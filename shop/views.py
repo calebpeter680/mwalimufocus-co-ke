@@ -466,6 +466,11 @@ def stk_push_view(request):
         order_id = request.POST.get('order_id')
 
 
+        print("Phone Number:", phone_number)
+        print("Email:", email)
+        print("Total_Price")
+
+
         if not total_price:
             return JsonResponse({'error': 'Total price not provided.'})
 
@@ -761,8 +766,10 @@ def shop_item_detail(request, education_level_slug, subject_slug, category_slug,
 
     request.session['session_order_id'] = order.pk
 
-
     return render(request, 'shop_item_detail.html', {'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+
+
+
 
 
 def create_order_for_item(shop_item):
