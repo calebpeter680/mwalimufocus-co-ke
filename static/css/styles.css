@@ -1,0 +1,81 @@
+
+/* Body CSS */
+body {
+  font-family: 'Roboto', sans-serif !important;
+
+  }
+
+
+/* Nav CSS */
+.nav-item a {
+  color: black; 
+  text-decoration: none; 
+}
+
+
+/* Table CSS */
+
+td, th {
+  font-size: 12px;
+}
+
+/* Footer CSS */
+
+
+/* Cart CSS */
+.old-price {
+  text-decoration: line-through;
+  color: #888;
+}
+
+
+.cart-basket {
+  font-size: 40px;
+  oolor: black;
+}
+
+.cart-link {
+    color: black !important; 
+}
+
+.position-relative {
+  position: relative;
+}
+
+.badge {
+  font-size: 0.5rem; 
+  padding: 0.25rem 0.5rem;
+}
+
+.translate-middle {
+  transform: translate(-50%, -50%);
+}
+
+
+.custom-cart-badge {
+  background-color: black; 
+}
+
+
+#paymentStatusHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#paymentStatusHeader i {
+    font-size: 34px;
+    margin-right: 8px;
+}
+
+
+.align-text-top {
+    vertical-align: top;
+    margin-top: 0.3em; 
+}
+
+
+
+
+
+

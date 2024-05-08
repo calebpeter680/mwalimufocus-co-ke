@@ -1,0 +1,399 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ education_level.name }} {{ category.name }} - MwalimuFocus.com</title>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center" style="padding-top: 0.1rem; padding-bottom: 0.1rem;">
+      <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-lg-row"> <!-- Remove 'flex-column' class -->
+                  <li class="nav-item">
+                      <a class="nav-link" href="tel:+254714477986" style="font-size: 0.9rem;"><i class="bi bi-telephone"></i> +254714477986</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="mailto:support@mwalimufocus.com" style="font-size: 0.9rem;"><i class="bi bi-envelope"></i> SUPPORT@MWALIMUFOCUS.COM</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+    </nav>
+
+
+
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: #98FB98;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            {% if brand.logo %}
+                <img src="{{ brand.logo.url }}" alt="Logo" height="80">
+            {% else %}
+                <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80">
+            {% endif %}
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+          <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            {% for item in menu_items %}
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/{{ item.slug }}">{{ item.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                <li>
+                  <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                      <i class="bi bi-person-circle"></i> My Profile
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                      <li><a class="dropdown-item" href="/accounts/dashboard/">Dashboard</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                  </div>
+                </li>
+            {% else %}
+                <li>
+                    <button class="btn btn-dark" data-bs-target="#accountModal" data-bs-toggle="modal">My Account</button>
+                </li>
+            {% endif %}
+          </ul>
+
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container">
+
+      <div class="d-flex justify-content-center">
+        <form class="mt-4 mb-2 d-block d-lg-inline-block" style="width: 100%; max-width: 20rem;">
+          <input class="form-control me-2" type="search" placeholder="Start typing to search..." aria-label="Search">
+        </form>
+      </div>
+
+      
+
+      <div class="row">
+        <!-- Sidebar Column -->
+        <div class="col-lg-3 mb-4 mt-4">
+
+          <div class="text-center">
+            <h1 style="font-size: 20px;">Browse <strong>{{education_level.name}} {{ category.name }}</strong> by Subject</h1>
+          </div>
+
+
+          <ul class="list-group list-group-flush">
+              {% for subject in subjects %}
+                  <li class="list-group-item">
+                     
+                    <a style="text-decoration: none;" href="{% url 'shop_items_by_subject_category_education_level' education_level_slug=education_level.slug subject_slug=subject.slug category_slug=category.slug %}">
+                          {{ subject.name }} ({{ subject.num_shop_items }})
+                      </a>
+
+                  </li>
+              {% endfor %}
+          </ul>
+          
+        </div>
+
+        <!-- Main Content Column -->
+        <div class="col-lg-9">
+
+          <div class="text-center mb-4" style="background-color: rgba(255, 255, 255, 0.9); padding: 20px;">
+            <h2 style="font-size: 28px;"><strong>Download {{education_level.name}} {{ category.name }}</strong></h2>
+          </div>
+
+          {% if shop_items %}
+          <div class="row">
+            {% for item in shop_items %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-2 mt-2">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title text-left" style="font-size: 14px; color: black; background-color: #98FB98; border-radius: 10px; padding: 10px;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</p>
+                  <a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
+                  <p class="card-text text-left">
+                    Price: Ksh {{ item.price }}
+                    {% if item.old_price %}
+                    <span style="text-decoration: line-through; color: #888;">Ksh {{ item.old_price }}</span>
+                    {% endif %}
+                  </p>
+
+                  <div class="card-footer text-center">
+                    <a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="btn btn-outline-dark my-2">Buy Now</a>
+                    
+                    <form id="add-to-cart-form-{{ item.id }}" class="add-to-cart-form" data-item-id="{{ item.id }}" method="post" data-in-cart="{% if item in cart_items %}true{% else %}false{% endif %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="item_id" value="{{ item.id }}">
+                      <button type="submit" class="btn btn-outline-dark my-2">
+                          {% if item in cart_items %}
+                              Remove from Cart
+                          {% else %}
+                              Add to Cart
+                          {% endif %}
+                      </button>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center" style="background-color: rgba(255, 255, 255, 0.9); padding: 20px;">
+            <p style="font-size: 22px;">Oops! No {{ category.name }} have been added yet!</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="container">
+      <footer class="py-5">
+        <div class="row">
+          <div class="col-12 col-md-3 mb-3">
+            <h5>Quick Links</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2">
+                <a href="/categories/" style="text-decoration: none; color: blue;">All Categories</a>
+              </li>
+              {% for item in categories_with_items %}
+              <li class="nav-item mb-2">
+                <a href="/categories/{{ item.slug }}/" style="text-decoration: none; color: blue;">{{ item.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+
+          <div class="col-12 col-md-3 mb-3">
+            <h5>Contact Us</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="tel:{{ brand.phone_number }}" class="nav-link p-0 text-body-secondary"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a></li>
+              <li class="nav-item mb-2"><a href="mailto:{{ brand.email }}" class="nav-link p-0 text-body-secondary email-link"><i class="bi bi-envelope"></i> {{ brand.email }}</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-5 offset-md-1 mb-3">
+            <form>
+              <h5>Subscribe to our newsletter</h5>
+              <p>Monthly digest of what's new and exciting from us.</p>
+              <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                <label for="newsletter1" class="visually-hidden">Email address</label>
+                <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                <button class="btn btn-dark" type="button">Subscribe</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <p>&copy; 2024 MwalimuFocus.Com. All rights reserved. MwalimuFocus.Com collaborates with professional teachers across Kenya to outsource high-quality schemes of work, lesson plans, lesson notes, revision booklets, and past papers with marking schemes. Kenyan teachers, parents, and students can download these materials from our website for FREE or at a small fee.</p>
+
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-telegram"></i></a></li>
+            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-facebook"></i></a></li>
+            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-whatsapp"></i></a></li>
+          </ul>
+        </div>
+      </footer>
+
+      <div class="add-to-cart row text-center py-3 fixed-bottom" style="background-color: {{ brand.primary_color }}">
+        <div class="col">
+          <div class="position-relative">
+            <a class="cart-link" href="/checkout/"><i class="bi bi-basket cart-basket"></i></a>
+            <a class="cart-link" href="/checkout/"><span class="badge custom-cart-badge rounded-pill position-absolute translate-middle top-0">{{ num_cart_items }}</span></a>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+
+
+    <!-- First Modal - Account Activity Selection -->
+    <div class="modal fade" id="accountModal" aria-hidden="true" aria-labelledby="accountModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <p class="modal-title" id="accountModalLabel" style="font-size: 24px;">I want to:</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <button class="btn btn-dark" data-bs-target="#registerModal" data-bs-toggle="modal" data-bs-dismiss="modal">Register</button>
+                    <button class="btn btn-dark" data-bs-target="#loginModal" data-bs-toggle="modal" data-bs-dismiss="modal">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Modal - Register or Login -->
+    <div class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="registerModalLabel" style="font-size: 24px;">Register as:</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <button class="btn btn-dark" data-bs-target="#customerRegisterModal" data-bs-toggle="modal" data-bs-dismiss="modal">Customer</button>
+                    <button class="btn btn-dark" data-bs-target="#vendorRegisterModal" data-bs-toggle="modal" data-bs-dismiss="modal">Vendor</button>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#accountModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Modal - Customer Registration Form -->
+    <div class="modal fade" id="customerRegisterModal" aria-hidden="true" aria-labelledby="customerRegisterModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="customerRegisterModalLabel" style="font-size: 24px;">Customer Registration</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body customer_registration_modal">
+                    <form id="customerRegistrationForm" method="post">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="emailInput1" class="form-label">Email Address (required)</label>
+                          <input type="email" class="form-control" id="emailInput1" name="email" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="passwordInput1" class="form-label">Password (required)</label>
+                          <input type="password" class="form-control" id="passwordInput1" name="password" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="phoneNumberInput1" class="form-label">Phone Number (optional)</label>
+                          <input type="tel" class="form-control" id="phoneNumberInput1" name="phone_number">
+                      </div>
+                      <div class="mb-3 form-check">
+                          <input type="checkbox" class="form-check-input" id="agreeTermsInput1" name="agree_to_terms" checked>
+                          <label class="form-check-label" for="agreeTermsInput1">Agree to Terms</label>
+                      </div>
+                      <input type="hidden" name="is_vendor" value="False">
+
+                      <button type="submit" class="btn btn-dark" id="registerCustomerBtn">Register</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#registerModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fourth Modal - Vendor Registration Form -->
+    <div class="modal fade" id="vendorRegisterModal" aria-hidden="true" aria-labelledby="vendorRegisterModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="vendorRegisterModalLabel" style="font-size: 24px;">Vendor Registration</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="vendor-registration-modal modal-body">
+                  <form id="registrationForm" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email Address (required)</label>
+                        <input type="email" class="form-control" id="emailInput" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password (required)</label>
+                        <input type="password" class="form-control" id="passwordInput" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumberInput" class="form-label">Phone Number (optional)</label>
+                        <input type="tel" class="form-control" id="phoneNumberInput" name="phone_number">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeTermsInput" name="agree_to_terms" checked>
+                        <label class="form-check-label" for="agreeTermsInput">Agree to Terms</label>
+                    </div>
+                    <input type="hidden" name="is_vendor" value="True">
+
+                    <button type="submit" class="btn btn-dark" id="registerBtn">Register</button>
+                  </form>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#registerModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fifth Modal - Login -->
+    <div class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="loginModalLabel" style="font-size: 24px;">Login</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body login-modal">
+                    <form>
+                      <div class="mb-3">
+                        <label for="InputEmail2" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="InputEmail2" aria-describedby="emailHelp">
+                      </div>
+                      <div class="mb-3">
+                        <label for="InputPassword2" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="InputPassword2">
+                      </div>
+                      <button type="submit" class="btn btn-dark" id="loginBtn">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                  <a href="{% url 'reset_password' %}" class="text-decoration-none">Forgot Password</a>
+                  <button class="btn btn-outline-dark" data-bs-target="#accountModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script src="{% static 'js/sign_up.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/image_url_format.js' %}"></script>
+    
+  </body>
+</html>

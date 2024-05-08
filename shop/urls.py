@@ -1,0 +1,43 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'), 
+    path('categories/', views.categories_view, name='categories'), 
+    path('categories/<slug:category_slug>/', views.CategoryShopItemsView.as_view(), name='category_shop_items'),
+
+    path('categories/<slug:education_level_slug>/category/<slug:category_slug>/', views.shop_items_by_education_level_category, name='shop_items_by_education_level_category'),
+    path('categories/<slug:category_slug>/subject/<slug:subject_slug>/', views.shop_items_by_subject_category, name='shop_items_by_subject_category'),
+
+    path('categories/<slug:education_level_slug>/<slug:subject_slug>/<slug:category_slug>/', views.shop_items_by_subject_category_education_level, name='shop_items_by_subject_category_education_level'),
+    
+    path('<slug:education_level_slug>/<slug:subject_slug>/<slug:category_slug>/<int:pk>/<slug:slug>/', views.shop_item_detail, name='shop_item_detail'),
+
+    path('add_to_cart/', views.add_to_cart, name='add_to_cart'),
+
+    path('checkout/', views.checkout, name='checkout'),
+
+    path('get_cart_items/', views.get_cart_items, name='get_cart_items'),
+
+    path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+
+    path('remove_from_cart_at_checkout/', views.remove_from_cart_at_checkout, name='remove_from_cart_at_checkout'),
+
+    path('trigger_stk_push/', views.stk_push_view, name='trigger_stk_push'),
+
+    path('webhook/', views.webhook_callback, name='webhook_callback'),
+
+    path('payment-status/', views.payment_status, name='payment_status'),
+
+    path('login-and-assign/', views.login_and_assign_user, name='login_and_assign'),
+
+    path('session-order-detail/', views.session_order_detail_view, name='session_order_detail'),
+
+    path('download/<int:shop_item_id>/', views.download_file, name='download_file'),
+
+    path('download_item/<int:item_id>/', views.download_customer_item_file, name='download_customer_item_file'),
+
+    path('send_attachment_via_email/<int:order_id>/', views.send_email_with_attachments, name='send_email_with_attachments'),
+
+    path('search/', views.search_shop_items, name='search_shop_items'),
+]

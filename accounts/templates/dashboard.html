@@ -1,0 +1,1081 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+
+    <script src="{% static 'js/dashboard-color-modes.js' %}"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>Dashboard · MwalimuFocus.com</title>
+
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
+
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+        <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.3/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.3/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.3/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#712cf9">
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/2.0.6/css/dataTables.dataTables.min.css">
+
+    <script type="text/javascript" src="//cdn.datatables.net/2.0.6/js/dataTables.min.js"></script>
+
+  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+      </symbol>
+    </svg>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+      <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+              id="bd-theme"
+              type="button"
+              aria-expanded="false"
+              data-bs-toggle="dropdown"
+              aria-label="Toggle theme (auto)">
+        <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
+        <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+            Light
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+            Dark
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+            Auto
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="calendar3" viewBox="0 0 16 16">
+    <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+    <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+  </symbol>
+  <symbol id="cart" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+  <symbol id="chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+  </symbol>
+  <symbol id="door-closed" viewBox="0 0 16 16">
+    <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2zm1 13h8V2H4v13z"/>
+    <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/>
+  </symbol>
+
+  <symbol id="file-earmark" viewBox="0 0 16 16">
+    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+  </symbol>
+
+  <symbol id="myProducts" viewBox="0 0 16 16">
+    <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z"/>
+    <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z"/>
+  </symbol>
+
+
+  <symbol id="withdrawalRequest" viewBox="0 0 16 16">
+    <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+    <path d="M0 4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V6a2 2 0 0 1-2-2z"/>
+  </symbol>
+
+
+  <symbol id="withdrawalHistory" viewBox="0 0 16 16">
+    <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z"/>
+    <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5"/>
+  </symbol>
+
+
+
+  <symbol id="addProduct" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+    <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+  </symbol>
+
+
+  <symbol id="shop-2" viewBox="0 0 16 16">
+      <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
+  </symbol>
+
+  <symbol id="file-earmark-text" viewBox="0 0 16 16">
+    <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+    <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+  </symbol>
+  <symbol id="gear-wide-connected" viewBox="0 0 16 16">
+    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+  </symbol>
+  <symbol id="graph-up" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
+  </symbol>
+  <symbol id="house-fill" viewBox="0 0 16 16">
+    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+  </symbol>
+  <symbol id="list" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+  </symbol>
+  <symbol id="people" viewBox="0 0 16 16">
+    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+  </symbol>
+
+  <symbol id="plus-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+  </symbol>
+
+  <symbol id="shopMore" viewBox="0 0 16 16">
+    <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+  </symbol>
+
+  <symbol id="FAQs" viewBox="0 0 16 16">
+    <path d="M8.05 9.6c.336 0 .504-.24.554-.627.04-.534.198-.815.847-1.26.673-.475 1.049-1.09 1.049-1.986 0-1.325-.92-2.227-2.262-2.227-1.02 0-1.792.492-2.1 1.29A1.7 1.7 0 0 0 6 5.48c0 .393.203.64.545.64.272 0 .455-.147.564-.51.158-.592.525-.915 1.074-.915.61 0 1.03.446 1.03 1.084 0 .563-.208.885-.822 1.325-.619.433-.926.914-.926 1.64v.111c0 .428.208.745.585.745"/>
+    <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+    <path d="M7.001 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0"/>
+  </symbol>
+
+
+  <symbol id="puzzle" viewBox="0 0 16 16">
+    <path d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .039-.063v-.009a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003a.214.214 0 0 0-.039-.064.859.859 0 0 0-.27-.193C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.039.063v.003l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855zM4.605 3a.5.5 0 0 0-.498.55l.001.007.29 3.4A.5.5 0 0 1 3.9 7.5h-.782c-.696 0-1.182-.497-1.469-.872a.459.459 0 0 0-.118-.115.112.112 0 0 0-.025-.012L1.5 6.5h-.003a.213.213 0 0 0-.064.039.86.86 0 0 0-.193.27C1.1 7.09 1 7.51 1 8c0 .491.1.912.24 1.19.07.14.14.225.194.271a.213.213 0 0 0 .063.039H1.5l.006-.001a.112.112 0 0 0 .025-.012.459.459 0 0 0 .118-.115c.287-.375.773-.872 1.469-.872H3.9a.5.5 0 0 1 .498.542l-.29 3.408a.5.5 0 0 0 .497.55h1.878c-.048-.166-.195-.352-.463-.557-.274-.21-.52-.528-.52-.943 0-.568.447-.947.862-1.154C6.807 10.123 7.387 10 8 10s1.193.123 1.638.346c.415.207.862.586.862 1.154 0 .415-.246.733-.52.943-.268.205-.415.39-.463.557h1.878a.5.5 0 0 0 .498-.55l-.001-.007-.29-3.4A.5.5 0 0 1 12.1 8.5h.782c.696 0 1.182.497 1.469.872.05.065.091.099.118.115.013.008.021.01.025.012a.02.02 0 0 0 .006.001h.003a.214.214 0 0 0 .064-.039.86.86 0 0 0 .193-.27c.14-.28.24-.7.24-1.191 0-.492-.1-.912-.24-1.19a.86.86 0 0 0-.194-.271.215.215 0 0 0-.063-.039H14.5l-.006.001a.113.113 0 0 0-.025.012.459.459 0 0 0-.118.115c-.287.375-.773.872-1.469.872H12.1a.5.5 0 0 1-.498-.543l.29-3.407a.5.5 0 0 0-.497-.55H9.517c.048.166.195.352.463.557.274.21.52.528.52.943 0 .568-.447.947-.862 1.154C9.193 5.877 8.613 6 8 6s-1.193-.123-1.638-.346C5.947 5.447 5.5 5.068 5.5 4.5c0-.415.246-.733.52-.943.268-.205.415-.39.463-.557H4.605z"/>
+  </symbol>
+  <symbol id="search" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+  </symbol>
+</svg>
+
+<header class="navbar sticky-top flex-md-nowrap p-0 shadow" data-bs-theme="dark" style="background: {{ brand.primary_color }};">
+
+  <a href="/">
+
+    {% if brand.logo %}
+        <img src="{{ brand.logo.url }}" alt="Logo" height="80">
+    {% else %}
+        <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80">
+    {% endif %}
+
+  </a>
+
+  <ul class="navbar-nav flex-row d-md-none">
+    <li class="nav-item text-nowrap">
+      <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <svg class="bi"><use xlink:href="#list"/></svg>
+      </button>
+    </li>
+  </ul>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+      <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+
+
+        <div class="offcanvas-header" style="background: {{ brand.primary_color }};">
+          <h5 class="offcanvas-title" id="sidebarMenuLabel">
+            <a href="/">
+              {% if brand.logo %}
+                  <img src="{{ brand.logo.url }}" alt="Logo" height="80">
+              {% else %}
+                  <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80">
+              {% endif %}
+            </a>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+
+
+
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+          <ul class="nav flex-column">
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'dashboard' %}">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Dashboard
+              </a>
+            </li>
+
+            {% if not user.is_vendor %}
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="/categories/">
+                <svg class="bi"><use xlink:href="#shopMore"/></svg>
+                Shop More
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="/categories/" data-bs-target="#accountModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#withdrawalRequest"/></svg>
+                Start Selling
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#" data-bs-target="#FAQsModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#FAQs"/></svg>
+                FAQs
+              </a>
+            </li>
+            {% endif %}
+
+
+            {% if user.is_vendor %}
+            <li class="nav-item">
+              <a type="button" class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#shopDetail" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#shop-2"/></svg>
+                My Shop
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a type="button" class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#productListModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#myProducts"/></svg>
+                My Products
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a type="button" class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#addShopItem" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#addProduct"/></svg>
+                Add Product
+              </a>
+            </li>
+
+          </ul>
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+            <span>Finances</span>
+            <a class="link-secondary" href="#" aria-label="Add a new report">
+              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-auto">
+
+            <li class="nav-item">
+              <a type="button" class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#requestWithdrawalModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#withdrawalRequest"/></svg>
+                Request Withdrawal
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#withdrawalHistoryModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#withdrawalHistory"/></svg>
+                Withdrawal History
+              </a>
+            </li>
+          </ul>
+          {% endif %}
+
+          <hr class="my-3">
+
+          <ul class="nav flex-column mb-auto">
+
+            {% if user.is_vendor %}
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#" data-bs-target="#FAQsModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#FAQs"/></svg>
+                FAQs
+              </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#" data-bs-target="#myProfileModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
+                My Profile
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="{% url 'logout' %}">
+                <svg class="bi"><use xlink:href="#door-closed"/></svg>
+                Sign out
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" style="font-size: 18px">{% if request.user.is_vendor %} {{ request.user.email }} (Vendor) {% else %} {{ request.user.email }} {% endif %}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            {% if request.user.is_vendor %}
+            <button type="button" class="btn btn-sm btn-dark" href="#" data-bs-target="#addShopItem" data-bs-toggle="modal">Sell a Product</button>
+            {% else %}
+            <a href="{% url 'vendor_sign_up' %}" type="button" class="btn btn-sm btn-dark" data-bs-target="#accountModal" data-bs-toggle="modal">Become a Vendor</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+
+      {% if request.user.is_vendor %}
+      <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div style="background-color: rgba(0, 0, 0, 0.1); color: {{ brand.primary_color }}; display: flex; justify-content: center; align-items: center; height: 40px;">
+                      <i class="bi bi-shop" style="color: black; font-size: 30px;"></i>
+                  </div>
+                  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                      <div>
+                          <h5>{{ vendor_shop.name }} (ID: <strong>{{ vendor_shop.id }}</strong>) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The name of your shop."></i></h5>
+                      </div>
+                      <div>
+                          <span>{{ vendor_shop_items_count }} {{ sing_plu_items }} on sale</span>
+                      </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div style="background-color: rgba(0, 0, 0, 0.1); color: {{ brand.primary_color }}; display: flex; justify-content: center; align-items: center; height: 40px;">
+                      <i class="bi bi-bag" style="color: black; font-size: 30px;"></i>
+                    </div>
+
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                      <div>
+                          <h5>Total Sales <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Number of times currently listed products on your shop were purchased."></i></h5>
+                      </div>
+                      <div>
+                          <span>{{ total_sales }}</span>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div style="background-color: rgba(0, 0, 0, 0.1); color: {{ brand.primary_color }}; display: flex; justify-content: center; align-items: center; height: 40px;">
+                      <i class="bi bi-cash-stack" style="color: black; font-size: 30px;"></i>
+                    </div>
+
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                      <div>
+                          <h5>Available Balance <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Balance available for withdrawal."></i></h5>
+                      </div>
+                      <div>
+                          <span>Ksh {{ vendor_shop.available_balance }}</span>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      {% endif %}
+
+
+      
+
+      {% if user.is_vendor %}
+      <hr>
+      <h2 style="font-size: 20px;" class="text-center">Your Sales Summary <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Orders placed by customers with an intention to purchase one of your products."></i></h2>
+      <div class="table-responsive">
+        <table class="table display table-sm" id="myTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date Created</th>
+              <th>Product</th>
+              <th>Earnings</th>
+              <th>Status</th>
+              <th>Vendor Is Paid</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vendor_order in vendor_orders %}
+              <tr>
+                <td>#{{ vendor_order.display_order_number }}</td>
+                <td>{{ vendor_order.created_at }}</td>
+                <td>{{ vendor_order.shop_item.title }}</td>
+                <td>Ksh {{ vendor_order.price }}</td>
+                <td>{% if vendor_order.order.is_paid %} Paid {% else %} Pending {% endif %}</td>
+                <td>{{ vendor_order.vendor_is_paid }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% else %}
+
+      <h2 style="font-size: 20px;" class="text-center">Your Downloads Summary <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="A list of products you have purchased on our site."></i></h2>
+      <div class="table-responsive">
+        <table class="table display table-sm" id="myTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date Purchased</th>
+              <th>Description</th>
+              <th>Download Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in customer_items %}
+              <tr>
+                <td>#{{ item.order.display_order_number }}</td>
+                <td>{{ item.created_at }}</td>
+                <td>{{ item.title }} || <strong>Category:</strong> {{ item.category }} || <strong>Level:</strong>{{ item.education_level }} || <strong>Subject:</strong> {{ item.subject }}</td>
+                <td><a href="{% url 'download_customer_item_file' item.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% endif %}
+      
+    </main>
+  </div>
+</div>
+
+
+
+
+  <!-- FAQs Modal -->
+  <div class="modal fade modal-lg" id="FAQsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Frequently Asked Questions</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+
+            {% if request.user.is_vendor %}
+            <div class="accordion-item">
+              {% for faq in vendor_faqs %}
+                <h2 class="accordion-header" id="flush-headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    {{ faq.title }}
+                  </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                  {% if faq.image %}
+                    <div class="accordion-body">{{ faq.image.url }}</div>
+                  {% endif %}
+                  <div class="accordion-body">{{ faq.description }}</div>
+                </div>
+              {% endfor %}
+            </div>
+            {% else %}
+
+            <div class="accordion-item">
+              {% for faq in customer_faqs %}
+                <h2 class="accordion-header" id="flush-headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    {{ faq.title }}
+                  </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                  {% if faq.image %}
+                    <div class="accordion-body">{{ faq.image.url }}</div>
+                  {% endif %}
+                  <div class="accordion-body">{{ faq.description }}</div>
+                </div>
+              {% endfor %}
+            </div>
+
+            {% endif %}
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- Vendor Registration Form -->
+    <div class="modal fade" id="accountModal" aria-hidden="true" aria-labelledby="vendorRegisterModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="vendorRegisterModalLabel" style="font-size: 24px;">Vendor Registration</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="vendor-registration-modal modal-body">
+                  <form id="registrationForm" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email Address (required)</label>
+                        <input type="email" class="form-control" id="emailInput" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password (required)</label>
+                        <input type="password" class="form-control" id="passwordInput" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumberInput" class="form-label">Phone Number (optional)</label>
+                        <input type="tel" class="form-control" id="phoneNumberInput" name="phone_number">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeTermsInput" name="agree_to_terms" checked>
+                        <label class="form-check-label" for="agreeTermsInput">Agree to Terms</label>
+                    </div>
+                    <input type="hidden" name="is_vendor" value="True">
+
+                    <button type="submit" class="btn btn-dark" id="registerBtn">Register</button>
+                  </form>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#registerModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Shop Edit Modal -->
+    <div class="modal fade" id="shopDetail" aria-hidden="true" aria-labelledby="shopDetailModalLabel" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title text-center" id="shopDetailModalLabel">Update Your Shop Info</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body update-shop-modal">
+                  <form id="shopEditForm" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="nameInput" class="form-label">Shop Name <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The shop name will be displayed to your customers. You can edit it at any time."></i></label>
+                          <input type="text" class="form-control" id="nameInput" name="name" value="{{ vendor_shop.name }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="descriptionInput" class="form-label">Description <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="In one paragraph, tell your customers about what your shop sells and how you ensure the quality of the materials you sell."></i></label>
+                          <textarea class="form-control" id="descriptionInput" name="description" rows="3">{{ vendor_shop.description }}</textarea>
+                      </div>
+                      <button type="button" class="btn btn-dark" id="updateShopBtn">Update</button>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+              </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Request Withdrawal Modal -->
+       
+      <div class="modal fade" id="requestWithdrawalModal" aria-hidden="true" aria-labelledby="requestWithdrawalModalLabel" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title text-center" id="requestWithdrawalModalLabel">Request a withdrawal.</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body withdrawal-request-modal-body">
+                      <form id="requestWithdrawalForm" method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                              <label for="mpesaNameInput">Your Name</label>
+                              <input type="text" class="form-control" id="mpesaNameInput" name="mpesa_name" placeholder="e.g., John Doe" required>
+                          </div>
+
+                          <div class="mb-3">
+                              <label for="mpesaPhoneNumberInput">Your Mpesa Phone Number</label>
+                              <input type="tel" class="form-control" id="mpesaPhoneNumberInput" name="mpesa_phone_number" placeholder="e.g., 0712345678" required>
+                          </div>
+
+                          <div class="mb-3">
+                              <label for="amountInput">Amount (Ksh) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The amount shown is equivalent to your available balance. The minimum amount you can withdraw is Ksh 200."></i></label>
+
+                              <input type="number" class="form-control" value="{{ vendor_shop.available_balance }}" min="0" step="1" disabled>
+
+                              
+                              <input type="hidden" id="amountInput" name="amount" value="{{ vendor_shop.available_balance }}">
+
+                              <input type="hidden" id="shop_vendor_id" name="shop_vendor_id" value="{{ vendor_shop.id }}">
+
+                          </div>
+
+                          <button type="button" class="btn btn-dark" id="sendRequestBtn">Send Request</button>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+      <!-- Withdrawal History Modal -->
+       
+      <div class="modal fade modal-lg" id="withdrawalHistoryModal" aria-hidden="true" aria-labelledby="withdrawalHistoryModalLabel" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title text-center" id="withdrawalHistoryModalLabel">Withdrawal History</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body withdrawal-history-modal-body">
+                      <div class="table-responsive">
+                        <table class="table display" id="withdrawalHistoryTable" style="font-size: 14px;">
+                          {% if vendor_withdrawal_requests %}
+                          <thead>
+                            <tr>
+                              <th>Date Created</th>
+                              <th>Mpesa Number</th>
+                              <th>Amount</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for request in vendor_withdrawal_requests %}
+                              <tr>
+                                <td>{{ request.created_at }}</td>
+                                <td>{{ request.account }}</td>
+                                <td>Ksh {{ request.amount }}</td>
+                                <td>{{ request.transaction_status }}</td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                          {% else %}
+                            No withdrawal requests yet.
+                          {% endif %}
+                        </table>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+      <!-- Profile Modal -->
+       
+      <div class="modal fade" id="myProfileModal" aria-hidden="true" aria-labelledby="myProfileModalLabel" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title text-center" id="myProfileModalLabel">My Profile</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">My Profile</button>
+                      </li>
+
+                      {% if user.is_vendor %}
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Total Earnings</button>
+                      </li>
+                      {% endif %}
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Change Password</button>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Email:</strong></div>
+                                    <div class="col-md-8">{{ user.email }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="If you would like to change your email, please call Support, {{ brand.phone_number }} or contact us via email, {{ brand.email }}."></i></div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Phone Number:</strong></div>
+                                    <div class="col-md-8">{{ user.phone_number }} <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#changePhoneNumberModal">Change</button></div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Date Joined:</strong></div>
+                                    <div class="col-md-8">{{ user.date_joined|date:"F j, Y" }}</div>
+                                </div>
+                            </li>
+                        </ul>
+                      </div>
+
+                      {% if user.is_vendor %}
+
+                      <div class="tab-pane fade mt-2 mb-2" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">Since you joined this platform as a vendor on {{ vendor_shop.created_at|date:"F j, Y" }}, you have earned a cumulative amount of <strong>Ksh {{ vendor_shop.total_earnings }}.</strong></div>
+
+                      {% endif %}
+
+
+                      <div class="tab-pane fade change-password-div-body" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                        <form type="post" class="mt-2 mb-2">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="changeCurrentPasswordInput" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="changeCurrentPasswordInput">
+                          </div>
+                          <div class="mb-3">
+                            <label for="changeNewPasswordInput" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="changeNewPasswordInput">
+                          </div>
+                          <button type="submit" id="changeNewPasswordBtn" class="btn btn-dark">Submit</button>
+                        </form>
+                      </div>
+
+
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+
+
+        <!-- Change Phone Number Modal -->
+        <div class="modal" id="changePhoneNumberModal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Change Your Profile Phone Number <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Ensure the new phone number is reachable in case our Support Team calls you!"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body phone-number-change-body">
+                <form method="post">
+                  {% csrf_token %}
+                    <label for="phoneNumberChangeInput" class="form-label">New Phone Number</label>
+                    <input type="tel" id="phoneNumberChangeInput" name="phone_number" class="form-control" placeholder="e.g., 0712345678" required>
+                    <button type="submit" class="btn btn-dark mt-3" id="phoneNumberChangeBtn">Update</button>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#myProfileModal">Back</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      <!-- Add Shop Item Modal -->
+      <div class="modal fade" id="addShopItem" aria-hidden="true" aria-labelledby="addShopItemModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="shopDetailModalLabel">Add a Product to Your Shop <strong>{{ vendor_shop.name }}</strong></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body add-shop-item-modal">
+                    <form id="addShopItemForm" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="titleInput">Title <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The title should be short and concise. Less than 10 words, please!"></i></label>
+                          <input type="text" class="form-control" id="titleInput" name="title" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="categoryInput">Category</label>
+                          <select class="form-select" id="categoryInput" name="category" required>
+                              {% for category in categories %}
+                                  <option value="{{ category.id }}">{{ category.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="educationLevelInput">Education Level</label>
+                          <select class="form-select" id="educationLevelInput" name="education_level" required>
+                              {% for education_level in education_levels %}
+                                  <option value="{{ education_level.id }}">{{ education_level.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="subjectInput">Subject</label>
+                          <select class="form-select" id="subjectInput" name="subject" required>
+                              {% for subject in subjects %}
+                                  <option value="{{ subject.id }}">{{ subject.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="descriptionInput">Description <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="In one paragraph, provide specific information about your product that you think your customers should know before buying."></i></label>
+                          <textarea class="form-control" id="descriptionInput" name="description" rows="3" required></textarea>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="oldPriceInput">Old Price (Ksh) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="This will display as the original price of the product before you gave a discount!"></i></label>
+                            <input type="number" class="form-control" id="oldPriceInput" name="old_price" min="0" step="1">
+                            <div id="emailHelp" class="form-text">Old price must be a bigger value than the new price.</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="newPriceInput">New Price (Ksh) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="This will be displayed as the discounted price for your product. It is also the actual amount the customer will pay if they purchase the product!"></i></label>
+                            <input type="number" class="form-control" id="newPriceInput" name="new_price" required min="0" step="1">
+                            <div id="emailHelp" class="form-text">Ensure the minimum value is Ksh {{ min_price }} to avoid starting over again. <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="To maintain a competitive space, we require a minimum new price of Ksh {{ min_price }}."></i></div>
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="fileInput">File <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="You must upload a file. The file must be 100% your work as we don't tolerate copyright infringement. Also, ensure the file matches the details you've provided above to prevent permanent account suspension!"></i></label>
+                          <input type="file" class="form-control" id="fileInput" name="file">
+                      </div>
+                      <button type="button" class="btn btn-dark" id="addShopItemBtn">Add Product</button>
+                  </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+         <!-- Product List Modal -->
+        <div class="modal fade modal-lg" id="productListModal" aria-hidden="true" aria-labelledby="productListModalLabel" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">{{ vendor_shop.name }} Listed Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                {% if not vendor_shop_items %}
+
+                <p class="col mb-4">You don't have listed products. Close this modal and click on "Sell a Product" to list your products.</p>
+
+                {% endif %}
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+
+                  {% if vendor_shop_items %}
+                    {% for item in vendor_shop_items %}
+                        <div class="col mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title text-center" style="font-size: 16px;">{{ item.item.title }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-eye"></i> {{ item.item.views_count }} views <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Share your product on social media platforms like Facebook and WhatsApp groups to increase visibility."></i></h6>
+                                    <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-cloud-download"></i> {{ item.item.downloads_count }} dowloads <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Ensure you optimize the description and quality of your product to get more downloads (sales)."></i></h6>
+                                    <p><strong>Category:</strong> {{ item.item.category.name }}</p>
+                                    <p><strong>Level:</strong> {{ item.item.education_level.name }}</p>
+                                    <p><strong>Subject:</strong> {{ item.item.subject.name }}</p>
+                                    <p><strong>Created At:</strong> {{ item.created_at }}</p>
+                                    <p><strong>Price:</strong> Ksh {{ item.item.price }} <span style="text-decoration: line-through; color: #888;">Ksh {{ item.item.old_price }}</span></p>
+                                    <div class="text-center card-footer">
+                                      <button class="btn btn-dark my-2" data-bs-target="#productDeleteModal{{ item.item.id }}" data-bs-toggle="modal">Delete</button>
+                                      <button class="btn btn-dark my-2" data-bs-target="#updateShopItem{{ item.item.id }}" data-bs-toggle="modal" data-itemid="{{ item.item.id }}">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                  {% endif %}
+              </div>
+
+              <div class="modal-footer">
+                <p>By listing products, you confirm that all the products are your original work. Copyright violation is not permitted.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- Delete Product Modal -->
+        {% if vendor_shop_items %}
+          {% for item in vendor_shop_items %}
+          <div class="modal fade" id="productDeleteModal{{ item.item.id }}" aria-hidden="true" aria-labelledby="productDeleteModalLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title"><strong>{{ item.item.title }}</strong></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body delete-product-modal-body">
+                  <p class="text-center" style="font-size: 20px;"><i class="bi bi-exclamation-triangle"></i></p>
+                  <p>Are you certain you want to delete this product? Deleting it may impact your available balance if there are outstanding related purchases. We recommend withdrawing your available balance before proceeding with the deletion. </p>
+                  <input type="hidden" id="itemID" value="{{ item.item.id }}">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-dark" id="productDeleteConfirm{{ item.item.id }}" data-itemid="{{ item.item.id }}">Yes</button>
+                  <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% endif %}
+
+
+
+      <!-- Update Shop Item Modal -->
+      {% if vendor_shop_items %}
+      {% for item in vendor_shop_items %}
+      <div class="modal fade" id="updateShopItem{{ item.item.id }}" data-modalid="{{ item.item.id }}" aria-hidden="true" aria-labelledby="updateShopItemModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="updateShopItemModalLabel">Update <strong>{{ item.item.title }}</strong></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body update-shop-item-modal">
+                    <form id="updateShopItemForm" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="titleInput">Title <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The title should be short and concise. Less than 10 words, please!"></i></label>
+                          <input type="text" class="form-control" id="titleInput_update" name="title" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="categoryInput_update">Category</label>
+                          <select class="form-select" id="categoryInput_update" name="category" required>
+                              {% for category in categories %}
+                                  <option value="{{ category.id }}">{{ category.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="educationLevelInput_update">Education Level</label>
+                          <select class="form-select" id="educationLevelInput_update" name="education_level" required>
+                              {% for education_level in education_levels %}
+                                  <option value="{{ education_level.id }}">{{ education_level.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="subjectInput_update">Subject</label>
+                          <select class="form-select" id="subjectInput_update" name="subject" required>
+                              {% for subject in subjects %}
+                                  <option value="{{ subject.id }}">{{ subject.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="descriptionInput_update">Description <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="In one paragraph, provide specific information about your product that you think your customers should know before buying."></i></label>
+                          <textarea class="form-control" id="descriptionInput_update" name="description" rows="3" required></textarea>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="oldPriceInput_update">Old Price (Ksh) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="This will display as the original price of the product before you gave a discount!"></i></label>
+                            <input type="number" class="form-control" id="oldPriceInput_update" name="old_price" min="0" step="1">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="newPriceInput_update">New Price (Ksh) <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="This will be displayed as the discounted price for your product. It is also the actual amount the customer will pay if they purchase the product!"></i></label>
+                            <input type="number" class="form-control" id="newPriceInput_update" name="new_price" required min="0" step="1">
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="fileInput_update">Current File <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="You must contact Support Team ({{ brand.phone_number }}/{{ brand.email }} to change the file!"></i></label><br>
+                          {% if item.item.file %}
+                              <a href="{% url 'download_file' item.item.id %}" target="_blank">{{ item.item.file.name }}</a>
+                          {% else %}
+                              No file uploaded
+                          {% endif %}
+                      </div>
+
+                      <input type="hidden" id="itemID" value="{{ item.item.id }}">
+                      <button type="button" class="btn btn-dark" id="updateShopItemBtn{{ item.item.id }}" data-itemid="{{ item.item.id }}">Update Product</button>
+                  </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+
+    <script src="{% static 'js/sign_up.js' %}"></script>
+    <script src="{% static 'js/tooltips.js' %}"></script>
+    <script src="{% static 'js/dataTables.js' %}"></script>
+    <script src="{% static 'js/edit_shop.js' %}"></script>
+    <script src="{% static 'js/add_product.js' %}"></script>
+    <script src="{% static 'js/delete_product.js' %}"></script>
+    <script src="{% static 'js/update_product.js' %}"></script>
+    <script src="{% static 'js/withdrawal_request.js' %}"></script>
+    <script src="{% static 'js/change_phone_number.js' %}"></script>
+    <script src="{% static 'js/password_change.js' %}"></script>
+    <script src="{% static 'js/image_url_format.js' %}"></script>
+
+
+  </body>
+</html>

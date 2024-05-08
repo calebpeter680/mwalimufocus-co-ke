@@ -1,0 +1,225 @@
+import json
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from .models import CustomUser, CustomerFAQ, VendorFAQ
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, redirect
+from shop.models import ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
+from django.db.models import Count, Q
+from vendors.models import VendorShop, VendorShopItem, Vendor_Order, VendorCommission, WithdrawalRequest, ProductMinPrice
+from django.db.models import Sum
+from decimal import Decimal
+from collections import defaultdict
+from django.contrib.auth.decorators import login_required
+
+
+def dashboard_view(request):
+
+    if not request.user.is_authenticated:
+        return redirect('home')
+
+    brand = Brand.objects.last()
+    categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
+    menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
+
+    user_email = request.session.get('user_email')
+    print("User Email:", user_email)
+
+    context = {
+        'brand': brand,
+        'categories_with_items': categories_with_items,
+        'menu_items': menu_items,
+    }
+
+    if user_email:
+        try:
+            user = CustomUser.objects.get(email=user_email)
+            if user.is_vendor:
+
+                try:
+
+                    min_price_obj = ProductMinPrice.objects.latest('id')
+                    min_price = min_price_obj.price
+
+                except ProductMinPrice.DoesNotExist:
+                    min_price = 50
+
+                context['min_price'] = min_price
+
+                vendor_faqs = VendorFAQ.objects.all()
+                context['vendor_faqs'] = vendor_faqs
+                
+                vendor_shop = VendorShop.objects.get(user=user)
+                context['vendor_shop'] = vendor_shop
+
+                vendor_withdrawal_requests = WithdrawalRequest.objects.filter(user=user).order_by('-created_at')
+                context['vendor_withdrawal_requests'] = vendor_withdrawal_requests
+
+                vendor_orders = Vendor_Order.objects.filter(vendor=user).order_by('-created_at')
+                context['vendor_orders'] = vendor_orders
+
+                vendor_shop_items = VendorShopItem.objects.filter(shop=vendor_shop).order_by('-created_at')
+                context['vendor_shop_items'] = vendor_shop_items
+
+                vendor_shop_items_count = vendor_shop_items.count()
+                context['vendor_shop_items_count'] = vendor_shop_items_count
+
+                sing_plu_items = "product" if vendor_shop_items_count == 1 else "products"
+                context['sing_plu_items'] = sing_plu_items
+
+                shop_items = [vendor_shop_item.item for vendor_shop_item in vendor_shop_items]
+
+                orders = Order.objects.filter(items__in=shop_items)
+                paid_orders = orders.filter(is_paid=True)
+                context['total_sales'] = paid_orders.count()
+
+                unpaid_vendor_orders = vendor_orders.filter(vendor_is_paid=False, order__is_paid=True)
+
+                available_balance = sum(order.price for order in unpaid_vendor_orders if order.price is not None)
+
+                vendor_shop.available_balance = Decimal(str(available_balance))
+
+                vendor_shop.save()
+
+                categories = Category.objects.all()
+                context['categories'] = categories
+                education_levels = Education_Level.objects.all()
+                context['education_levels'] = education_levels
+                subjects = Subject.objects.all()
+                context['subjects'] = subjects
+            
+            else:
+
+                customer_faqs = CustomerFAQ.objects.all()
+                context['customer_faqs'] = customer_faqs
+
+                try:
+                    user = CustomUser.objects.get(email=user_email)
+                    customer_items = Customer_Item.objects.filter(user=user).order_by('-created_at')
+                    context['customer_items'] = customer_items
+                except CustomUser.DoesNotExist:
+                    pass
+
+        except CustomUser.DoesNotExist:
+            pass
+
+    return render(request, 'dashboard.html', context)
+
+
+
+
+
+
+def vendor_sign_up(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        phone_number = data.get('phone_number')
+        agree_to_terms = data.get('agree_to_terms')
+
+        if email and password and phone_number:
+            try:
+                existing_user = CustomUser.objects.get(email=email)
+                return JsonResponse({'error': 'User with this email exists! Login or reset forgotten password'})
+            except CustomUser.DoesNotExist:
+                try:
+                    user = CustomUser.objects.create_user(email=email, password=password, phone_number=phone_number, is_vendor=True)
+                except ValueError as e:
+                    return JsonResponse({'error': str(e)})
+
+
+                request.session['user_email'] = email
+
+
+                user = authenticate(request, email=email, password=password)
+                if user is not None:
+                    login(request, user)
+
+                    shop_name = email.split('@')[0]
+                    try:
+                        shop = VendorShop.objects.create(user=user, name=shop_name)
+                        return JsonResponse({'success': 'Sign up successful! Shop created and you are logged in successfully!'})
+                    except Exception as e:
+                        return JsonResponse({'error': f'Failed to create shop: {e}'})
+
+        return JsonResponse({'error': 'Invalid form data'})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+
+def customer_sign_up(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        phone_number = data.get('phone_number')
+        agree_to_terms = data.get('agree_to_terms')
+        is_vendor = data.get('is_vendor', False)
+
+        if email and password:
+            try:
+                existing_user = CustomUser.objects.get(email=email)
+                return JsonResponse({'error': 'User with this email exists! Login or reset forgotten password'})
+            except ObjectDoesNotExist:
+                try:
+                    user = CustomUser.objects.create_user(email=email, password=password, phone_number=phone_number, is_vendor=is_vendor)
+                except ValueError as e:
+                    return JsonResponse({'error': str(e)})
+
+                request.session['user_email'] = email
+
+                user = authenticate(request, email=email, password=password)
+                if user is not None:
+                    login(request, user)
+                    return JsonResponse({'success': 'Sign up successful! You are logged in successfully!'})
+
+        return JsonResponse({'error': 'Invalid form data'})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+def login_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            request.session['user_email'] = email
+
+            response_data = {
+                'success': 'Login successful! You will be redirected shortly!',
+            }
+            return JsonResponse(response_data)
+
+        else:
+            return JsonResponse({'error': 'Incorrect Email or Password'})
+
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
+
+
+
