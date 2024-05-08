@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
 from accounts.models import CustomUser
-from storages.backends.s3boto3 import S3Boto3Storage
 from decimal import Decimal
 import json
 
@@ -53,7 +52,7 @@ class ShopItem(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, default=100)
-    file = models.FileField(null=True, blank=True, storage=S3Boto3Storage())
+    file = models.FileField(null=True, blank=True, upload_to='shopitemfiles/')
     slug = models.SlugField(blank=True)
     education_level_slug = models.SlugField(blank=True)
     subject_slug = models.SlugField(blank=True)
@@ -104,7 +103,7 @@ class Customer_Item(models.Model):
     category = models.CharField(max_length=200)
     education_level = models.CharField(max_length=200)
     subject = models.CharField(max_length=200)
-    file = models.FileField(upload_to='customer_items/', storage=S3Boto3Storage())
+    file = models.FileField(upload_to='customer_items/')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
