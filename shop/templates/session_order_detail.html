@@ -125,7 +125,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <div class="alert alert-info" role="alert">
-                    <p>Hello! We have sent the attachments for each item to <strong>{{ order.user.email }}</strong>!
+                    <p>Hello! We have sent the attachments for each item to <strong>{{ order.user.email }}</strong>! If you didn't receive the email, kindly check your spam folder.
                     {% if user.is_authenticated %}You can similarly access your orders from your dashboard. You have <strong>UNLIMITED</strong> downloads for all items associated with this order! {% else %} If you would like to enjoy <strong>UNLIMITED</strong> downloads for each item associated with this order, kindly login to your account. If you don't have an account yet, we have emailed you your login details together with the attachments.{% endif %}</p>
                   </div>
                 </div>

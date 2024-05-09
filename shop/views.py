@@ -105,7 +105,7 @@ def home(request):
 
     popular_downloads.sort(key=lambda x: x[1], reverse=True)
 
-    popular_downloads = popular_downloads[:12] 
+    popular_downloads = popular_downloads[:16] 
 
     popular_items = [item for item, _ in popular_downloads]
 
@@ -927,7 +927,7 @@ def send_email_with_attachments(request, order_id):
 
     plain_message = "\n\n".join(message_lines)
 
-    from_email = 'info@mwalimufocus.com'
+    from_email = settings.DEFAULT_FROM_EMAIL
     to_email = order.user.email
 
     email = EmailMessage(subject, plain_message, from_email, [to_email])
