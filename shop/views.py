@@ -31,6 +31,10 @@ from django.views.decorators.http import require_GET
 
 
 
+from django.http import JsonResponse
+from django.db.models import Q
+from .models import ShopItem
+
 @require_GET
 def search_shop_items(request):
     query = request.GET.get('query', '')
@@ -46,14 +50,21 @@ def search_shop_items(request):
             Q(education_level__name__icontains=term)
         )
 
+    # Aggregate shop items with counts
     shop_items = {}
     for item in queryset:
         if item.title not in shop_items:
             shop_items[item.title] = {
+                'id': item.id,
                 'title': item.title,
+                'slug': item.slug,
                 'category': item.category.name,
                 'subject': item.subject.name,
                 'education_level': item.education_level.name,
+                'price': str(item.price), 
+                'education_level_slug': item.education_level_slug,
+                'subject_slug': item.subject_slug,
+                'category_slug': item.category_slug,
                 'count': 1
             }
         else:
@@ -61,9 +72,24 @@ def search_shop_items(request):
 
     sorted_items = sorted(shop_items.values(), key=lambda x: x['count'], reverse=True)
 
-    serialized_items = [{'title': item['title'], 'category': item['category'], 'subject': item['subject'], 'education_level': item['education_level']} for item in sorted_items]
+    serialized_items = [
+        {
+            'id': item['id'],
+            'slug': item['slug'],
+            'title': item['title'],
+            'category': item['category'],
+            'subject': item['subject'],
+            'education_level': item['education_level'],
+            'price': item['price'],
+            'education_level_slug': item['education_level_slug'],
+            'subject_slug': item['subject_slug'],
+            'category_slug': item['category_slug'],
+        }
+        for item in sorted_items
+    ]
 
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 
@@ -455,6 +481,9 @@ def remove_from_cart_at_checkout(request):
     return JsonResponse({'success': False})
 
 
+
+
+
 service = APIService(token=settings.INTASEND_TOKEN, publishable_key=settings.INTASEND_PUBLISHABLE_KEY, test=False)
 
 
@@ -719,6 +748,10 @@ def login_and_assign_user(request):
 
 
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Transaction
+
 @csrf_exempt
 def payment_status(request):
     print("Received request:", request.method)
@@ -738,6 +771,12 @@ def payment_status(request):
             if transaction:
                 state = transaction.status
                 print("Transaction status:", state)
+
+                if state == 'COMPLETE':
+                    if 'cart' in request.session:
+                        del request.session['cart']
+                        print("Removed 'cart' from session")
+
                 return JsonResponse({'state': state}, status=200)
                 
             else:
@@ -751,6 +790,7 @@ def payment_status(request):
     else:
         print("Invalid request method")
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 
 

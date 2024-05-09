@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Download CBC Materials and Resources - MwalimuFocus.com</title>
+    <title>Download CBC and 8-4-4 Materials and Resources</title>
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
@@ -178,13 +178,20 @@
 
     <div class="container">
 
-      <div class="d-flex justify-content-center">
-
-        <form class="mt-4 mb-2 d-block d-lg-inline-block" id="site-wide-search-form" style="width: 100%; max-width: 40rem;">
-          <input class="form-control me-2" type="search" placeholder="Start typing to search..." aria-label="Search">
+      <div class="search-container">
+        <form class="search-form mt-4 mb-2 d-block d-lg-inline-block bd-search position-relative" id="site-wide-search-form">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input class="form-control me-2" type="text" placeholder="Start typing to search..." aria-label="Search">
+          </div>
         </form>
 
+        <div class="search-results-container">
+            <p>Results to be Displayed here</p>
+        </div>
       </div>
+
+
 
        <div class="container col-xxl-8 px-2 py-2">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
@@ -584,11 +591,10 @@
 
 
     <script src="{% static 'js/cart.js' %}"></script>
-
     <script src="{% static 'js/sign_up.js' %}"></script>
-
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
 
   </body>
 </html>

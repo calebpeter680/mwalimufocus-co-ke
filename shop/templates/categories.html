@@ -103,13 +103,19 @@
 
     <div class="container">
 
-      <div class="d-flex justify-content-center">
-
-        <form class="mt-4 mb-2 d-block d-lg-inline-block" style="width: 100%; max-width: 40rem;">
-          <input class="form-control me-2" type="search" placeholder="Start typing to search..." aria-label="Search">
+      <div class="search-container">
+        <form class="search-form mt-4 mb-2 d-block d-lg-inline-block bd-search position-relative" id="site-wide-search-form">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input class="form-control me-2" type="text" placeholder="Start typing to search..." aria-label="Search">
+          </div>
         </form>
 
+        <div class="search-results-container">
+            <p>Results to be Displayed here</p>
+        </div>
       </div>
+
 
       {% if categories_with_items %}
 
@@ -365,6 +371,7 @@
     <script src="{% static 'js/sign_up.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
     
   </body>
 </html>
