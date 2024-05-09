@@ -465,24 +465,24 @@ def stk_push_view(request):
         total_price = request.POST.get('total_price')
         order_id = request.POST.get('order_id')
 
-
         print("Phone Number:", phone_number)
         print("Email:", email)
-        print("Total_Price")
-
+        print("Total Price:", total_price)
+        print("Order ID:", order_id)
 
         if not total_price:
+            print("Total price not provided.")
             return JsonResponse({'error': 'Total price not provided.'})
 
         try:
             total_price = float(total_price)
         except ValueError:
+            print("Invalid total price format.")
             return JsonResponse({'error': 'Invalid total price format.'})
 
         phone_number = normalize_phone_number(phone_number)
 
         try:
-            
             response = service.collect.mpesa_stk_push(
                 phone_number=phone_number,
                 email=email,
@@ -490,8 +490,9 @@ def stk_push_view(request):
                 narrative="Order Payment"
             )
 
-            if response:
+            print("STK Push Response:", response)
 
+            if response:
                 invoice_id = response['invoice']['invoice_id']
                 status = response['invoice']['state']
 
@@ -503,6 +504,7 @@ def stk_push_view(request):
                     order=order
                 )
 
+                print("Transaction:", transaction)
 
                 stored_invoice_id = request.session.get('invoice_id')
                 print("Current Invoice ID in Session:", stored_invoice_id)
@@ -511,22 +513,15 @@ def stk_push_view(request):
                     request.session['invoice_id'] = invoice_id
                     stored_new_invoice_id = request.session.get('invoice_id')
                     print("New Invoice ID in Session (Initialized):", stored_new_invoice_id)
-
                 elif stored_invoice_id != invoice_id:
                     request.session['invoice_id'] = invoice_id
                     stored_new_invoice_id = request.session.get('invoice_id')
                     print("New Invoice ID in Session (Updated):", stored_new_invoice_id)
-
                 else:
                     print("Invoice ID already set in session.")
 
-
-
-
                 next_view_url = request.build_absolute_uri(reverse('login_and_assign'))
-
-                print(next_view_url)
-
+                print("Next View URL:", next_view_url)
 
                 payload_next = {
                     'email': email,
@@ -536,21 +531,25 @@ def stk_push_view(request):
 
                 try:
                     r = requests.post(next_view_url, json=payload_next)
+                    print("Post Request Status Code:", r.status_code)
+                    print("Post Request Response:", r.text)
 
                 except requests.exceptions.RequestException as e:
                     print('Request failed:', e)
 
-
-
                 return JsonResponse({'success': True})
             else:
+                print("Failed to trigger M-Pesa STK Push.")
                 return JsonResponse({'error': 'Failed to trigger M-Pesa STK Push.'})
 
         except Exception as e:
+            print("Exception occurred:", e)
             return JsonResponse({'error': str(e)})
 
     else:
+        print("Invalid request method.")
         return JsonResponse({'error': 'Invalid request method.'})
+
 
 
 
@@ -681,7 +680,7 @@ def login_and_assign_user(request):
 
                     else:
 
-                        final_price = price * (65 / 100)
+                        final_price = price * Decimal('0.65')
 
                     if vendor in vendor_prices:
                         vendor_prices[vendor] += final_price
@@ -718,30 +717,41 @@ def login_and_assign_user(request):
 
 
 
+
+
 @csrf_exempt
 def payment_status(request):
+    print("Received request:", request.method)
+
     if request.method == 'GET':
         try:
             invoice_id = request.session.get('invoice_id')
             print("Invoice ID stored in session:", invoice_id)
 
             if not invoice_id:
+                print("Invoice ID not found in session")
                 return JsonResponse({'error': 'Invoice ID not found in session'}, status=400)
 
             transaction = Transaction.objects.filter(transaction_id=invoice_id).order_by('-created_at').first()
+            print("Transaction found in database:", transaction)
 
             if transaction:
                 state = transaction.status
+                print("Transaction status:", state)
                 return JsonResponse({'state': state}, status=200)
                 
             else:
+                print("Transaction not found for invoice ID")
                 return JsonResponse({'error': 'Transaction not found for invoice ID'}, status=404)
 
         except Exception as e:
+            print("Error occurred:", e)
             return JsonResponse({'error': str(e)}, status=400)
 
     else:
+        print("Invalid request method")
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 
 #end of intensend configuration
@@ -872,6 +882,8 @@ def download_customer_item_file(request, item_id):
 
 
 
+
+
 def send_email_with_attachments(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
 
@@ -915,7 +927,7 @@ def send_email_with_attachments(request, order_id):
 
     plain_message = "\n\n".join(message_lines)
 
-    from_email = 'calebpeter4@gmail.com'
+    from_email = 'info@mwalimufocus.com'
     to_email = order.user.email
 
     email = EmailMessage(subject, plain_message, from_email, [to_email])

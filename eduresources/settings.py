@@ -19,11 +19,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
+#SECRET_KEY = 'django-insecure-)1d*4-vi8ps%h(fki%=(&uw5s4)v1l7cnxm4#b&!2-90&v1h9#'
+
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 #DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") + ['testserver', 'www.testserver']
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,60bc-105-163-0-153.ngrok-free.app").split(",") + ['testserver', 'www.testserver']
 
 
 
@@ -139,7 +141,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
+    'https://60bc-105-163-0-153.ngrok-free.app'
 ]
+
 
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')

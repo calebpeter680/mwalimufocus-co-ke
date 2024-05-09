@@ -246,7 +246,7 @@ def initiate_mpesa_b2c(request):
         if amount != available_balance:
             return JsonResponse({'status': 'This request couldn\'t be completed. Please refresh the browser and try again.'})
 
-        if available_balance < 10:
+        if available_balance < 500:
             return JsonResponse({'status': 'Your available balance is insufficient. You must have at least Ksh 500 to make a withdrawal request.'})
 
         if available_balance < amount:
