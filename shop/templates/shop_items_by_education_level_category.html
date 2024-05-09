@@ -4,9 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ education_level.name }} {{ category.name }} - MwalimuFocus.com</title>
+    <title>{{ education_level.name }} {{ category.name }} - MwalimuFocus.Co.Ke</title>
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 
@@ -33,10 +34,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-lg-row"> <!-- Remove 'flex-column' class -->
                   <li class="nav-item">
-                      <a class="nav-link" href="tel:+254714477986" style="font-size: 0.9rem;"><i class="bi bi-telephone"></i> +254714477986</a>
+                      <a class="nav-link" href="tel:{{ brand.phone_number }}" style="font-size: 0.9rem;"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link" href="mailto:support@mwalimufocus.com" style="font-size: 0.9rem;"><i class="bi bi-envelope"></i> SUPPORT@MWALIMUFOCUS.COM</a>
+                      <a class="nav-link" href="{{ brand.email }}" style="font-size: 0.9rem;"><i class="bi bi-envelope"></i> {{ brand.email }}</a>
                   </li>
               </ul>
           </div>
@@ -45,7 +46,7 @@
 
 
 
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: #98FB98;">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
             {% if brand.logo %}
@@ -152,7 +153,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12 mb-2 mt-2">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title text-left" style="font-size: 14px; color: black; background-color: #98FB98; border-radius: 10px; padding: 10px;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</p>
+                  <p class="card-title text-left" style="font-size: 14px; color: black; background-color: {{ brand.primary_color }}; border-radius: 10px; padding: 10px;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</p>
                   <a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
                   <p class="card-text text-left">
                     Price: Ksh {{ item.price }}
@@ -233,7 +234,7 @@
         </div>
 
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-          <p>&copy; 2024 MwalimuFocus.Com. All rights reserved. MwalimuFocus.Com collaborates with professional teachers across Kenya to outsource high-quality schemes of work, lesson plans, lesson notes, revision booklets, and past papers with marking schemes. Kenyan teachers, parents, and students can download these materials from our website for FREE or at a small fee.</p>
+          <p>&copy; 2024 MwalimuFocus.Co.Ke. All rights reserved. MwalimuFocus.Co.Ke collaborates with professional teachers across Kenya to outsource high-quality schemes of work, lesson plans, lesson notes, revision booklets, and past papers with marking schemes. Kenyan teachers, parents, and students can download these materials from our website for FREE or at a small fee.</p>
 
           <ul class="list-unstyled d-flex">
             <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-telegram"></i></a></li>
