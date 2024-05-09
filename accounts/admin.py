@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, CustomerFAQ, VendorFAQ
+from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -44,3 +44,8 @@ class CustomerFAQAdmin(admin.ModelAdmin):
 @admin.register(VendorFAQ)
 class VendorFAQAdmin(admin.ModelAdmin):
     list_display = ('title', 'description')
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = ('email', 'joined_at')

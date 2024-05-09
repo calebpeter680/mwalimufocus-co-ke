@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
-from .models import CustomUser, CustomerFAQ, VendorFAQ
+from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
@@ -12,7 +12,7 @@ from django.db.models import Sum
 from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
 
 def dashboard_view(request):
 
@@ -220,6 +220,32 @@ def logout_view(request):
     return redirect('home')
 
 
+
+
+
+@csrf_exempt
+def create_subscriber_from_json(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+
+            if email:
+                existing_subscriber = Subscriber.objects.filter(email=email).exists()
+
+                if existing_subscriber:
+                    return JsonResponse({'message': 'You are already subscribed to our newsletter.'})
+                else:
+                    subscriber = Subscriber.objects.create(email=email)
+                    return JsonResponse({'message': 'Thank you! You are successfully subscribed to our newsletter.'})
+            else:
+                return JsonResponse({'error': 'Email not provided.'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format.'})
+
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 
