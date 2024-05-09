@@ -13,7 +13,7 @@ from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.utils import timezone
+from datetime import datetime 
 
 def dashboard_view(request):
 
@@ -223,6 +223,7 @@ def logout_view(request):
 
 
 
+ 
 
 @csrf_exempt
 def create_subscriber_from_json(request):
@@ -241,8 +242,10 @@ def create_subscriber_from_json(request):
                     return JsonResponse({'message': 'You are already subscribed to our newsletter.'})
                 else:
                     print(f"Creating new subscriber with email {email}.")
-                    # Create a new Subscriber instance with joined_at auto-filled
-                    subscriber = Subscriber.objects.create(email=email)
+
+                    joined_at = datetime.now()
+                    subscriber = Subscriber.objects.create(email=email, joined_at=joined_at)
+
                     return JsonResponse({'message': 'Thank you! You are successfully subscribed to our newsletter.'})
 
             else:
@@ -256,6 +259,7 @@ def create_subscriber_from_json(request):
     else:
         print(f"Received {request.method} request, but only POST is allowed.")
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 
 
 
