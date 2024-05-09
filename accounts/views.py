@@ -223,6 +223,7 @@ def logout_view(request):
 
 
 
+
 @csrf_exempt
 def create_subscriber_from_json(request):
     if request.method == 'POST':
@@ -230,22 +231,30 @@ def create_subscriber_from_json(request):
             data = json.loads(request.body)
             email = data.get('email')
 
+            print(f"Received POST request with data: {data}")
+
             if email:
                 existing_subscriber = Subscriber.objects.filter(email=email).exists()
 
                 if existing_subscriber:
+                    print(f"Subscriber with email {email} already exists.")
                     return JsonResponse({'message': 'You are already subscribed to our newsletter.'})
                 else:
+                    print(f"Creating new subscriber with email {email}.")
                     subscriber = Subscriber.objects.create(email=email)
                     return JsonResponse({'message': 'Thank you! You are successfully subscribed to our newsletter.'})
             else:
+                print("Email not provided in the POST data.")
                 return JsonResponse({'error': 'Email not provided.'})
 
         except json.JSONDecodeError:
+            print("Invalid JSON format in the request body.")
             return JsonResponse({'error': 'Invalid JSON format.'})
 
     else:
+        print(f"Received {request.method} request, but only POST is allowed.")
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 
 
 
