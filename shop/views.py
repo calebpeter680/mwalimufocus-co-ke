@@ -990,5 +990,11 @@ def send_email_with_attachments(request, order_id):
 
 
 
+def robots_txt(request):
+    content = "User-agent: *\nDisallow:"
+    return HttpResponse(content, content_type="text/plain")
+
+
+
 
 

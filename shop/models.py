@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from accounts.models import CustomUser
 from decimal import Decimal
 import json
+from django.urls import reverse
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -59,6 +61,8 @@ class ShopItem(models.Model):
     category_slug = models.SlugField(blank=True)
     downloads_count = models.IntegerField(default=0)
     views_count = models.IntegerField(default=0)
+    is_search_engine_indexible = models.BooleanField(default=False)
+    date_created = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -72,8 +76,19 @@ class ShopItem(models.Model):
 
         super().save(*args, **kwargs)
 
+
     def __str__(self):
         return f'{self.title} (ID: {self.pk})'
+
+
+    def get_absolute_url(self):
+        return reverse('shop_item_detail', kwargs={
+            'education_level_slug': self.education_level_slug,
+            'subject_slug': self.subject_slug,
+            'category_slug': self.category_slug,
+            'pk': self.pk,
+            'slug': self.slug
+        })
 
 
 
@@ -123,6 +138,7 @@ class Brand(models.Model):
 
     def __str__(self):
         return f"Brand: {self.id}"
+
 
 
 

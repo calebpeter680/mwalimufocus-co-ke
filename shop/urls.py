@@ -1,5 +1,12 @@
 from django.urls import path
 from . import views
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import ShopItemSitemap, StaticViewSitemap
+
+sitemaps = {
+    'shop_items': ShopItemSitemap,
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
     path('', views.home, name='home'), 
@@ -40,4 +47,8 @@ urlpatterns = [
     path('send_attachment_via_email/<int:order_id>/', views.send_email_with_attachments, name='send_email_with_attachments'),
 
     path('search/', views.search_shop_items, name='search_shop_items'),
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
+    path('robots.txt', views.robots_txt, name='robots_txt'),
 ]
