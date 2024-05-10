@@ -52,3 +52,5 @@ urlpatterns = [
 
     path('robots.txt', views.robots_txt, name='robots_txt'),
 ]
+
+handler404 = 'shop.views.custom_404_view'

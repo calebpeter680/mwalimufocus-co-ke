@@ -27,6 +27,7 @@ from vendors.models import Vendor_Order, VendorShop, VendorShopItem, VendorCommi
 from django.db.models import DecimalField, Sum
 from decimal import Decimal
 from django.views.decorators.http import require_GET
+from django.http import HttpResponseNotFound
 
 
 
@@ -993,6 +994,11 @@ def send_email_with_attachments(request, order_id):
 def robots_txt(request):
     content = "User-agent: *\nDisallow:"
     return HttpResponse(content, content_type="text/plain")
+
+
+
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)
 
 
 
