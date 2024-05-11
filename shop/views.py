@@ -30,25 +30,32 @@ from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
 
 
+
+
 @require_GET
 def search_shop_items(request):
     query = request.GET.get('query', '')
-    search_terms = [char for char in query.lower() if char.isalnum()]  
+    
+    search_terms = [query[i:i+2].lower() for i in range(len(query) - 1) if query[i:i+2].isalnum()]
 
     queryset = ShopItem.objects.all()
 
+    q_objects = Q()
     for term in search_terms:
-        queryset = queryset.filter(
+        q_objects |= (
             Q(title__icontains=term) |
             Q(category__name__icontains=term) |
             Q(subject__name__icontains=term) |
             Q(education_level__name__icontains=term)
         )
 
+    queryset = queryset.filter(q_objects)
+
     shop_items = {}
     for item in queryset:
-        if item.title not in shop_items:
-            shop_items[item.title] = {
+        item_key = item.id  
+        if item_key not in shop_items:
+            shop_items[item_key] = {
                 'id': item.id,
                 'title': item.title,
                 'slug': item.slug,
@@ -62,7 +69,7 @@ def search_shop_items(request):
                 'count': 1
             }
         else:
-            shop_items[item.title]['count'] += 1
+            shop_items[item_key]['count'] += 1
 
     sorted_items = sorted(shop_items.values(), key=lambda x: x['count'], reverse=True)
 
@@ -83,6 +90,7 @@ def search_shop_items(request):
     ]
 
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 

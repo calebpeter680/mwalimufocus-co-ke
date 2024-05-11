@@ -63,7 +63,6 @@ class ShopItem(models.Model):
     views_count = models.IntegerField(default=0)
     is_search_engine_indexible = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
-
     Aggregate_Rating_Value = models.IntegerField(default=0)
     Worst_Rating_Value = models.IntegerField(default=0)
     Best_Rating_Value = models.IntegerField(default=0)
