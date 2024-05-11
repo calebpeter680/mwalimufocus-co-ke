@@ -67,6 +67,7 @@ class ShopItem(models.Model):
     Worst_Rating_Value = models.IntegerField(default=0)
     Best_Rating_Value = models.IntegerField(default=0)
     Rating_Count = models.IntegerField(default=0)
+    image = models.ImageField(upload_to='shopitemimages/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -28,6 +28,7 @@ from django.db.models import DecimalField, Sum
 from decimal import Decimal
 from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
+from storages.backends.s3boto3 import S3Boto3Storage
 
 
 
