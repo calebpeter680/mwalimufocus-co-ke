@@ -31,22 +31,21 @@ from django.http import HttpResponseNotFound
 
 
 
-
 @require_GET
 def search_shop_items(request):
     query = request.GET.get('query', '')
     
-    search_terms = [query[i:i+2].lower() for i in range(len(query) - 1) if query[i:i+2].isalnum()]
+    search_words = query.split()
 
     queryset = ShopItem.objects.all()
 
     q_objects = Q()
-    for term in search_terms:
+    for word in search_words:
         q_objects |= (
-            Q(title__icontains=term) |
-            Q(category__name__icontains=term) |
-            Q(subject__name__icontains=term) |
-            Q(education_level__name__icontains=term)
+            Q(title__icontains=word) |
+            Q(category__name__icontains=word) |
+            Q(subject__name__icontains=word) |
+            Q(education_level__name__icontains=word)
         )
 
     queryset = queryset.filter(q_objects)
@@ -66,12 +65,12 @@ def search_shop_items(request):
                 'education_level_slug': item.education_level_slug,
                 'subject_slug': item.subject_slug,
                 'category_slug': item.category_slug,
-                'count': 1
+                'match_count': 1  
             }
         else:
-            shop_items[item_key]['count'] += 1
+            shop_items[item_key]['match_count'] += 1 
 
-    sorted_items = sorted(shop_items.values(), key=lambda x: x['count'], reverse=True)
+    sorted_items = sorted(shop_items.values(), key=lambda x: x['match_count'], reverse=True)
 
     serialized_items = [
         {
@@ -90,6 +89,7 @@ def search_shop_items(request):
     ]
 
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 

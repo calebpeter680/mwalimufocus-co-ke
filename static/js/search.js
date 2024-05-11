@@ -3,8 +3,12 @@ $(document).ready(function() {
 
     function highlightMatch(text, query) {
         const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`[${escapedQuery}]`, 'gi');
-        return text.replace(regex, match => `<span class="highlight-search">${match}</span>`);
+        const words = escapedQuery.split(/\s+/).filter(Boolean); 
+
+        const regexPattern = `\\b(${words.join('|')})\\b`;
+
+        const regex = new RegExp(regexPattern, 'gi'); 
+        return text.replace(regex, '<span class="highlight-search">$&</span>');
     }
 
     function updateSearchResults(query) {
