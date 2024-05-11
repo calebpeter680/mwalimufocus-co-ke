@@ -30,12 +30,6 @@ from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
 
 
-
-
-from django.http import JsonResponse
-from django.db.models import Q
-from .models import ShopItem
-
 @require_GET
 def search_shop_items(request):
     query = request.GET.get('query', '')
@@ -51,7 +45,6 @@ def search_shop_items(request):
             Q(education_level__name__icontains=term)
         )
 
-    # Aggregate shop items with counts
     shop_items = {}
     for item in queryset:
         if item.title not in shop_items:
@@ -139,6 +132,18 @@ def home(request):
     brand = Brand.objects.last()
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
+    
+
+    categories_names = [category.name for category in categories_with_items]
+
+    if len(categories_names) > 1:
+        last_category = categories_names.pop()
+        categories_description = ", ".join(categories_names)
+        categories_description += f" and {last_category}"
+    else:
+        categories_description = categories_names[0] if categories_names else ""
+
+    meta_description = f"Download CBC and 8-4-4 materials and resources, including {categories_description}"
 
     context = {
         'user': request.user,
@@ -148,7 +153,8 @@ def home(request):
         'popular_items': popular_items,
         'brand': brand,
         'categories_with_items': categories_with_items,
-        'menu_items': menu_items
+        'menu_items': menu_items,
+        'meta_description': meta_description
     }
     return render(request, 'home.html', context)
 
@@ -167,7 +173,19 @@ def categories_view(request):
     cart_items = ShopItem.objects.filter(id__in=cart)  
     num_cart_items = len(cart_items)
 
-    context = {'user': request.user, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'categories_with_items': categories_with_items, 'brand': brand, 'menu_items': menu_items}
+
+    categories_names = [category.name for category in categories_with_items]
+
+    if len(categories_names) > 1:
+        last_category = categories_names.pop()
+        categories_description = ", ".join(categories_names)
+        categories_description += f" and {last_category}"
+    else:
+        categories_description = categories_names[0] if categories_names else ""
+
+    meta_description = f"Browse CBC and 8-4-4 {categories_description}"
+
+    context = {'meta_description': meta_description, 'user': request.user, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'categories_with_items': categories_with_items, 'brand': brand, 'menu_items': menu_items}
     return render(request, 'categories.html', context)
 
 
@@ -992,8 +1010,9 @@ def send_email_with_attachments(request, order_id):
 
 
 def robots_txt(request):
-    content = "User-agent: *\nDisallow:"
+    content = "User-agent: *\nDisallow: /checkout/\n"
     return HttpResponse(content, content_type="text/plain")
+
 
 
 

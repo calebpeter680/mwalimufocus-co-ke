@@ -64,6 +64,11 @@ class ShopItem(models.Model):
     is_search_engine_indexible = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
 
+    Aggregate_Rating_Value = models.IntegerField(default=0)
+    Worst_Rating_Value = models.IntegerField(default=0)
+    Best_Rating_Value = models.IntegerField(default=0)
+    Rating_Count = models.IntegerField(default=0)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.title}")

@@ -34,7 +34,24 @@
 
     <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
 
+    <meta name="description" content="Download PDFs of {{ education_level }} {{ category }}">
+
   </head>
+
+  <script type="application/ld+json">
+      {
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "name": "MwalimuFocus.Co.Ke",
+        "url": "https://mwalimufocus.co.ke/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://mwalimufocus.co.ke/search/?{search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light text-center" style="padding-top: 0.1rem; padding-bottom: 0.1rem;">

@@ -21,7 +21,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
-#DEBUG = False
+#DEBUG = True
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,b0d7-105-163-158-49.ngrok-free.app").split(",") + ['testserver', 'www.testserver']
 
