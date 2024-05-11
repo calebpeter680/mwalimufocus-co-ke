@@ -818,8 +818,11 @@ def payment_status(request):
 
 
 
-def shop_item_detail(request, education_level_slug, subject_slug, category_slug, slug, pk):
-    shop_item = get_object_or_404(ShopItem, education_level_slug=education_level_slug, subject_slug=subject_slug, category_slug=category_slug, slug=slug, pk=pk)
+def shop_item_detail(request, category_slug, pk, slug):
+    shop_item = get_object_or_404(ShopItem, category__slug=category_slug, pk=pk, slug=slug)
+
+
+    category = Category.objects.filter(slug=category_slug).first()
     
     ShopItem.objects.filter(pk=shop_item.pk).update(views_count=F('views_count') + 1)
 
@@ -835,7 +838,7 @@ def shop_item_detail(request, education_level_slug, subject_slug, category_slug,
 
     request.session['session_order_id'] = order.pk
 
-    return render(request, 'shop_item_detail.html', {'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+    return render(request, 'shop_item_detail.html', {'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 

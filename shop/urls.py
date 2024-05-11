@@ -13,12 +13,12 @@ urlpatterns = [
     path('categories/', views.categories_view, name='categories'), 
     path('categories/<slug:category_slug>/', views.CategoryShopItemsView.as_view(), name='category_shop_items'),
 
-    path('categories/<slug:education_level_slug>/category/<slug:category_slug>/', views.shop_items_by_education_level_category, name='shop_items_by_education_level_category'),
-    path('categories/<slug:category_slug>/subject/<slug:subject_slug>/', views.shop_items_by_subject_category, name='shop_items_by_subject_category'),
+    path('<slug:education_level_slug>/category/<slug:category_slug>/', views.shop_items_by_education_level_category, name='shop_items_by_education_level_category'),
+    path('subject/<slug:subject_slug>/<slug:category_slug>/', views.shop_items_by_subject_category, name='shop_items_by_subject_category'),
 
-    path('categories/<slug:education_level_slug>/<slug:subject_slug>/<slug:category_slug>/', views.shop_items_by_subject_category_education_level, name='shop_items_by_subject_category_education_level'),
+    path('level/<slug:education_level_slug>/<slug:subject_slug>/<slug:category_slug>/', views.shop_items_by_subject_category_education_level, name='shop_items_by_subject_category_education_level'),
     
-    path('<slug:education_level_slug>/<slug:subject_slug>/<slug:category_slug>/<int:pk>/<slug:slug>/', views.shop_item_detail, name='shop_item_detail'),
+    path('<slug:category_slug>/<int:pk>/<slug:slug>/', views.shop_item_detail, name='shop_item_detail'),
 
     path('add_to_cart/', views.add_to_cart, name='add_to_cart'),
 

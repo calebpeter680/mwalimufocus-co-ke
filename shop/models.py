@@ -88,16 +88,10 @@ class ShopItem(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop_item_detail', kwargs={
-            'education_level_slug': self.education_level_slug,
-            'subject_slug': self.subject_slug,
             'category_slug': self.category_slug,
             'pk': self.pk,
             'slug': self.slug
         })
-
-
-
-
 
 
 

@@ -2,6 +2,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+
+    <link rel="canonical" href="https://mwalimufocus.co.ke/categories/{{ category.slug }}/">
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXNCD5KZR9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -36,21 +39,9 @@
 
     <meta name="description" content="Download PDFs of {{ education_level }} {{ category }}">
 
-  </head>
+    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"WebSite","name":"MwalimuFocus.Co.Ke","url":"https://mwalimufocus.co.ke/","potentialAction":{"@type":"SearchAction","target":"https://mwalimufocus.co.ke/search/?{search_term_string}","query-input":"required name=search_term_string"}}</script>
 
-  <script type="application/ld+json">
-      {
-        "@context": "https://schema.org/",
-        "@type": "WebSite",
-        "name": "MwalimuFocus.Co.Ke",
-        "url": "https://mwalimufocus.co.ke/",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://mwalimufocus.co.ke/search/?{search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
-    </script>
+  </head>
     
   <body>
 
@@ -127,6 +118,15 @@
 
     <div class="container">
 
+      <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/" style="text-decoration: none;">Home</a></li>
+          <li class="breadcrumb-item"><a href="/categories/" style="text-decoration: none;">Categories</a></li>
+          <li class="breadcrumb-item"><a href="/categories/{{ category.slug }}/" style="text-decoration: none;">{{ category.name }}</a></li>
+          <li class="breadcrumb-item">{{ education_level.name }}</li>
+        </ol>
+      </nav>
+
       <div class="search-container">
         <form class="search-form mt-4 mb-2 d-block d-lg-inline-block bd-search position-relative" id="site-wide-search-form">
           <div class="input-group">
@@ -179,7 +179,7 @@
               <div class="card">
                 <div class="card-body">
                   <p class="card-title text-left" style="font-size: 14px; color: black; background-color: {{ brand.primary_color }}; border-radius: 10px; padding: 10px;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</p>
-                  <a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
+                  <a href="{% url 'shop_item_detail' category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
                   <p class="card-text text-left">
                     Price: Ksh {{ item.price }}
                     {% if item.old_price %}
@@ -188,7 +188,7 @@
                   </p>
 
                   <div class="card-footer text-center">
-                    <a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="btn btn-outline-dark my-2">Buy Now</a>
+                    <a href="{% url 'shop_item_detail' category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="btn btn-outline-dark my-2">Buy Now</a>
                     
                     <form id="add-to-cart-form-{{ item.id }}" class="add-to-cart-form" data-item-id="{{ item.id }}" method="post" data-in-cart="{% if item in cart_items %}true{% else %}false{% endif %}">
                       {% csrf_token %}

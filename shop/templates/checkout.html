@@ -132,7 +132,7 @@
               <tbody>
                 {% for item in cart_items %}
                 <tr>
-                  <th><a href="{% url 'shop_item_detail' education_level_slug=item.education_level_slug subject_slug=item.subject_slug category_slug=item.category_slug slug=item.slug pk=item.pk %}" style="text-decoration: none; color: blue;">{{ item.title|truncatechars:20 }}</a></th>
+                  <th><a href="{% url 'shop_item_detail' category_slug=item.category_slug slug=item.slug pk=item.pk %}" style="text-decoration: none; color: blue;">{{ item.title|truncatechars:20 }}</a></th>
                   <td>{{ item.subject }}</td>
                   <td>{{ item.education_level }}</td>
                   <td>{{ item.category }}</td>
