@@ -1,0 +1,217 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXNCD5KZR9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXNCD5KZR9');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ top_level_page.meta_title }}</title>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
+
+    <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
+
+    <meta name="description" content="{{ top_level_page.meta_description }}">
+  </head>
+  <body>
+   
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light text-center" style="padding-top: 0.1rem; padding-bottom: 0.1rem;">
+  <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-lg-row"> <!-- Remove 'flex-column' class -->
+              <li class="nav-item">
+                  <a class="nav-link" href="tel:{{ brand.phone_number }}" style="font-size: 0.9rem;"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ brand.email }}" style="font-size: 0.9rem;"><i class="bi bi-envelope"></i> {{ brand.email }}</a>
+              </li>
+          </ul>
+      </div>
+  </div>
+</nav>
+
+
+
+
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+        {% if brand.logo %}
+            <img src="{{ brand.logo.url }}" alt="Logo" height="80" loading="lazy">
+        {% else %}
+            <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80" loading="lazy">
+        {% endif %}
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        {% for item in menu_items %}
+        <li class="nav-item">
+          <a class="nav-link" href="/categories/{{ item.slug }}">{{ item.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+            <li>
+              <div class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                  <i class="bi bi-person-circle"></i> My Profile
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                  <li><a class="dropdown-item" href="/accounts/dashboard/">Dashboard</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+              </div>
+            </li>
+        {% else %}
+            <li>
+                <button class="btn btn-dark" data-bs-target="#accountModal" data-bs-toggle="modal">My Account</button>
+            </li>
+        {% endif %}
+      </ul>
+
+
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-8">
+      <article class="blog-post mt-4">
+
+        <h1 class="blog-post-title text-center">{{ top_level_page.heading }}</h1>
+
+        {{ top_level_page.body|safe }}
+
+      </article>
+    </div>
+  </div>
+</main>
+
+<hr>
+
+<div class="container">
+  <footer class="py-5">
+    <div class="row">
+      <div class="col-12 col-md-3 mb-3">
+        <h5>Quick Links</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2">
+            <a href="/categories/" style="text-decoration: none; color: blue;">All Categories</a>
+          </li>
+          {% for item in categories_with_items %}
+          <li class="nav-item mb-2">
+            <a href="/categories/{{ item.slug }}/" style="text-decoration: none; color: blue;">{{ item.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+
+      <div class="col-12 col-md-3 mb-3">
+        <h5>Contact Us</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="tel:{{ brand.phone_number }}" class="nav-link p-0 text-body-secondary"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a></li>
+          <li class="nav-item mb-2"><a href="mailto:{{ brand.email }}" class="nav-link p-0 text-body-secondary email-link"><i class="bi bi-envelope"></i> {{ brand.email }}</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-5 offset-md-1 mb-3 subscriber-creation-div">
+        <h5>Subscribe to our newsletter</h5>
+        <p>Monthly digest of what's new and exciting from us.</p>
+        <div class="input-group">
+            <input id="newsletterEmail" type="text" class="form-control" placeholder="Email address">
+            <button id="subscribeButton" class="btn btn-dark">Subscribe</button>
+        </div>
+        <div id="subscriptionMessageContainer" class="mt-2"></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+      <div class="container">
+        <div class="row">
+            <div class="col">
+                <p>&copy; 2024 MwalimuFocus.Co.Ke. All rights reserved.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>MwalimuFocus.Co.Ke collaborates with professional teachers across Kenya to outsource high-quality schemes of work, lesson plans, lesson notes, revision booklets, and past papers with marking schemes. Kenyan teachers, parents, and students can download these materials from our website for FREE or at a small fee. Learn more <a href="/about-us/" style="text-decoration: none; color: blue;">about us.</a></p>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-1">
+              <p><a href="/terms-and-conditions/" style="text-decoration: none; color: blue;">Terms</a></p>
+          </div>
+          <div class="col-1">
+              <p><a href="/privacy-policy/" style="text-decoration: none; color: blue;">Privacy</a></p>
+          </div>
+        </div>
+      </div>
+
+      <ul class="list-unstyled d-flex">
+        <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-telegram"></i></a></li>
+        <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-facebook"></i></a></li>
+        <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-whatsapp"></i></a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="add-to-cart row text-center py-3 mb-n2 fixed-bottom" style="background-color: {{ brand.primary_color }}">
+    <div class="col">
+      <div class="position-relative">
+        <a class="cart-link" href="/checkout/"><i class="bi bi-basket cart-basket"></i></a>
+        <a class="cart-link" href="/checkout/"><span class="badge custom-cart-badge rounded-pill position-absolute translate-middle top-0">{{ num_cart_items }}</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script src="{% static 'js/cart.js' %}"></script>
+  <script src="{% static 'js/sign_up.js' %}"></script>
+  <script src="{% static 'js/login.js' %}"></script>
+  <script src="{% static 'js/image_url_format.js' %}"></script>
+  <script src="{% static 'js/newsletter.js' %}"></script>
+
+
+    
+  </body>
+</html>

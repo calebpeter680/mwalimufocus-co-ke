@@ -9,7 +9,7 @@ urlpatterns = [
     path('', include('shop.urls')),
     path('accounts/', include('accounts.urls')),
     path('vendors/', include('vendors.urls')),
-    #path('', include('pages.urls')),
+    path('', include('pages.urls')),
     path('tinymce/', include('tinymce.urls')),
 
 ]
