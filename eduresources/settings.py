@@ -28,6 +28,8 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,b0d7-105-
 
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +42,12 @@ INSTALLED_APPS = [
     'vendors',
     'accounts',
     'storages',
+    'pages',
+    'tinymce',
 ]
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,6 +150,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.com',
     'https://b0d7-105-163-158-49.ngrok-free.app'
 ]
+
+
 
 
 
