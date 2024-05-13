@@ -29,7 +29,7 @@ class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     image = models.ImageField(upload_to='team_images/')
-    description = models.TextField()
+    description = HTMLField()
 
     def __str__(self):
         return self.name
