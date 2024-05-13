@@ -1,4 +1,5 @@
 {% load static %}
+{% load image_filters %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -12,7 +13,7 @@
     </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>About {{ team_member.name }}</title>
+    <title>MwalimuFocus.Co.Ke Team</title>
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
@@ -33,11 +34,11 @@
 
     <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
 
-    <meta name="description" content="This is a description about {{ team_member.name }} as a member of our team.">
+    <meta name="description" content="Here is the display of all the team members who are responsible for the functionality and operational existence of this site.">
 
-    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mwalimufocus.co.ke/"},{"@type":"ListItem","position":2,"name":"Our Team","item":"https://mwalimufocus.co.ke/team/all-members/"},{"@type":"ListItem","position":3,"name":"About {{ team_member.name }}","item":"https://mwalimufocus.co.ke/our-team/member/{{ team_member.id }}/{{ team_member.slug }}/"}]}</script>
-
-    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"Person","name":"{{ team_member.name }}","url":"https://mwalimufocus.co.ke/our-team/member/{{ team_member.id }}/{{ team_member.slug }}/","image":"{{ image_url }}","jobTitle":"{{ team_member.role }}","worksFor":{"@type":"Organization","name":"MwalimuFocus.Co.Ke"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mwalimufocus.co.ke/"},{"@type":"ListItem","position":2,"name":"Our Team","item":"https://mwalimufocus.co.ke/team/all-members/"}]}</script>
+    {% spaceless %}{% if latest_founder %}<script type="application/ld+json">{ "@context": "https://schema.org/", "@type": "Person", "name": "{{ latest_founder.name }}", "url": "https://mwalimufocus.co.ke/our-team/member/{{ latest_founder.id }}/{{ latest_founder.slug }}/", "image": "{{ latest_founder_image_url }}", "jobTitle": "{{ latest_founder.role }}", "worksFor": { "@type": "Organization", "name": "MwalimuFocus.Co.Ke" } }</script>{% endif %}{% endspaceless %}
+    {% spaceless %}{% if non_founders %}{% for member in non_founders %}<script type="application/ld+json">{ "@context": "https://schema.org/", "@type": "Person", "name": "{{ member.name }}", "url": "https://mwalimufocus.co.ke/our-team/member/{{ member.id }}/{{ member.slug }}/", "image": "{{ member.image.url|remove_query_params }}", "jobTitle": "{{ member.role }}", "worksFor": { "@type": "Organization", "name": "MwalimuFocus.Co.Ke" } }</script>{% endfor %}{% endif %}{% endspaceless %}
 
     
   </head>
@@ -116,26 +117,36 @@
 
     <!-- main_content -->
   <main class="container">
-    <div class="row justify-content-center align-items-center">
-      <div class="col-md-8">
-        <article class="blog-post mt-4">
+    <div class="container px-4 py-5">
+    <h1 class="pb-2 border-bottom">Our Team Members</h1>
 
-          <h1 class="text-body-emphasis text-center">About {{ team_member.name }}</h1>
+    <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
+      {% if latest_founder %}
+      <div class="col d-flex flex-column gap-2">
+        <a href="{% url 'team_member_detail' member_id=latest_founder.pk slug=latest_founder.slug %}"><img src="{{ latest_founder.image.url }}" alt="{{ latest_founder.name }} Image" class="img-fluid rounded-circle mx-auto d-block" style="width: 400px; height: 400px;"></a>
 
-          <img src="{{ team_member.image.url }}" alt="{{ team_member.name }} Image" class="img-fluid rounded-circle mx-auto d-block" style="width: 200px; height: 200px;">
+        <a href="{% url 'team_member_detail' member_id=latest_founder.pk slug=latest_founder.slug %}" style="text-decoration: none; color: blue;" class="text-center">{{ latest_founder.name }}</a>
+        <p class="text-center">{{ latest_founder.role }}</p>
+      </div>
+      {% endif %}
 
-          <p class="text-center mt-2 mb-2">{{ team_member.role }}</p>
-
-          <hr class="col-12 mb-2">
-
-          <div class="row">
-            <div class="col-md-12">
-              <p>{{ team_member.description|safe }}</p>
+      <div class="col">
+        <div class="row row-cols-1 row-cols-sm-2 g-4">
+          {% if non_founders %}
+          {% for member in non_founders %}
+          <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center rounded-3">
+              <a href="{% url 'team_member_detail' member_id=member.pk slug=member.slug %}"><img src="{{ member.image.url }}" alt="{{ member.name }} Image" class="img-fluid rounded-circle mx-auto d-block" style="width: 200px; height: 200px;"></a>
             </div>
+            <a href="{% url 'team_member_detail' member_id=member.pk slug=member.slug %}" style="text-decoration: none; color: blue;" class="text-center">{{ member.name }}</a>
+            <p class="text-center">{{ member.role }}</p>
           </div>
-        </article>
+          {% endfor %}
+          {% endif %}
+        </div>
       </div>
     </div>
+  </div>
   </main>
 
   <hr>

@@ -1,4 +1,5 @@
 {% load static %}
+{% load image_filters %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,9 +11,17 @@
 
       gtag('config', 'G-XXNCD5KZR9');
     </script>
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ shop_item.title }}</title>
+
+    {% if shop_item.is_search_engine_indexible == False %}
+
+    <meta name="robots" content="noindex">
+
+    {% endif %}
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
@@ -40,7 +49,7 @@
     <script type="application/ld+json">{"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mwalimufocus.co.ke/"},{"@type":"ListItem","position":2,"name":"Categories","item":"https://mwalimufocus.co.ke/categories/"},{"@type":"ListItem","position":3,"name":"{{ category.name }}","item":"https://mwalimufocus.co.ke/categories/{{ category.slug }}/"},{"@type":"ListItem","position":4,"name":"{{ shop_item.title }}","item":"https://mwalimufocus.co.ke/categories/{{ category.slug }}/{{ shop_item.pk }}/{{ shop_item.slug }}/"}]}</script>
 
     {% if shop_item.image %}
-    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"Product","name":"{{ shop_item.title }}","image":"{{ shop_item.image.url }}","description":"{{ shop_item.description }}","brand":{"@type":"Brand","name":"MwalimuFocus.Co.Ke"},"offers":{"@type":"Offer","url":"https://mwalimufocus.co.ke/","priceCurrency":"KES","price":"{{ shop_item.price }}","priceValidUntil":"2030-01-31","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","refundType":"FullRefund","returnPolicyCategory":"https://schema.org/FullRefundReturnPolicy"},"shippingDetails":{"@type":"OfferShippingDetails","shippingDestination":{"@type":"DefinedRegion","addressCountry":"KE"},"shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"KES"},"shippingLabel":"Free Shipping"}}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"Product","name":"{{ shop_item.title }}","image":"{{ shop_item.image.url|remove_query_params }}","description":"{{ shop_item.description }}","brand":{"@type":"Brand","name":"MwalimuFocus.Co.Ke"},"offers":{"@type":"Offer","url":"https://mwalimufocus.co.ke/","priceCurrency":"KES","price":"{{ shop_item.price }}","priceValidUntil":"2030-01-31","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","refundType":"FullRefund","returnPolicyCategory":"https://schema.org/FullRefundReturnPolicy"},"shippingDetails":{"@type":"OfferShippingDetails","shippingDestination":{"@type":"DefinedRegion","addressCountry":"KE"},"shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"KES"},"shippingLabel":"Free Shipping"}}}</script>
     {% endif %}
 
 

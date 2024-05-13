@@ -25,11 +25,25 @@ class TopLevelPage(models.Model):
 
 
 
+
+
 class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     image = models.ImageField(upload_to='team_images/')
     description = HTMLField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    slug = models.SlugField(max_length=150, unique=True, blank=True) 
+    is_founder = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name) 
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('team_member_detail', args=[self.id, self.slug])
+
