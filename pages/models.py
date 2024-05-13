@@ -22,3 +22,14 @@ class TopLevelPage(models.Model):
 
     def get_absolute_url(self):
         return reverse('top_level_page', kwargs={'slug': self.slug})
+
+
+
+class TeamMember(models.Model):
+    name = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='team_images/')
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name

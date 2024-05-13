@@ -6,17 +6,23 @@ import json
 from django.urls import reverse
 from django.utils import timezone
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.slug:  
+        if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('category_shop_items', kwargs={'category_slug': self.slug})
+
 
 
 class Education_Level(models.Model):

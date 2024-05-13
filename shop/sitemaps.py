@@ -1,7 +1,8 @@
 from django.contrib.sitemaps import Sitemap
-from .models import ShopItem
+from .models import ShopItem, Category
 from pages.models import TopLevelPage
 from django.urls import reverse
+from django.db.models import Count
 
 
 class ShopItemSitemap(Sitemap):
@@ -21,6 +22,16 @@ class TopLevelPageSitemap(Sitemap):
 
     def items(self):
         return TopLevelPage.objects.all().order_by('id')
+
+    def lastmod(self, obj):
+        return obj.created_at
+
+class CategorySitemap(Sitemap):
+    changefreq = "Daily"
+    priority = 1.0
+
+    def items(self):
+        return Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0).order_by('id')
 
     def lastmod(self, obj):
         return obj.created_at
