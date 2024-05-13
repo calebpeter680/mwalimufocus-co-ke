@@ -35,7 +35,21 @@
 
     <meta name="description" content="{{ meta_description }}">
 
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","name":"MwalimuFocus.Co.Ke","image":"https://mwalimufocus.nyc3.digitaloceanspaces.com/mwalimufocus/shopitemfiles/brand_logos/logo.png","@id":"","url":"https://mwalimufocus.co.ke/","telephone":"+254714477986","priceRange":"$","address":{"@type":"PostalAddress","streetAddress":"Third Floor, Green Spot Tower, Eastern Bypass","addressLocality":"Nairobi","postalCode":"00400","addressCountry":"KE"}},{"@type":"WebSite","name":"MwalimuFocus.Co.Ke","url":"https://mwalimufocus.co.ke/","potentialAction":{"@type":"SearchAction","target":"https://mwalimufocus.co.ke/search/?{search_term_string}","query-input":"required name=search_term_string"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mwalimufocus.co.ke/"}]}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://mwalimufocus.co.ke/#organization","name":"MwalimuFocus.Co.Ke","image":"https://mwalimufocus.nyc3.digitaloceanspaces.com/mwalimufocus/shopitemfiles/brand_logos/logo.png","url":"https://mwalimufocus.co.ke/","telephone":"+254714477986","priceRange":"$","address":{"@type":"PostalAddress","streetAddress":"Third Floor, Green Spot Tower, Eastern Bypass","addressLocality":"Nairobi","postalCode":"00400","addressCountry":"KE"}}</script>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://mwalimufocus.co.ke/#website","name":"MwalimuFocus.Co.Ke","url":"https://mwalimufocus.co.ke/","potentialAction":{"@type":"SearchAction","target":"https://mwalimufocus.co.ke/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mwalimufocus.co.ke/"}]}</script>
+    {% spaceless %}
+    {% for shop_item in popular_items %}
+    {% if shop_item.image %}
+    <script type="application/ld+json">
+      {"@context":"https://schema.org/","@type":"Product","name":"{{ shop_item.title }}","image":"{{ shop_item.image.url }}","description":"{{ shop_item.description }}","brand":{"@type":"Brand","name":"MwalimuFocus.Co.Ke"},"offers":{"@type":"Offer","url":"https://mwalimufocus.co.ke/","priceCurrency":"KES","price":"{{ shop_item.price }}","priceValidUntil":"2030-01-31","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","refundType":"FullRefund","returnPolicyCategory":"https://schema.org/FullRefundReturnPolicy"},"shippingDetails":{"@type":"OfferShippingDetails","shippingDestination":{"@type":"DefinedRegion","addressCountry":"KE"},"shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"KES"},"shippingLabel":"Free Shipping"}}}
+    </script>
+    {% endif %}
+    {% endfor %}
+    {% endspaceless %}
+
     
   </head>
   <body>

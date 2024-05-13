@@ -1,5 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from .models import ShopItem
+from pages.models import TopLevelPage
 from django.urls import reverse
 
 
@@ -8,11 +9,21 @@ class ShopItemSitemap(Sitemap):
     priority = 1.0
 
     def items(self):
-        return ShopItem.objects.filter(is_search_engine_indexible=True)
+        return ShopItem.objects.filter(is_search_engine_indexible=True).order_by('id')
 
     def lastmod(self, obj):
         return obj.date_created
 
+
+class TopLevelPageSitemap(Sitemap):
+    changefreq = "Weekly"
+    priority = 1.0
+
+    def items(self):
+        return TopLevelPage.objects.all().order_by('id')
+
+    def lastmod(self, obj):
+        return obj.created_at
 
 
 class StaticViewSitemap(Sitemap):
