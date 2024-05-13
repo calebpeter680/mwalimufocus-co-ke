@@ -111,31 +111,32 @@
 
 
     <!-- main_content -->
-<div class="container mt-4">
-  <main>
-    <h1 class="text-body-emphasis">About {{ team_member.name }}</h1>
+  <main class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-8">
+        <article class="blog-post mt-4">
 
-    <img src="{{ team_member.image.url }}" alt="{{ team_member.name }} Image" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
+          <h1 class="text-body-emphasis text-center">About {{ team_member.name }}</h1>
 
-    <hr class="col-3 col-md-2 mb-5">
+          <img src="{{ team_member.image.url }}" alt="{{ team_member.name }} Image" class="img-fluid rounded-circle mx-auto d-block" style="width: 200px; height: 200px;">
 
-    <div class="row g-5">
-      <div class="col-md-6">
-        <h2 class="text-body-emphasis">Description</h2>
-        <p>{{ team_member.description|safe }}</p>
-      </div>
+          <p class="text-center mt-2 mb-2">{{ team_member.role }}</p>
 
-      <div class="col-md-6">
-        <h2 class="text-body-emphasis">Role</h2>
-        <p>{{ team_member.role|safe }}</p>
+          <hr class="col-12 mb-2">
+
+          <div class="row">
+            <div class="col-md-12">
+              <p>{{ team_member.description|safe }}</p>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
   </main>
-</div>
 
-<hr>
+  <hr>
 
-<div class="container">
+  <div class="container">
   <footer class="py-5">
     <div class="row">
       <div class="col-12 col-md-3 mb-3">
