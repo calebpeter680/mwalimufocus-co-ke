@@ -1,6 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from .models import ShopItem, Category
-from pages.models import TopLevelPage
+from pages.models import TopLevelPage, TeamMember
 from django.urls import reverse
 from django.db.models import Count
 
@@ -26,6 +26,19 @@ class TopLevelPageSitemap(Sitemap):
     def lastmod(self, obj):
         return obj.created_at
 
+
+class TeamMemberSitemap(Sitemap):
+    changefreq = "Weekly"
+    priority = 0.2
+
+    def items(self):
+        return TeamMember.objects.all().order_by('id')
+
+    def lastmod(self, obj):
+        return obj.created_at
+
+
+
 class CategorySitemap(Sitemap):
     changefreq = "Daily"
     priority = 1.0
@@ -38,11 +51,11 @@ class CategorySitemap(Sitemap):
 
 
 class StaticViewSitemap(Sitemap):
-    priority = 1.0
-    changefreq = 'daily'
+    priority = 0.4
+    changefreq = 'Weekly'
 
     def items(self):
-        return ['home', 'categories']
+        return ['home', 'categories', 'all_team_members']
 
     def location(self, item):
         return reverse(item)
