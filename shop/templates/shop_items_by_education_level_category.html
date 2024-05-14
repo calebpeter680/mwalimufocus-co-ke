@@ -186,7 +186,7 @@
               <div class="card">
                 <div class="card-body">
                   <p class="card-title text-left" style="font-size: 14px; color: black; background-color: {{ brand.primary_color }}; border-radius: 10px; padding: 10px;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</p>
-                  <a href="{% url 'shop_item_detail' category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
+                  <a href="{% url 'shop_item_detail' category_slug=item.category.slug slug=item.slug pk=item.pk %}" class="card-title" style="font-size: 18px; text-decoration: none; color: blue;">{{ item.title }}</a>
                   <p class="card-text text-left">
                     Price: Ksh {{ item.price }}
                     {% if item.old_price %}
@@ -195,7 +195,7 @@
                   </p>
 
                   <div class="card-footer text-center">
-                    <a href="{% url 'shop_item_detail' category_slug=item.category_slug slug=item.slug pk=item.pk %}" class="btn btn-outline-dark my-2">Buy Now</a>
+                    <a href="{% url 'shop_item_detail' category_slug=item.category.slug slug=item.slug pk=item.pk %}" class="btn btn-outline-dark my-2">Buy Now</a>
                     
                     <form id="add-to-cart-form-{{ item.id }}" class="add-to-cart-form" data-item-id="{{ item.id }}" method="post" data-in-cart="{% if item in cart_items %}true{% else %}false{% endif %}">
                       {% csrf_token %}
