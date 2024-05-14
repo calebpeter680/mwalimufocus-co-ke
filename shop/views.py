@@ -770,12 +770,6 @@ def login_and_assign_user(request):
 
 
 
-
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from .models import Transaction
-
 @csrf_exempt
 def payment_status(request):
     print("Received request:", request.method)
