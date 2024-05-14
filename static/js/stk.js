@@ -38,6 +38,7 @@ $(document).ready(function() {
     });
 
     function updatePaymentStatusModal() {
+        console.log('Calling updatePaymentStatusModal function...');
         $.ajax({
             type: 'GET',
             url: '/payment-status/', 
