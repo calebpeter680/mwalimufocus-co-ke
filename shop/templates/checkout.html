@@ -58,11 +58,7 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-            {% if brand.logo %}
-                <img src="{{ brand.logo.url }}" alt="Logo" height="80" loading="lazy">
-            {% else %}
-                <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80" loading="lazy">
-            {% endif %}
+          <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80" loading="lazy">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
