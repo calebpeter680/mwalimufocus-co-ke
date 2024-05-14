@@ -432,7 +432,7 @@ def checkout(request):
 
     request.session['session_order_id'] = order.pk
 
-    return render(request, 'checkout.html', {
+    return render(request, 'checkout2.html', {
         'cart_items': cart_items,
         'total_price': total_price,
         'num_items': num_items,
@@ -837,7 +837,7 @@ def shop_item_detail(request, category_slug, pk, slug):
 
     request.session['session_order_id'] = order.pk
 
-    return render(request, 'shop_item_detail.html', {'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+    return render(request, 'product_detail.html', {'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 
