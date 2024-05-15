@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 DEBUG = os.getenv("DEBUG", "False") == "True"
 #DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,4cc9-105-163-2-38.ngrok-free.app").split(",") + ['testserver', 'www.testserver']
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
 
 
 
@@ -154,7 +154,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
-    'https://4cc9-105-163-2-38.ngrok-free.app'
+    'https://mwalimufocus-ec482d83d7a7.herokuapp.com'
 ]
 
 
