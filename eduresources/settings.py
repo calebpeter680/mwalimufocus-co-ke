@@ -17,13 +17,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-#SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
-SECRET_KEY = 'django-insecure-)1d*4-vi8ps%h(fki%=(&uw5s4)v1l7cnxm4#b&!2-90&v1h9#'
+#SECRET_KEY = 'django-insecure-)1d*4-vi8ps%h(fki%=(&uw5s4)v1l7cnxm4#b&!2-90&v1h9#'
 
 
-#DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
+#DEBUG = True
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,4cc9-105-163-2-38.ngrok-free.app").split(",") + ['testserver', 'www.testserver']
 
@@ -84,8 +84,8 @@ WSGI_APPLICATION = 'eduresources.wsgi.application'
 
 
 
-#DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
-DEVELOPMENT_MODE = True
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+#DEVELOPMENT_MODE = True
 
 
 
