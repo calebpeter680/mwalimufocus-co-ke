@@ -820,7 +820,7 @@ def payment_status(request):
 
 
 
-@gzip_page
+
 def shop_item_detail(request, category_slug, pk, slug):
     shop_item = get_object_or_404(ShopItem, category__slug=category_slug, pk=pk, slug=slug)
 
@@ -846,7 +846,7 @@ def shop_item_detail(request, category_slug, pk, slug):
 
 
 
-@gzip_page
+
 def create_order_for_item(shop_item):
     try:
         order = Order.objects.create(
@@ -869,7 +869,7 @@ def create_order_for_item(shop_item):
 
 
 
-@gzip_page
+
 def session_order_detail_view(request):
     session_order_id = request.session.get('session_order_id')
     print("Session Order ID:", session_order_id)
@@ -944,7 +944,7 @@ def session_order_detail_view(request):
 
 
 
-@gzip_page
+
 def download_file(request, shop_item_id):
     shop_item = get_object_or_404(ShopItem, id=shop_item_id)
     file = shop_item.file
@@ -953,7 +953,7 @@ def download_file(request, shop_item_id):
     return response
 
 
-@gzip_page
+
 def download_customer_item_file(request, item_id):
     customer_item = get_object_or_404(Customer_Item, id=item_id)
     file = customer_item.file
@@ -964,7 +964,7 @@ def download_customer_item_file(request, item_id):
 
 
 
-@gzip_page
+
 def send_email_with_attachments(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
 
