@@ -28,7 +28,7 @@ $(document).ready(function() {
                             const highlightedSubject = highlightMatch(item.subject, query);
                             const highlightedEducationLevel = highlightMatch(item.education_level, query);
 
-                            const itemDetailUrl = `/${item.category.slug}/${item.id}/${item.slug}/`;
+                            const itemDetailUrl = `/${item.category_slug}/${item.id}/${item.slug}/`;
 
                             const card = `
                                 <div class="mb-3">

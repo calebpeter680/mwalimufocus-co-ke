@@ -59,7 +59,7 @@ def search_shop_items(request):
             'price': str(item.price), 
             'education_level_slug': item.education_level_slug,
             'subject_slug': item.subject_slug,
-            'category_slug': item.category_slug,
+            'category_slug': item.category.slug,
             'match_count': match_count
         }
 
