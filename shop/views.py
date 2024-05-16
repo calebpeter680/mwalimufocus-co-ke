@@ -29,9 +29,13 @@ from decimal import Decimal
 from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.views.decorators.gzip import gzip_page
 
 
 
+
+
+@gzip_page
 def search_shop_items(request):
     query = request.GET.get('query', '')
     search_words = query.split()
@@ -109,7 +113,7 @@ def display_order_number(request, number):
         return None
 
 
-
+@gzip_page
 def home(request):
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
@@ -167,7 +171,7 @@ def home(request):
 
 
 
-
+@gzip_page
 def categories_view(request):
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
@@ -233,7 +237,7 @@ class CategoryShopItemsView(View):
 
 
 
-
+@gzip_page
 def shop_items_by_subject_category(request, category_slug, subject_slug):
     category = get_object_or_404(Category, slug=category_slug)
     subject = get_object_or_404(Subject, slug=subject_slug)
@@ -273,7 +277,7 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
 
 
 
-
+@gzip_page
 def shop_items_by_subject_category_education_level(request, education_level_slug, subject_slug, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     subject = get_object_or_404(Subject, slug=subject_slug)
@@ -312,7 +316,7 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
 
 
 
-
+@gzip_page
 def shop_items_by_education_level_category(request, education_level_slug, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     education_level = get_object_or_404(Education_Level, slug=education_level_slug)
@@ -354,7 +358,7 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
 
 
 
-
+@gzip_page
 @csrf_exempt
 def add_to_cart(request):
     if request.method == 'POST':
@@ -375,7 +379,7 @@ def add_to_cart(request):
 
 
 
-
+@gzip_page
 def checkout(request):
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)
@@ -450,7 +454,7 @@ def checkout(request):
 
 
 
-
+@gzip_page
 @csrf_exempt
 def get_cart_items(request):
     if 'cart' in request.session:
@@ -461,7 +465,7 @@ def get_cart_items(request):
         return JsonResponse({'num_items': 0})
 
 
-
+@gzip_page
 @csrf_exempt
 def remove_from_cart(request, item_id):
     if request.method == 'POST':
@@ -481,7 +485,7 @@ def remove_from_cart(request, item_id):
 
 
 
-
+@gzip_page
 @csrf_exempt
 def remove_from_cart_at_checkout(request):
     if request.method == 'POST':
@@ -816,7 +820,7 @@ def payment_status(request):
 
 
 
-
+@gzip_page
 def shop_item_detail(request, category_slug, pk, slug):
     shop_item = get_object_or_404(ShopItem, category__slug=category_slug, pk=pk, slug=slug)
 
@@ -842,7 +846,7 @@ def shop_item_detail(request, category_slug, pk, slug):
 
 
 
-
+@gzip_page
 def create_order_for_item(shop_item):
     try:
         order = Order.objects.create(
@@ -865,7 +869,7 @@ def create_order_for_item(shop_item):
 
 
 
-
+@gzip_page
 def session_order_detail_view(request):
     session_order_id = request.session.get('session_order_id')
     print("Session Order ID:", session_order_id)
@@ -940,7 +944,7 @@ def session_order_detail_view(request):
 
 
 
-
+@gzip_page
 def download_file(request, shop_item_id):
     shop_item = get_object_or_404(ShopItem, id=shop_item_id)
     file = shop_item.file
@@ -949,7 +953,7 @@ def download_file(request, shop_item_id):
     return response
 
 
-
+@gzip_page
 def download_customer_item_file(request, item_id):
     customer_item = get_object_or_404(Customer_Item, id=item_id)
     file = customer_item.file
@@ -960,7 +964,7 @@ def download_customer_item_file(request, item_id):
 
 
 
-
+@gzip_page
 def send_email_with_attachments(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
 
