@@ -31,8 +31,6 @@ from django.http import HttpResponseNotFound
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
-
-
 def search_shop_items(request):
     query = request.GET.get('query', '')
     search_words = query.split()

@@ -57,10 +57,14 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-lg-row"> <!-- Remove 'flex-column' class -->
                   <li class="nav-item">
-                      <a class="nav-link" href="{{ brand.phone_number }}" style="font-size: 0.9rem;"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a>
+                      <a class="nav-link" href="tel:{{ brand.phone_number }}" style="font-size: 0.9rem;">
+                          <i class="bi bi-telephone"></i> {{ brand.phone_number }}
+                      </a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link" href="{{ brand.email }}" style="font-size: 0.9rem;"><i class="bi bi-envelope"></i> {{ brand.email }}</a>
+                      <a class="nav-link" href="mailto:{{ brand.email }}" style="font-size: 0.9rem;">
+                          <i class="bi bi-envelope"></i> {{ brand.email }}
+                      </a>
                   </li>
               </ul>
           </div>
