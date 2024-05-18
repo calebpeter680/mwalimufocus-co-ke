@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 DEBUG = os.getenv("DEBUG", "False") == "True"
 #DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,mwalimufocus.co.ke,www.mwalimufocus.co.ke,mwalimufocus.com,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,mwalimufocus.co.ke,mwalimufocus.com,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
 
 
 
@@ -61,7 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+    'shop.middleware.DomainRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'eduresources.urls'
