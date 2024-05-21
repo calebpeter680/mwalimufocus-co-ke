@@ -575,6 +575,10 @@ def stk_push_view(request):
                 next_view_url = request.build_absolute_uri(reverse('login_and_assign'))
                 print("Next View URL:", next_view_url)
 
+
+
+                headers = {'Content-Type': 'application/json'}
+                
                 payload_next = {
                     'email': email,
                     'phone_number': phone_number,
@@ -582,7 +586,7 @@ def stk_push_view(request):
                 }
 
                 try:
-                    r = requests.post(next_view_url, json=payload_next)
+                    r = requests.post(next_view_url, json=payload_next, headers=headers)
                     print("Post Request Status Code:", r.status_code)
                     print("Post Request Response:", r.text)
 
