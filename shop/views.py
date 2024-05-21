@@ -885,10 +885,19 @@ def session_order_detail_view(request):
         print("Creating customer items...")
         items = order.items.all()
         print("Items:", items)
+        
         customer_items = []
 
         for item in items:
             print("Processing item:", item)
+            print("Title:", item.title)
+            print("Category:", item.category.name)
+            print("Education Level:", item.education_level.name)
+            print("Subject:", item.subject.name)
+            print("File:", item.file)
+            print("User:", order.user)
+            print("Order:", order)
+            
             customer_item = Customer_Item.objects.create(
                 title=item.title,
                 category=item.category.name,
@@ -934,6 +943,7 @@ def session_order_detail_view(request):
     }
 
     return render(request, 'session_order_detail.html', context)
+
 
 
 
