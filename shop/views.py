@@ -863,7 +863,7 @@ def create_order_for_item(shop_item):
 
 
 
-
+from django.db import transaction
 
 def session_order_detail_view(request):
     session_order_id = request.session.get('session_order_id')
@@ -873,54 +873,95 @@ def session_order_detail_view(request):
         print("Redirecting to home...")
         return redirect('home')
 
-    order = get_object_or_404(Order, pk=session_order_id)
-    print("Order:", order)
+    try:
+        order = get_object_or_404(Order, pk=session_order_id)
+        print("Order:", order)
+    except Exception as e:
+        print(f"Error fetching order: {e}")
+        return redirect('home')
 
     items = None  
 
-    if order.customer_items_created:
-        print("Customer items already created")
-        customer_items = order.customer_item_set.all()  
-    else:
-        print("Creating customer items...")
-        items = order.items.all()
-        print("Items:", items)
-        customer_items = []
+    try:
+        with transaction.atomic():
+            if order.customer_items_created:
+                print("Customer items already created")
+                try:
+                    customer_items = order.customer_item_set.all()
+                    print("Customer items:", customer_items)
+                except Exception as e:
+                    print(f"Error fetching customer items: {e}")
+                    return redirect('home')
+            else:
+                print("Creating customer items...")
+                try:
+                    items = order.items.all()
+                    print("Items:", items)
+                    customer_items = []
 
-        for item in items:
-            print("Processing item:", item)
-            customer_item = Customer_Item(
-                title=item.title,
-                category=item.category.name,
-                education_level=item.education_level.name,
-                subject=item.subject.name,
-                file=item.file,
-                user=order.user,
-                order=order
-            )
-            customer_item.save()
-            print("Customer item saved:", customer_item)
-            customer_items.append(customer_item)
+                    for item in items:
+                        print("Processing item:", item)
+                        try:
+                            customer_item = Customer_Item(
+                                title=item.title,
+                                category=item.category.name,
+                                education_level=item.education_level.name,
+                                subject=item.subject.name,
+                                file=item.file,
+                                user=order.user,
+                                order=order
+                            )
+                            customer_item.save()
+                            print("Customer item saved:", customer_item)
+                            customer_items.append(customer_item)
 
-            item.downloads_count += 1
-            item.save()
-            print("Item updated:", item)
+                            item.downloads_count += 1
+                            item.save()
+                            print("Item updated:", item)
+                        except Exception as e:
+                            print(f"Error processing item {item.id}: {e}")
+                            return redirect('home')
 
-        order.customer_items_created = True
-        order.save()
-        print("Customer items created and order updated:", order)
+                    order.customer_items_created = True
+                    order.save()
+                    print("Customer items created and order updated:", order)
+                except Exception as e:
+                    print(f"Error creating customer items: {e}")
+                    return redirect('home')
 
-    num_shopitems = len(customer_items)
-    print("Number of shop items:", num_shopitems)
-    item_sing_plu = "Item" if num_shopitems == 1 else "Items"
-    print("Item singular/plural:", item_sing_plu)
+    except Exception as e:
+        print(f"Error during transaction: {e}")
+        return redirect('home')
 
-    brand = Brand.objects.last()
-    print("Brand:", brand)
-    categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
-    print("Categories with items:", categories_with_items)
-    menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
-    print("Menu items:", menu_items)
+    try:
+        num_shopitems = len(customer_items)
+        print("Number of shop items:", num_shopitems)
+        item_sing_plu = "Item" if num_shopitems == 1 else "Items"
+        print("Item singular/plural:", item_sing_plu)
+    except Exception as e:
+        print(f"Error calculating number of shop items: {e}")
+        return redirect('home')
+
+    try:
+        brand = Brand.objects.last()
+        print("Brand:", brand)
+    except Exception as e:
+        print(f"Error fetching brand: {e}")
+        brand = None
+
+    try:
+        categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
+        print("Categories with items:", categories_with_items)
+    except Exception as e:
+        print(f"Error fetching categories with items: {e}")
+        categories_with_items = []
+
+    try:
+        menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
+        print("Menu items:", menu_items)
+    except Exception as e:
+        print(f"Error fetching menu items: {e}")
+        menu_items = []
 
     context = {
         'order': order,
@@ -933,7 +974,12 @@ def session_order_detail_view(request):
         'customer_items': customer_items,
     }
 
-    return render(request, 'session_order_detail.html', context)
+    try:
+        return render(request, 'session_order_detail.html', context)
+    except Exception as e:
+        print(f"Error rendering template: {e}")
+        return redirect('home')
+
 
 
 
