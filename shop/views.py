@@ -572,7 +572,7 @@ def stk_push_view(request):
                 else:
                     print("Invoice ID already set in session.")
 
-                next_view_url = request.build_absolute_uri(reverse('login_and_assign'))
+                next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
                 print("Next View URL:", next_view_url)
 
 
