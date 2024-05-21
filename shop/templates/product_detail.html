@@ -139,7 +139,12 @@
         </ol>
       </nav>
 
-      <h1 class="mt-4 mb-2" style="font-size: 20px;">Pay to Download <strong>"{{ shop_item.title}}"</strong> Instantly.</h1>
+      <h1 class="mt-4 mb-2" style="font-size: 20px;">Download <strong>"{{ shop_item.title}}"</strong> Instantly.</h1>
+        {% if shop_item.views_count %}
+          <div class="row">
+            <div class="col" style="font-size: 12px;">Viewed <strong>{{ shop_item.views_count}} times</strong> and downloaded <strong>{{ shop_item.downloads_count }} times</strong>.</div>
+          </div>
+        {% endif %}
 
       <div class="row">
         <div class="col-md-6 order-2 order-md-1">
@@ -187,14 +192,6 @@
                 <div class="col-sm-9">Ksh {{ shop_item.price }} {% if shop_item.old_price %}<span style="text-decoration: line-through; color: #888;">Ksh {{ shop_item.old_price }}</span>{% endif %}</div>
               </div>
             </li>
-
-            {% if shop_item.views_count %}
-            <li class="list-group-item">
-              <div class="row">
-                <div class="col">Viewed <strong>{{ shop_item.views_count}} times</strong> and downloaded <strong>{{ shop_item.downloads_count }} times</strong>.</div>
-              </div>
-            </li>
-            {% endif %}
 
           </ul>
         </div>
