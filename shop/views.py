@@ -29,7 +29,6 @@ from decimal import Decimal
 from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
 from storages.backends.s3boto3 import S3Boto3Storage
-from django.db import transaction
 
 
 def search_shop_items(request):
@@ -866,7 +865,6 @@ def create_order_for_item(shop_item):
 
 
 
-
 def session_order_detail_view(request):
     session_order_id = request.session.get('session_order_id')
     print("Session Order ID:", session_order_id)
@@ -875,79 +873,54 @@ def session_order_detail_view(request):
         print("Redirecting to home...")
         return redirect('home')
 
-    try:
-        order = get_object_or_404(Order, pk=session_order_id)
-        print("Order:", order)
-    except Exception as e:
-        print(f"Error fetching order: {e}")
-        return redirect('home')
+    order = get_object_or_404(Order, pk=session_order_id)
+    print("Order:", order)
 
     items = None  
 
-    try:
-        with transaction.atomic():
-            if order.customer_items_created:
-                print("Customer items already created")
-                customer_items = order.customer_item_set.all()
-                print("Customer items:", customer_items)
-            else:
-                print("Creating customer items...")
-                items = order.items.all()
-                print("Items:", items)
-                customer_items = []
+    if order.customer_items_created:
+        print("Customer items already created")
+        customer_items = order.customer_item_set.all()  
+    else:
+        print("Creating customer items...")
+        items = order.items.all()
+        print("Items:", items)
+        customer_items = []
 
-                for item in items:
-                    print("Processing item:", item)
-                    customer_item = Customer_Item(
-                        title=item.title,
-                        category=item.category.name,
-                        education_level=item.education_level.name,
-                        subject=item.subject.name,
-                        file=item.file,
-                        user=order.user,
-                        order=order
-                    )
-                    customer_item.save()
-                    print("Customer item saved:", customer_item)
-                    customer_items.append(customer_item)
+        for item in items:
+            print("Processing item:", item)
+            customer_item = Customer_Item(
+                title=item.title,
+                category=item.category.name,
+                education_level=item.education_level.name,
+                subject=item.subject.name,
+                file=item.file,
+                user=order.user,
+                order=order
+            )
+            customer_item.save()
+            print("Customer item saved:", customer_item)
+            customer_items.append(customer_item)
 
-                    item.downloads_count += 1
-                    item.save()
-                    print("Item updated:", item)
+            item.downloads_count += 1
+            item.save()
+            print("Item updated:", item)
 
-                order.customer_items_created = True
-                order.save()
-                print("Customer items created and order updated:", order)
-
-    except Exception as e:
-        print(f"Error during transaction: {e}")
-        return redirect('home')
+        order.customer_items_created = True
+        order.save()
+        print("Customer items created and order updated:", order)
 
     num_shopitems = len(customer_items)
     print("Number of shop items:", num_shopitems)
     item_sing_plu = "Item" if num_shopitems == 1 else "Items"
     print("Item singular/plural:", item_sing_plu)
 
-    try:
-        brand = Brand.objects.last()
-        print("Brand:", brand)
-    except Exception as e:
-        print(f"Error fetching brand: {e}")
-        brand = None
-
-    try:
-        categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
-        print("Categories with items:", categories_with_items)
-    except Exception as e:
-        print(f"Error fetching categories with items: {e}")
-        categories_with_items = []
-
-    try:
-        menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
-        print("Menu items:", menu_items)
-    except Exception as e:
-        print(f"Error fetching menu items: {e}")
-        menu_items = []
+    brand = Brand.objects.last()
+    print("Brand:", brand)
+    categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
+    print("Categories with items:", categories_with_items)
+    menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
+    print("Menu items:", menu_items)
 
     context = {
         'order': order,
@@ -961,8 +934,6 @@ def session_order_detail_view(request):
     }
 
     return render(request, 'session_order_detail.html', context)
-
-
 
 
 
