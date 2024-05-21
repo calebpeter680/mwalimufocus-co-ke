@@ -889,7 +889,7 @@ def session_order_detail_view(request):
 
         for item in items:
             print("Processing item:", item)
-            customer_item = Customer_Item(
+            customer_item = Customer_Item.objects.create(
                 title=item.title,
                 category=item.category.name,
                 education_level=item.education_level.name,
@@ -898,7 +898,7 @@ def session_order_detail_view(request):
                 user=order.user,
                 order=order
             )
-            customer_item.save()
+
             print("Customer item saved:", customer_item)
             customer_items.append(customer_item)
 
