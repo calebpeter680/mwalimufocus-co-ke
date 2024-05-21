@@ -8,6 +8,7 @@ from django.db.models import Count
 class ShopItemSitemap(Sitemap):
     changefreq = "Daily"
     priority = 1.0
+    protocol = "https"
 
     def items(self):
         return ShopItem.objects.filter(is_search_engine_indexible=True).order_by('id')
@@ -19,6 +20,7 @@ class ShopItemSitemap(Sitemap):
 class TopLevelPageSitemap(Sitemap):
     changefreq = "Weekly"
     priority = 1.0
+    protocol = "https"
 
     def items(self):
         return TopLevelPage.objects.all().order_by('id')
@@ -30,6 +32,7 @@ class TopLevelPageSitemap(Sitemap):
 class TeamMemberSitemap(Sitemap):
     changefreq = "Weekly"
     priority = 0.2
+    protocol = "https"
 
     def items(self):
         return TeamMember.objects.all().order_by('id')
@@ -42,6 +45,7 @@ class TeamMemberSitemap(Sitemap):
 class CategorySitemap(Sitemap):
     changefreq = "Daily"
     priority = 1.0
+    protocol = "https"
 
     def items(self):
         return Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0).order_by('id')
@@ -53,6 +57,7 @@ class CategorySitemap(Sitemap):
 class StaticViewSitemap(Sitemap):
     priority = 0.4
     changefreq = 'Weekly'
+    protocol = "https"
 
     def items(self):
         return ['home', 'categories', 'all_team_members']
