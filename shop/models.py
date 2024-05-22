@@ -5,6 +5,7 @@ from decimal import Decimal
 import json
 from django.urls import reverse
 from django.utils import timezone
+from tinymce.models import HTMLField
 
 
 class Category(models.Model):
@@ -57,7 +58,7 @@ class ShopItem(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     education_level = models.ForeignKey(Education_Level, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    description = models.TextField()
+    description = HTMLField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, default=100)
     file = models.FileField(null=True, blank=True, upload_to='shopitemfiles/')
