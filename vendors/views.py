@@ -58,7 +58,10 @@ class VendorShopEditView(View):
 class AddShopItemView(View):
     def post(self, request):
         data = request.POST
-        
+
+        # Print received data for debugging
+        print("Received data:", data)
+
         title = data.get('title')
         category_id = data.get('category')
         education_level_id = data.get('education_level')
@@ -67,6 +70,16 @@ class AddShopItemView(View):
         new_price = data.get('new_price')
         old_price = data.get('old_price')
         file = request.FILES.get('file')
+
+        # Print extracted data for debugging
+        print("Extracted data - Title:", title)
+        print("Extracted data - Category ID:", category_id)
+        print("Extracted data - Education Level ID:", education_level_id)
+        print("Extracted data - Subject ID:", subject_id)
+        print("Extracted data - Description:", description)
+        print("Extracted data - New Price:", new_price)
+        print("Extracted data - Old Price:", old_price)
+        print("Extracted data - File:", file)
 
         if not all([title, description, new_price, old_price, file]):
             missing_fields = []
@@ -84,24 +97,21 @@ class AddShopItemView(View):
             error_message = f"Please provide the following fields: {', '.join(missing_fields)}"
             return JsonResponse({'status': 'success', 'message': error_message})
 
-
-
         try:
             min_price_obj = ProductMinPrice.objects.latest('id')
             min_price = min_price_obj.price
-
         except ProductMinPrice.DoesNotExist:
             min_price = 50
+
+        # Print minimum price for debugging
+        print("Minimum price:", min_price)
 
         if float(new_price) < min_price:
             return JsonResponse({'status': 'error', 'message': f'The required minimum new price is Ksh {min_price}.'})
 
-
         category = get_object_or_404(Category, id=category_id)
         education_level = get_object_or_404(Education_Level, id=education_level_id)
         subject = get_object_or_404(Subject, id=subject_id)
-
-
 
         shop_item = ShopItem.objects.create(
             title=title,
@@ -122,11 +132,16 @@ class AddShopItemView(View):
             created_at=timezone.now()
         )
 
+        # Print success message for debugging
+        print("Product added successfully.")
+
         response_data = {
             'status': 'success',
             'message': 'Product added successfully.'
         }
+
         return JsonResponse(response_data)
+
 
 
 
