@@ -185,19 +185,17 @@
               </div>
             </li>
             {% endif %}
-
-            <li class="list-group-item">
-              <div class="row">
-                <div class="col-sm-3"><strong>Price:</strong></div>
-                <div class="col-sm-9">Ksh {{ shop_item.price }} {% if shop_item.old_price %}<span style="text-decoration: line-through; color: #888;">Ksh {{ shop_item.old_price }}</span>{% endif %}</div>
-              </div>
-            </li>
-
           </ul>
         </div>
 
         <div class="col-md-6 order-1 order-md-2">
-          <h2 class="text-left mt-4 mb-3">Pay Ksh {{ shop_item.price }} to Download Item</h2>
+          <h2 class="text-left mt-2 mb-2" style="font-size: 22px;">Pay Ksh {{ shop_item.price }} {% if shop_item.old_price %}<span style="text-decoration: line-through; color: #888;">Ksh {{ shop_item.old_price }}
+          </span>{% endif %} to Download Item</h2> 
+          {% if percentage_saved > 0 %}
+            <span style="font-size: 14px; color: #e74c3c;">
+                🌟 Save <strong>{{ percentage_saved }}%</strong> now! 🌟 Act fast and grab this deal before it's gone! ⏰
+            </span>
+          {% endif %}
           <p>Enter your details below to initiate a payment using MPESA.</p>
           <div class="card p-4"> 
             <form id="paymentForm">
@@ -228,7 +226,7 @@
                   <button id="proceedBtn" type="submit" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#paymentStatus"><i class="bi bi-lock"></i> Proceed to Secure Payment</button>
               </div>
             </form>
-
+          </div>
 
             <div class="modal fade" id="paymentStatus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">

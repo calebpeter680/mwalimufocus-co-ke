@@ -823,6 +823,12 @@ def payment_status(request):
 def shop_item_detail(request, category_slug, pk, slug):
     shop_item = get_object_or_404(ShopItem, category__slug=category_slug, pk=pk, slug=slug)
 
+    if shop_item.old_price > 0:
+        percentage_saved = ((shop_item.old_price - shop_item.price) / shop_item.old_price) * 100
+    else:
+        percentage_saved = 0
+
+    percentage_saved = round(percentage_saved, 2)
 
     category = Category.objects.filter(slug=category_slug).first()
     
@@ -840,7 +846,7 @@ def shop_item_detail(request, category_slug, pk, slug):
 
     request.session['session_order_id'] = order.pk
 
-    return render(request, 'product_detail.html', {'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+    return render(request, 'product_detail.html', {'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 
