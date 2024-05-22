@@ -142,7 +142,7 @@
       <h1 class="mt-4 mb-2" style="font-size: 20px;">Download <strong>"{{ shop_item.title}}"</strong> Instantly.</h1>
         {% if shop_item.views_count %}
           <div class="row">
-            <div class="col" style="font-size: 12px;">Viewed <strong>{{ shop_item.views_count}} times</strong> and downloaded <strong>{{ shop_item.downloads_count }} times</strong>.</div>
+            <div class="col" style="font-size: 12px;"><i class="bi bi-eye"></i> <strong>{{ shop_item.views_count}} views</strong> <i class="bi bi-cloud-download"></i> <strong>{{ shop_item.downloads_count }} downloads</strong>.</div>
           </div>
         {% endif %}
 
@@ -192,8 +192,8 @@
           <h2 class="text-left mt-2 mb-2" style="font-size: 22px;">Pay Ksh {{ shop_item.price }} {% if shop_item.old_price %}<span style="text-decoration: line-through; color: #888;">Ksh {{ shop_item.old_price }}
           </span>{% endif %} to Download Item</h2> 
           {% if percentage_saved > 0 %}
-            <span style="font-size: 14px; color: #e74c3c;">
-                🌟 Save <strong>{{ percentage_saved }}%</strong> now! 🌟 Act fast and grab this deal before it's gone! ⏰
+            <span class="mb-2" style="font-size: 14px;">
+                <strong>Save {{ percentage_saved }}%</strong> now! Act fast and grab this deal before it's gone! ⏰
             </span>
           {% endif %}
           <p>Enter your details below to initiate a payment using MPESA.</p>
