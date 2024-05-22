@@ -1,6 +1,6 @@
 function initTinyMCE() {
   tinymce.init({
-    selector: '#descriptionInput', '#descriptionInput_update'
+    selector: '#descriptionInput, #descriptionInput_update',
     menubar: false,
     plugins: 'lists link image preview',
     toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview',
