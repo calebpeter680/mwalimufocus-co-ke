@@ -103,7 +103,6 @@ class AddShopItemView(View):
         except ProductMinPrice.DoesNotExist:
             min_price = 50
 
-        # Print minimum price for debugging
         print("Minimum price:", min_price)
 
         if float(new_price) < min_price:

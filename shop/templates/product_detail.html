@@ -203,6 +203,9 @@
               <div class="form-group mb-4 mt-2">
                   <label for="phonenumber">Your MPESA Phone Number:</label>
                   <input type="text" class="form-control" name="phonenumber" id="phonenumber" placeholder="Phone e.g., 0712345678">
+                  {% if request.user.is_authenticated %}
+                    <div class="form-text">Attachments can be downloaded immediately after purchase, and a copy will also be sent to <strong>{{ request.user.email }}</strong>.</div>
+                  {% endif %}
               </div>
 
               {% if request.user.is_authenticated %}
@@ -214,6 +217,7 @@
               <div class="form-group mt-4 mb-4"> 
                   <label for="email" >Your Email Address:</label>
                   <input type="text" class="form-control" name="email" id="email" placeholder="Enter your email address...">
+                  <div class="form-text">Attachments can be downloaded immediately after purchase, and a copy will also be sent to your provided email.</div>
               </div>
               {% endif %}
 
