@@ -191,11 +191,6 @@
         <div class="col-md-6 order-1 order-md-2">
           <h2 class="text-left mt-2 mb-2" style="font-size: 22px;">Pay Ksh {{ shop_item.price }} {% if shop_item.old_price %}<span style="text-decoration: line-through; color: #888;">Ksh {{ shop_item.old_price }}
           </span>{% endif %} to Download Item</h2> 
-          {% if percentage_saved > 0 %}
-            <span class="mb-2" style="font-size: 14px;">
-                <strong>Save {{ percentage_saved }}%</strong> now! Act fast and grab this deal before it's gone! ⏰
-            </span>
-          {% endif %}
           <p>Enter your details below to initiate a payment using MPESA.</p>
           <div class="card p-4"> 
             <form id="paymentForm">
