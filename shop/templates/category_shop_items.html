@@ -319,11 +319,31 @@
             </div>
           </div>
 
+          {% if latest_link %}
           <ul class="list-unstyled d-flex">
-            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-telegram"></i></a></li>
-            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-facebook"></i></a></li>
-            <li class="ms-3" style="font-size: 20px;"><a class="link-body-emphasis" href="#"><i class="bi bi-whatsapp"></i></a></li>
+              {% if latest_link.facebook_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.facebook_url }}" target="_blank">
+                          <i class="bi bi-facebook"></i>
+                      </a>
+                  </li>
+              {% endif %}
+              {% if latest_link.telegram_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.telegram_url }}" target="_blank">
+                          <i class="bi bi-telegram"></i>
+                      </a>
+                  </li>
+              {% endif %}
+              {% if latest_link.whatsapp_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.whatsapp_url }}" target="_blank">
+                          <i class="bi bi-whatsapp"></i>
+                      </a>
+                  </li>
+              {% endif %}
           </ul>
+          {% endif %}
         </div>
       </footer>
 

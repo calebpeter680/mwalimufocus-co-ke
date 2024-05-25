@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber
+from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber, SocialMediaLinks
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -49,3 +49,7 @@ class VendorFAQAdmin(admin.ModelAdmin):
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = ('email', 'joined_at')
+
+@admin.register(SocialMediaLinks)
+class SocialMediaLinksAdmin(admin.ModelAdmin):
+    list_display = ('facebook_url', 'telegram_url', 'whatsapp_url')

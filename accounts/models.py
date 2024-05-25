@@ -71,3 +71,14 @@ class Subscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+
+
+
+class SocialMediaLinks(models.Model):
+    facebook_url = models.URLField(max_length=200, blank=True, null=True, help_text="URL of the Facebook page")
+    telegram_url = models.URLField(max_length=200, blank=True, null=True, help_text="URL of the Telegram channel")
+    whatsapp_url = models.URLField(max_length=200, blank=True, null=True, help_text="URL of the WhatsApp group")
+
+    def __str__(self):
+        return f"SocialMediaLinks(facebook={self.facebook_url}, telegram={self.telegram_url}, whatsapp={self.whatsapp_url})"

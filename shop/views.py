@@ -13,7 +13,7 @@ from django.urls import reverse
 import base64
 from datetime import datetime
 from django.contrib.auth import authenticate, login
-from accounts.models import CustomUser
+from accounts.models import CustomUser, SocialMediaLinks
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -134,6 +134,7 @@ def home(request):
     popular_items = [item for item, _ in popular_downloads]
 
     brand = Brand.objects.last()
+    latest_link = SocialMediaLinks.objects.latest('pk')
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
     
@@ -158,7 +159,8 @@ def home(request):
         'brand': brand,
         'categories_with_items': categories_with_items,
         'menu_items': menu_items,
-        'meta_description': meta_description
+        'meta_description': meta_description,
+        'latest_link': latest_link,
     }
     return render(request, 'home.html', context)
 
@@ -189,7 +191,9 @@ def categories_view(request):
 
     meta_description = f"Browse CBC and 8-4-4 {categories_description}"
 
-    context = {'meta_description': meta_description, 'user': request.user, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'categories_with_items': categories_with_items, 'brand': brand, 'menu_items': menu_items}
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
+    context = {'latest_link': latest_link, 'meta_description': meta_description, 'user': request.user, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'categories_with_items': categories_with_items, 'brand': brand, 'menu_items': menu_items}
     return render(request, 'categories.html', context)
 
 
@@ -211,6 +215,8 @@ class CategoryShopItemsView(View):
 
         education_levels_with_items = Education_Level.objects.filter(shopitem__category=category).annotate(num_items=Count('shopitem'))
 
+        latest_link = SocialMediaLinks.objects.latest('pk')
+
         cart = request.session.get('cart', [])
         cart_items = ShopItem.objects.filter(id__in=cart)  
         num_cart_items = len(cart_items)
@@ -226,6 +232,7 @@ class CategoryShopItemsView(View):
             'num_cart_items': num_cart_items,
             'cart_items': cart_items,
             'user': request.user,
+            'latest_link': latest_link
         }
         return render(request, 'category_shop_items.html', context)
 
@@ -248,6 +255,8 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
 
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
     num_cart_items = len(cart_items)
@@ -263,6 +272,7 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
         'num_cart_items': num_cart_items,
         'cart_items': cart_items,
         'user': request.user,
+        'latest_link': latest_link
     }
 
     return render(request, 'shop_items_by_subject_category.html', context)
@@ -288,6 +298,8 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
 
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
     num_cart_items = len(cart_items)
@@ -303,6 +315,7 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
         'num_cart_items': num_cart_items,
         'cart_items': cart_items,
         'user': request.user,
+        'latest_link': latest_link
     }
 
     return render(request, 'shop_items_by_subject_category_education_level.html', context)
@@ -331,6 +344,8 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
         .filter(num_shop_items__gt=0)  
     )
 
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
     num_cart_items = len(cart_items)
@@ -346,6 +361,7 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
         'num_cart_items': num_cart_items,
         'cart_items': cart_items,
         'user': request.user,
+        'latest_link': latest_link
     }
 
     return render(request, 'shop_items_by_education_level_category.html', context)
@@ -431,6 +447,8 @@ def checkout(request):
 
     request.session['session_order_id'] = order.pk
 
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
     return render(request, 'checkout2.html', {
         'cart_items': cart_items,
         'total_price': total_price,
@@ -443,6 +461,7 @@ def checkout(request):
         'percentage_saved': percentage_saved,
         'order': order, 
         'user': request.user, 
+        'latest_link': latest_link
     })
 
 
@@ -846,7 +865,9 @@ def shop_item_detail(request, category_slug, pk, slug):
 
     request.session['session_order_id'] = order.pk
 
-    return render(request, 'product_detail.html', {'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
+    return render(request, 'product_detail.html', {'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 
@@ -941,6 +962,9 @@ def session_order_detail_view(request):
     menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
     print("Menu items:", menu_items)
 
+
+    latest_link = SocialMediaLinks.objects.latest('pk')
+
     context = {
         'order': order,
         'brand': brand,
@@ -950,6 +974,7 @@ def session_order_detail_view(request):
         'item_sing_plu': item_sing_plu,
         'items': items,  
         'customer_items': customer_items,
+        'latest_link': latest_link
     }
 
     return render(request, 'session_order_detail.html', context)
