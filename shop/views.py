@@ -134,7 +134,10 @@ def home(request):
     popular_items = [item for item, _ in popular_downloads]
 
     brand = Brand.objects.last()
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
     
@@ -191,7 +194,10 @@ def categories_view(request):
 
     meta_description = f"Browse CBC and 8-4-4 {categories_description}"
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     context = {'latest_link': latest_link, 'meta_description': meta_description, 'user': request.user, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'categories_with_items': categories_with_items, 'brand': brand, 'menu_items': menu_items}
     return render(request, 'categories.html', context)
@@ -215,7 +221,10 @@ class CategoryShopItemsView(View):
 
         education_levels_with_items = Education_Level.objects.filter(shopitem__category=category).annotate(num_items=Count('shopitem'))
 
-        latest_link = SocialMediaLinks.objects.latest('pk')
+        try:
+            latest_link = SocialMediaLinks.objects.latest('pk')
+        except SocialMediaLinks.DoesNotExist:
+            latest_link = None
 
         cart = request.session.get('cart', [])
         cart_items = ShopItem.objects.filter(id__in=cart)  
@@ -255,7 +264,10 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
@@ -298,7 +310,10 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
@@ -344,7 +359,10 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
         .filter(num_shop_items__gt=0)  
     )
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     cart = request.session.get('cart', [])
     cart_items = ShopItem.objects.filter(id__in=cart)  
@@ -447,7 +465,10 @@ def checkout(request):
 
     request.session['session_order_id'] = order.pk
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     return render(request, 'checkout2.html', {
         'cart_items': cart_items,
@@ -865,7 +886,10 @@ def shop_item_detail(request, category_slug, pk, slug):
 
     request.session['session_order_id'] = order.pk
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     return render(request, 'product_detail.html', {'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
@@ -963,7 +987,10 @@ def session_order_detail_view(request):
     print("Menu items:", menu_items)
 
 
-    latest_link = SocialMediaLinks.objects.latest('pk')
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
 
     context = {
         'order': order,
