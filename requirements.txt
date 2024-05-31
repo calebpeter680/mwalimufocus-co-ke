@@ -6,7 +6,9 @@ charset-normalizer==3.3.2
 dj-database-url==2.1.0
 Django==5.0.4
 django-admin-interface==0.28.6
+django-appconf==1.0.6
 django-colorfield==0.11.0
+django-compressor==4.4
 django-heroku==0.3.1
 django-js-asset==2.2.0
 django-storages==1.14.2
@@ -24,7 +26,9 @@ python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-dotenv==1.0.1
 python-slugify==8.0.4
+rcssmin==1.1.1
 requests==2.31.0
+rjsmin==1.2.1
 s3transfer==0.10.1
 six==1.16.0
 sqlparse==0.5.0

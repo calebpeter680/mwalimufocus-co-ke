@@ -13,7 +13,14 @@ from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime 
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.utils.html import strip_tags
+
+
 
 def dashboard_view(request):
 
@@ -264,4 +271,48 @@ def create_subscriber_from_json(request):
 
 
 
+def get_purchased_categories(user):
+    customer_items = Customer_Item.objects.filter(user=user)
+    categories = set(item.category for item in customer_items)
+    return categories
+
+
+
+def get_new_shop_items(categories):
+    one_week_ago = timezone.now() - timedelta(days=7)
+    new_shop_items = ShopItem.objects.filter(
+        category__name__in=categories,
+        date_created__gte=one_week_ago
+    )
+    return new_shop_items
+
+
+
+def send_promotional_email(user, new_shop_items):
+    subject = "Check Out Our New Items Just for You!"
+    context = {
+        'user': user,
+        'new_shop_items': new_shop_items,
+    }
+    html_message = render_to_string('promotional_email.html', context)
+    plain_message = strip_tags(html_message)
+    send_mail(
+        subject,
+        plain_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+        html_message=html_message,
+    )
+
+
+
+def send_promotional_emails_to_all_users():
+    users = CustomUser.objects.all()
+    for user in users:
+        categories = get_purchased_categories(user)
+        if categories:
+            new_shop_items = get_new_shop_items(categories)
+            if new_shop_items:
+                send_promotional_email(user, new_shop_items)
 

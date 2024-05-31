@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -648,12 +649,14 @@
 
 
 
+    {% compress js %}
     <script src="{% static 'js/cart.js' %}" defer></script>
     <script src="{% static 'js/sign_up.js' %}" defer></script>
     <script src="{% static 'js/login.js' %}" defer></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/search.js' %}" defer></script>
     <script src="{% static 'js/newsletter.js' %}" defer></script>
+    {% endcompress %}
 
   </body>
 </html>
