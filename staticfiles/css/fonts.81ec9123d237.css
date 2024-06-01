@@ -1,0 +1,83 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100; 
+  src: url("/static/fonts/Roboto-Thin.66209ae01f48.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 100; 
+  src: url("/static/fonts/Roboto-ThinItalic.7bcadd0675fe.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300; 
+  src: url("/static/fonts/Roboto-Light.881e150ab929.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 300; 
+  src: url("/static/fonts/Roboto-LightItalic.5788d5ce921d.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400; 
+  src: url("/static/fonts/Roboto-Regular.8a36205bd9b8.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400; 
+  src: url("/static/fonts/Roboto-Italic.cebd892d1acf.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500; 
+  src: url("/static/fonts/Roboto-Medium.68ea4734cf86.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 500; 
+  src: url("/static/fonts/Roboto-MediumItalic.c16d19c2c0fd.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700; 
+  src: url("/static/fonts/Roboto-Bold.b8e42971dec8.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 700; 
+  src: url("/static/fonts/Roboto-BoldItalic.fd6e9700781c.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900; 
+  src: url("/static/fonts/Roboto-Black.d6a6f8878adb.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 900; 
+  src: url("/static/fonts/Roboto-BlackItalic.c3332e3b8fef.ttf") format('truetype');
+}
