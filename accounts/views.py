@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from shop.models import ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
 from django.db.models import Count, Q
 from vendors.models import VendorShop, VendorShopItem, Vendor_Order, VendorCommission, WithdrawalRequest, ProductMinPrice
-from django.db.models import Sum
+from django.db.models import Sum, Subquery, OuterRef, Max
 from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
@@ -43,7 +43,61 @@ def dashboard_view(request):
     if user_email:
         try:
             user = CustomUser.objects.get(email=user_email)
-            if user.is_vendor:
+
+            if user.is_superuser:
+                now = timezone.now()
+                one_day_ago = now - timezone.timedelta(days=1)
+                two_days_ago = now - timezone.timedelta(days=2)
+                one_week_ago = now - timezone.timedelta(weeks=1)
+                two_weeks_ago = now - timezone.timedelta(weeks=2)
+                one_month_ago = now - timezone.timedelta(days=30)
+
+                def get_total_price(filter_date=None):
+                    transactions = Transaction.objects.filter(status='COMPLETE')
+                    if filter_date:
+                        transactions = transactions.filter(created_at__gte=filter_date)
+                    return transactions.aggregate(total=Sum('order__total_price'))['total'] or Decimal('0.00')
+
+                total_today = get_total_price(one_day_ago)
+                total_past_48_hours = get_total_price(two_days_ago)
+                total_past_week = get_total_price(one_week_ago)
+                total_past_two_weeks = get_total_price(two_weeks_ago)
+                total_past_month = get_total_price(one_month_ago)
+                total_all_time = get_total_price()
+
+                context['total_today'] = total_today
+                context['total_past_48_hours'] = total_past_48_hours
+                context['total_past_week'] = total_past_week
+                context['total_past_two_weeks'] = total_past_two_weeks
+                context['total_past_month'] = total_past_month
+                context['total_all_time'] = total_all_time
+
+                percentage_difference = 0
+                if total_past_48_hours != 0:
+                    percentage_difference = ((total_today - total_past_48_hours) / total_past_48_hours) * 100
+
+                context['percentage_difference'] = percentage_difference
+
+
+                all_orders_with_transactions_and_latest_transaction = Order.objects.annotate(
+                    has_transaction=Subquery(
+                        Transaction.objects.filter(order_id=OuterRef('pk')).values('order_id')
+                    ),
+                    latest_transaction_created_at=Subquery(
+                        Transaction.objects.filter(order_id=OuterRef('pk')).order_by('-created_at').values('created_at')[:1]
+                    )
+                ).filter(has_transaction__isnull=False).order_by('-pk')
+
+                context['all_orders'] = all_orders_with_transactions_and_latest_transaction
+
+                all_transactions = Transaction.objects.all().order_by('-pk')
+                context['all_transactions'] = all_transactions
+
+
+
+
+
+            elif user.is_vendor:
 
                 try:
 
