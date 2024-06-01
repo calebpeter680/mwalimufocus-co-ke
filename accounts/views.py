@@ -76,6 +76,9 @@ def dashboard_view(request):
                 if total_past_48_hours != 0:
                     percentage_difference = ((total_today - total_past_48_hours) / total_past_48_hours) * 100
 
+
+                percentage_difference = round(percentage_difference, 2)
+                
                 context['percentage_difference'] = percentage_difference
 
 
