@@ -110,6 +110,7 @@ class Order(models.Model):
     display_order_number = models.IntegerField(null=True, blank=True)
     attachments_sent = models.BooleanField(default=False)
     customer_items_created = models.BooleanField(default=False, null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Order {self.pk} - Total: Ksh {self.total_price}"

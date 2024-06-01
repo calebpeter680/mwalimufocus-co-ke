@@ -489,11 +489,11 @@
                   </div>
                   <div class="card-body d-flex flex-column justify-content-center align-items-center">
                       <div>
-                          <h5>Ksh {{ total_today }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Earnings with the past 24 hours."></i></h5>
+                          <h5>Ksh {{ total_today }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Earnings within the past 24 hours."></i></h5>
                       </div>
                       <div>
                           <span>Earnings today 
-                              <span class="{% if percentage_difference >= 0 %}text-success{% else %}text-danger{% endif %}">
+                              <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Percentage change compared to yesterday." class="{% if percentage_difference >= 0 %}text-success{% else %}text-danger{% endif %}">
                                   {{ percentage_difference }}%
                               </span>
                               <i class="bi {% if percentage_difference >= 0 %}bi-arrow-up{% else %}bi-arrow-down{% endif %}"></i>
@@ -506,15 +506,20 @@
             <div class="col-md-4 mb-3">
                 <div class="card">
                     <div style="background-color: rgba(0, 0, 0, 0.1); color: {{ brand.primary_color }}; display: flex; justify-content: center; align-items: center; height: 40px;">
-                      <i class="bi bi-bag" style="color: black; font-size: 30px;"></i>
+                      <i class="bi bi-people" style="color: black; font-size: 30px;"></i>
                     </div>
 
                     <div class="card-body d-flex flex-column justify-content-center align-items-center">
                       <div>
-                          <h5>Total Sales <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Number of times currently listed products on your shop were purchased."></i></h5>
+                          <h5>{{ users_today }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="New customers who signed up within the past 24 hours."></i></h5>
                       </div>
                       <div>
-                          <span>{{ total_sales }}</span>
+                          <span>New customers today 
+                              <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Percentage change compared to yesterday." class="{% if percentage_difference_users >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                  {{ percentage_difference_users }}%
+                              </span>
+                              <i class="bi {% if percentage_difference_users >= 0 %}bi-arrow-up{% else %}bi-arrow-down{% endif %}"></i>
+                          </span>
                       </div>
                     </div>
                 </div>
@@ -528,10 +533,15 @@
 
                     <div class="card-body d-flex flex-column justify-content-center align-items-center">
                       <div>
-                          <h5>Available Balance <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Balance available for withdrawal."></i></h5>
+                          <h5>{{ conversion_rate_today }}% <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The percentage of paid orders within the last 24 hours."></i></h5>
                       </div>
                       <div>
-                          <span>Ksh {{ vendor_shop.available_balance }}</span>
+                          <span>Conversion rate today 
+                              <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Percentage change compared to yesterday." class="{% if percentage_difference_conversion >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                  {{ percentage_difference_conversion }}%
+                              </span>
+                              <i class="bi {% if percentage_difference_conversion >= 0 %}bi-arrow-up{% else %}bi-arrow-down{% endif %}"></i>
+                          </span>
                       </div>
                     </div>
                 </div>
@@ -600,7 +610,7 @@
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
                 <td class="text-center">{% if order.attachments_sent %} <i class="bi bi-check"></i>
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
-                <td>{{ order.user.phone_number }}</td>
+                <td class="text-left">{{ order.user.phone_number }}</td>
               </tr>
             {% endfor %}
           </tbody>

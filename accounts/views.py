@@ -52,6 +52,22 @@ def dashboard_view(request):
                 two_weeks_ago = now - timezone.timedelta(weeks=2)
                 one_month_ago = now - timezone.timedelta(days=30)
 
+
+                users_today = CustomUser.objects.filter(date_joined__gte=one_day_ago).count()
+                users_yesterday = CustomUser.objects.filter(date_joined__gte=two_days_ago, date_joined__lt=one_day_ago).count()
+
+                context['users_today'] = users_today
+                context['users_yesterday'] = users_yesterday
+
+
+                percentage_difference_users = 0
+                if users_yesterday != 0:
+                    percentage_difference_users = ((users_today - users_yesterday) / users_yesterday) * 100
+
+                percentage_difference_users = round(percentage_difference_users, 2)
+                context['percentage_difference_users'] = percentage_difference_users
+
+
                 def get_total_price(filter_date=None):
                     transactions = Transaction.objects.filter(status='COMPLETE')
                     if filter_date:
@@ -78,7 +94,7 @@ def dashboard_view(request):
 
 
                 percentage_difference = round(percentage_difference, 2)
-                
+
                 context['percentage_difference'] = percentage_difference
 
 
@@ -97,6 +113,24 @@ def dashboard_view(request):
 
                 all_transactions = Transaction.objects.all().order_by('-pk')
                 context['all_transactions'] = all_transactions
+
+
+
+                total_paid_orders_today = Order.objects.filter(is_paid=True, created_at__gte=one_day_ago).count()
+                total_orders_today = Order.objects.filter(created_at__gte=one_day_ago).count()
+                conversion_rate_today = (total_paid_orders_today / total_orders_today) * 100 if total_orders_today != 0 else 0
+                
+                conversion_rate_today = round(conversion_rate_today, 2)
+
+                total_paid_orders_yesterday = Order.objects.filter(is_paid=True, created_at__range=[two_days_ago, one_day_ago]).count()
+                total_orders_yesterday = Order.objects.filter(created_at__range=[two_days_ago, one_day_ago]).count()
+                conversion_rate_yesterday = (total_paid_orders_yesterday / total_orders_yesterday) * 100 if total_orders_yesterday != 0 else 0
+                percentage_difference_conversion = ((conversion_rate_today - conversion_rate_yesterday) / conversion_rate_yesterday) * 100 if conversion_rate_yesterday != 0 else 0
+
+                percentage_difference_conversion = round(percentage_difference_conversion, 2)
+                
+                context['conversion_rate_today'] = conversion_rate_today
+                context['percentage_difference_conversion'] = percentage_difference_conversion
 
 
 
