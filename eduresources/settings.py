@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'pages',
     'tinymce',
     'compressor',
-    'django_minify_html',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -65,7 +64,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
     'shop.middleware.DomainRedirectMiddleware',
-    'django_minify_html.middleware.MinifyHtmlMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
+
 ]
 
 ROOT_URLCONF = 'eduresources.urls'
