@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
-    'compressor',
 ]
 
 
@@ -152,19 +151,12 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-]
+
+
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
-COMPRESS_ENABLED = True
-
-COMPRESS_OFFLINE = True
 
 
 

@@ -1,6 +1,5 @@
 {% load static %}
 {% load image_filters %}
-{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -472,14 +471,12 @@
     </div>
 
 
-    {% compress js %}
     <script src="{% static 'js/cart.js' %}"></script>
     <script src="{% static 'js/sign_up.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/search.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>
-    {% endcompress %}
 
     
   </body>
