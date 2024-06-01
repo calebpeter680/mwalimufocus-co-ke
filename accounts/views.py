@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from shop.models import ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
 from django.db.models import Count, Q
 from vendors.models import VendorShop, VendorShopItem, Vendor_Order, VendorCommission, WithdrawalRequest, ProductMinPrice
-from django.db.models import Sum, Subquery, OuterRef, Max
+from django.db.models import Sum, Subquery, OuterRef, Max, Exists
 from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
@@ -79,18 +79,18 @@ def dashboard_view(request):
                 context['percentage_difference'] = percentage_difference
 
 
-                all_orders_with_transactions_and_latest_transaction = Order.objects.annotate(
-                    has_transaction=Subquery(
-                        Transaction.objects.filter(order_id=OuterRef('pk')).values('order_id')
+                all_orders_with_latest_transaction = Order.objects.annotate(
+                    has_transaction=Exists(
+                        Transaction.objects.filter(order_id=OuterRef('pk'))
                     ),
                     latest_transaction_created_at=Subquery(
-                        Transaction.objects.filter(order_id=OuterRef('pk')).filter(order=OuterRef('pk')).order_by('-created_at').values_list('created_at', flat=True)[:1]
+                        Transaction.objects.filter(order_id=OuterRef('pk')).order_by('-created_at').values('created_at')[:1]
                     )
-                ).filter(has_transaction__isnull=False).order_by('-pk')
+                ).filter(has_transaction=True).order_by('-pk')
+
+                context['all_orders'] = all_orders_with_latest_transaction
 
 
-
-                context['all_orders'] = all_orders_with_transactions_and_latest_transaction
 
                 all_transactions = Transaction.objects.all().order_by('-pk')
                 context['all_transactions'] = all_transactions
