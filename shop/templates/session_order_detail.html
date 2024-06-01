@@ -1,5 +1,4 @@
 {% load static %}
-{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -16,12 +15,10 @@
     <title>Order #{{ order.display_order_number }}</title>
 
 
-    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
-    {% endcompress %}
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
@@ -408,7 +405,6 @@
 
 
 
-    {% compress js %}
     <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
     <script src="{% static 'js/jQuery.js' %}" defer></script>
     <script src="{% static 'js/sign_up.js' %}"></script>
@@ -417,7 +413,6 @@
     <script src="{% static 'js/attachments_via_email.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>
-    {% endcompress %}
     
   </body>
 </html>

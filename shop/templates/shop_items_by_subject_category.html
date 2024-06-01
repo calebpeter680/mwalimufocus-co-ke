@@ -1,6 +1,5 @@
 {% load static %}
 {% load image_filters %}
-{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -16,13 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ subject.name }} {{ category.name }} - MwalimuFocus.Co.Ke</title>
 
-    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
-    {% endcompress %}
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
@@ -463,7 +460,6 @@
     </div>
 
 
-    {% compress js %}
     <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
     <script src="{% static 'js/jQuery.js' %}" defer></script>
     <script src="{% static 'js/cart.js' %}"></script>
@@ -472,7 +468,6 @@
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/search.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>
-    {% endcompress %}
 
     
   </body>

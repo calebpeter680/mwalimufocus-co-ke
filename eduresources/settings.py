@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
-    'compressor',
+
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
