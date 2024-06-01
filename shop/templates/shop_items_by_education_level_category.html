@@ -1,5 +1,6 @@
 {% load static %}
 {% load image_filters %}
+{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,9 +18,19 @@
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
-    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
@@ -67,7 +78,7 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-          <img src="{% static 'img/logo.webp' %}" alt="Default Logo" height="80" loading="lazy">
+          <img src="{% static 'img/logo.png' %}" alt="Default Logo" height="80" loading="lazy">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -458,14 +469,17 @@
         </div>
     </div>
 
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
-    <script src="{% static 'js/jQuery.js' %}" defer></script>
+
+
+
+    {% compress js %}
     <script src="{% static 'js/cart.js' %}"></script>
     <script src="{% static 'js/sign_up.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/search.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>
+    {% endcompress %}
     
   </body>
 </html>

@@ -47,8 +47,10 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
-
+    'compressor',
 ]
+
+
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
