@@ -84,9 +84,10 @@ def dashboard_view(request):
                         Transaction.objects.filter(order_id=OuterRef('pk')).values('order_id')
                     ),
                     latest_transaction_created_at=Subquery(
-                        Transaction.objects.filter(order_id=OuterRef('pk')).order_by('-created_at').values_list('created_at', flat=True)[:1]
+                        Transaction.objects.filter(order_id=OuterRef('pk')).filter(order=OuterRef('pk')).order_by('-created_at').values_list('created_at', flat=True)[:1]
                     )
                 ).filter(has_transaction__isnull=False).order_by('-pk')
+
 
 
                 context['all_orders'] = all_orders_with_transactions_and_latest_transaction
