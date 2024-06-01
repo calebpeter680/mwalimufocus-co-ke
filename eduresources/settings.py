@@ -64,6 +64,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
     'shop.middleware.DomainRedirectMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
+
 
 ]
 
