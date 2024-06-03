@@ -603,14 +603,23 @@
           <tbody>
             {% for order in all_orders %}
               <tr>
-                <td>#{{ order.display_order_number }}</td>
+                <td>
+                  #{{ order.display_order_number }}
+                  <i class="bi bi-info-circle" 
+                     data-bs-toggle="tooltip" 
+                     data-bs-placement="top" 
+                     data-bs-custom-class="custom-tooltip" 
+                     data-bs-title="{% for item in order.items.all %}{{ item.title }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                  </i>
+                </td>
+
                 <td>{{ order.latest_transaction_created_at }}</td>
                 <td>Ksh {{ order.total_price }}</td>
                 <td class="text-center">{% if order.is_paid %} <i class="bi bi-check"></i>
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
                 <td class="text-center">{% if order.attachments_sent %} <i class="bi bi-check"></i>
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
-                <td class="text-left">{{ order.user.phone_number }}</td>
+                <td class="text-left">{{ order.user.phone_number }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="{{ order.user.email }}"></i></td>
               </tr>
             {% endfor %}
           </tbody>

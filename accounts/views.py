@@ -113,7 +113,7 @@ def dashboard_view(request):
                     has_transaction=True,
                     user__phone_number__isnull=False,
                     user__phone_number__gt=''
-                ).order_by('-pk')
+                ).prefetch_related('items').order_by('-pk')
 
                 context['all_orders'] = all_orders_with_latest_transaction
 
