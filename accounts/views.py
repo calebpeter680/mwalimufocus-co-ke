@@ -68,10 +68,12 @@ def dashboard_view(request):
                 context['percentage_difference_users'] = percentage_difference_users
 
 
-                def get_total_price(filter_date=None):
+                def get_total_price(filter_date=None, filter_range=None):
                     transactions = Transaction.objects.filter(status='COMPLETE')
                     if filter_date:
                         transactions = transactions.filter(created_at__gte=filter_date)
+                    if filter_range:
+                        transactions = transactions.filter(created_at__range=filter_range)
                     return transactions.aggregate(total=Sum('order__total_price'))['total'] or Decimal('0.00')
 
                 total_today = get_total_price(one_day_ago)
