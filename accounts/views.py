@@ -80,6 +80,7 @@ def dashboard_view(request):
                 total_past_two_weeks = get_total_price(two_weeks_ago)
                 total_past_month = get_total_price(one_month_ago)
                 total_all_time = get_total_price()
+                total_one_day_ago_to_two_days_ago = get_total_price(filter_range=[two_days_ago, one_day_ago])
 
                 context['total_today'] = total_today
                 context['total_past_48_hours'] = total_past_48_hours
@@ -88,9 +89,10 @@ def dashboard_view(request):
                 context['total_past_month'] = total_past_month
                 context['total_all_time'] = total_all_time
 
+
                 percentage_difference = 0
-                if total_past_48_hours != 0:
-                    percentage_difference = ((total_today - total_past_48_hours) / total_past_48_hours) * 100
+                if total_one_day_ago_to_two_days_ago != 0:
+                    percentage_difference = ((total_today - total_one_day_ago_to_two_days_ago) / total_one_day_ago_to_two_days_ago) * 100
 
 
                 percentage_difference = round(percentage_difference, 2)
