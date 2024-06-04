@@ -24,7 +24,7 @@
 
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
 
-    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
@@ -57,7 +57,7 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-          <img src="{% static 'img/logo.webp' %}" alt="Default Logo" height="80" loading="lazy">
+          <img src="{% static 'img/logo.webp' %}" alt="MwalimuFocus.Co.Ke" height="70" width="170" loading="lazy">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
