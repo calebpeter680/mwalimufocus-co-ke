@@ -47,17 +47,6 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
-    'compressor',
-]
-
-
-
-
-
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',  
 ]
 
 
@@ -156,34 +145,19 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
+STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-COMPRESS_ENABLED = DEBUG
-COMPRESS_OFFLINE = True
-COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_URL = STATIC_URL
+
 
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-WHITENOISE_USE_FINDERS = True  
-WHITENOISE_AUTOREFRESH = False  
 
-
-WHITENOISE_MIMETYPES = {
-    'application/javascript': 'application/javascript; charset=utf-8',
-    'application/x-font-ttf': 'application/font-ttf; charset=utf-8',
-    'font/opentype': 'font/opentype; charset=utf-8',
-    'application/font-woff': 'application/font-woff; charset=utf-8',
-    'application/font-woff2': 'application/font-woff2; charset=utf-8',
-    'text/css': 'text/css; charset=utf-8',
-}
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
