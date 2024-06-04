@@ -47,6 +47,18 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
+    'compressor',
+]
+
+
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',  
 ]
 
 
@@ -93,8 +105,8 @@ WSGI_APPLICATION = 'eduresources.wsgi.application'
 
 
 
-#DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
-DEVELOPMENT_MODE = True
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+#DEVELOPMENT_MODE = True
 
 
 

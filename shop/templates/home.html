@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,19 +15,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Download CBC and 8-4-4 Materials and Resources</title>
 
+    {% compress js %}
+    <script src="{% static 'js/popper.min.js' %}" defer></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    {% endcompress %}
+
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    {% endcompress %}
 
-
-    <script src="{% static 'js/popper.min.js' %}" defer></script>
-
-    <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
-
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
@@ -645,13 +647,14 @@
       </div>
     </div>
 
-
-    <script src="{% static 'js/cart.js' %}" defer></script>
+    {% compress js %}
+    <script src="{% static 'js/cart.js' %}"></script>
     <script src="{% static 'js/sign_up.js' %}" defer></script>
     <script src="{% static 'js/login.js' %}" defer></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script src="{% static 'js/search.js' %}" defer></script>
     <script src="{% static 'js/newsletter.js' %}" defer></script>
+    {% endcompress %}
 
   </body>
 </html>

@@ -1,5 +1,6 @@
 {% load static %}
 {% load image_filters %}
+{% load compress %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -23,17 +24,20 @@
 
     {% endif %}
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+    
+    {% compress js %}
     <script src="{% static 'js/popper.min.js' %}" defer></script>
-
     <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
-
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    {% endcompress %}
+
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
+    {% endcompress %}
+
+    
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
 
