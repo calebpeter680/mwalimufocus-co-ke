@@ -69,12 +69,20 @@ def dashboard_view(request):
 
 
                 def get_total_price(filter_date=None, filter_range=None):
-                    transactions = Transaction.objects.filter(status='COMPLETE')
+                    transactions = Transaction.objects.filter(status='COMPLETE') 
+
                     if filter_date:
                         transactions = transactions.filter(created_at__gte=filter_date)
                     if filter_range:
                         transactions = transactions.filter(created_at__range=filter_range)
+
+                    transactions = transactions.exclude(
+                        Q(order__user__phone_number='0714477986') |
+                        Q(order__user__phone_number='254714477986')
+                    )
+
                     return transactions.aggregate(total=Sum('order__total_price'))['total'] or Decimal('0.00')
+
 
                 total_today = get_total_price(one_day_ago)
                 total_past_48_hours = get_total_price(two_days_ago)
@@ -110,9 +118,10 @@ def dashboard_view(request):
                         Transaction.objects.filter(order_id=OuterRef('pk')).order_by('-created_at').values('created_at')[:1]
                     )
                 ).filter(
-                    has_transaction=True,
-                    user__phone_number__isnull=False,
-                    user__phone_number__gt=''
+                    Q(has_transaction=True) &  
+                    Q(user__phone_number__isnull=False) &  
+                    Q(user__phone_number__gt='') &  
+                    ~Q(user__phone_number__in=['0714477986', '254714477986'])  
                 ).prefetch_related('items').order_by('-pk')
 
                 context['all_orders'] = all_orders_with_latest_transaction
