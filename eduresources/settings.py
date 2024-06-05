@@ -5,30 +5,24 @@ import sys
 import dj_database_url
 from django.conf import settings
 import django_heroku
-from decouple import config 
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+from decouple import config
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
+# Base directory
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+# Secret Key and Debug
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
-#SECRET_KEY = 'django-insecure-)1d*4-vi8ps%h(fki%=(&uw5s4)v1l7cnxm4#b&!2-90&v1h9#'
-
-
-DEBUG = os.getenv("DEBUG", "False") == "True"
 #DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,mwalimufocus.co.ke,mwalimufocus.com,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
 
-
-
+# Installed Apps
 INSTALLED_APPS = [
     'admin_interface',
     'colorfield',
@@ -49,11 +43,10 @@ INSTALLED_APPS = [
     'tinymce',
 ]
 
-
-
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -67,8 +60,6 @@ MIDDLEWARE = [
     'shop.middleware.DomainRedirectMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
-
-
 ]
 
 ROOT_URLCONF = 'eduresources.urls'
@@ -92,27 +83,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eduresources.wsgi.application'
 
 
-
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 #DEVELOPMENT_MODE = True
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
-
-
-if DEVELOPMENT_MODE is True:
+if DEVELOPMENT_MODE:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
     }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv("DATABASE_URL", None) is None:
+else:
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if not DATABASE_URL:
         raise Exception("DATABASE_URL environment variable not defined")
     DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+        "default": dj_database_url.parse(DATABASE_URL),
     }
-
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -133,42 +120,31 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LANGUAGE_CODE = 'en-us'
-
-
 TIME_ZONE = 'Africa/Nairobi'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-
-
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_GZIP = True
+WHITENOISE_BROTLI = True
+WHITENOISE_MAX_AGE = 31536000
+WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
     'https://mwalimufocus-ec482d83d7a7.herokuapp.com'
 ]
-
 
 
 
@@ -180,8 +156,10 @@ AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')
 AWS_LOCATION = os.getenv('AWS_LOCATION')
 AWS_DEFAULT_ACL = os.getenv('AWS_DEFAULT_ACL')
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_QUERYSTRING_AUTH = os.getenv('AWS_QUERYSTRING_AUTH')
+AWS_QUERYSTRING_AUTH = os.getenv('AWS_QUERYSTRING_AUTH') == 'True'
 AWS_S3_VERIFY_SSL = os.getenv('AWS_S3_VERIFY_SSL') == 'True'
+
+
 
 
 INTASEND_TOKEN = os.getenv("INTASEND_TOKEN")
@@ -192,12 +170,11 @@ INTASEND_PUBLISHABLE_KEY = os.getenv("INTASEND_PUBLISHABLE_KEY")
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.privateemail.com'
-EMAIL_PORT = 587  
-EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'Mwalimu Focus <info@mwalimufocus.com>'
-
 
 SITE_ID = 1
 
