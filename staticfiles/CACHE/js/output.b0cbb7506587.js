@@ -1,2 +1,0 @@
-function removeImgParams(){const imgElements=document.getElementsByTagName('img');for(let i=0;i<imgElements.length;i++){const imgElement=imgElements[i];let src=imgElement.getAttribute('src');if(src.includes('?')){src=src.split('?')[0];imgElement.setAttribute('src',src)}}}
-window.onload=function(){removeImgParams()};
