@@ -1,17 +1,1 @@
-$(document).ready(function(){var sendRequestBtn=$('#sendRequestBtn');var debounceTimeout=60000;var localStorageKey='withdrawalRequestTime';sendRequestBtn.click(function(event){event.preventDefault();sendRequestBtn.html(`
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Sending...
-        `);var lastRequestTime=localStorage.getItem(localStorageKey);if(lastRequestTime){var currentTime=new Date().getTime();var timeElapsed=currentTime-parseInt(lastRequestTime,10);if(timeElapsed<debounceTimeout){$('.withdrawal-request-modal-body').html(`
-                    <div class="alert alert-dark" role="alert">
-                        You must wait for at least 10 minutes before attempting another withdrawal request.
-                    </div>
-                `);sendRequestBtn.html('Send Request');setTimeout(function(){location.reload()},4000);return}}
-var csrfToken=$('#requestWithdrawalForm input[name="csrfmiddlewaretoken"]').val();var formData=$('#requestWithdrawalForm').serialize();$.ajax({type:'POST',url:'/vendors/initiate_mpesa_b2c/',data:formData,headers:{'X-CSRFToken':csrfToken},success:function(response){$('.withdrawal-request-modal-body').html(`
-                    <div class="alert alert-dark" role="alert">
-                        ${response.status}
-                    </div>
-                `);localStorage.setItem(localStorageKey,new Date().getTime().toString());sendRequestBtn.html('Send Request');setTimeout(function(){location.reload()},4000)},error:function(xhr,status,error){console.error('Error:',error);$('.withdrawal-request-modal-body').html(`
-                    <div class="alert alert-dark" role="alert">
-                        An Error Occurred. Try Again
-                    </div>
-                `);sendRequestBtn.html('Send Request');setTimeout(function(){location.reload()},4000)}})})})
+$(document).ready((function(){var e=$("#sendRequestBtn"),t="withdrawalRequestTime";e.click((function(r){r.preventDefault(),e.html('\n            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n            Sending...\n        ');var a=localStorage.getItem(t);if(a&&(new Date).getTime()-parseInt(a,10)<6e4)return $(".withdrawal-request-modal-body").html('\n                    <div class="alert alert-dark" role="alert">\n                        You must wait for at least 10 minutes before attempting another withdrawal request.\n                    </div>\n                '),e.html("Send Request"),void setTimeout((function(){location.reload()}),4e3);var n=$('#requestWithdrawalForm input[name="csrfmiddlewaretoken"]').val(),o=$("#requestWithdrawalForm").serialize();$.ajax({type:"POST",url:"/vendors/initiate_mpesa_b2c/",data:o,headers:{"X-CSRFToken":n},success:function(r){$(".withdrawal-request-modal-body").html(`\n                    <div class="alert alert-dark" role="alert">\n                        ${r.status}\n                    </div>\n                `),localStorage.setItem(t,(new Date).getTime().toString()),e.html("Send Request"),setTimeout((function(){location.reload()}),4e3)},error:function(t,r,a){console.error("Error:",a),$(".withdrawal-request-modal-body").html('\n                    <div class="alert alert-dark" role="alert">\n                        An Error Occurred. Try Again\n                    </div>\n                '),e.html("Send Request"),setTimeout((function(){location.reload()}),4e3)}})}))}));

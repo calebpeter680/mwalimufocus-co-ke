@@ -1,12 +1,1 @@
-document.addEventListener('DOMContentLoaded',function(){const addShopItemBtn=document.getElementById('addShopItemBtn');addShopItemBtn.addEventListener('click',function(event){event.preventDefault();addShopItemBtn.innerHTML=`
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Adding...
-        `;const addShopItemForm=document.getElementById('addShopItemForm');const formData=new FormData(addShopItemForm);const csrfToken=formData.get('csrfmiddlewaretoken');fetch('/vendors/add-shop-item/',{method:'POST',body:formData,headers:{'X-CSRFToken':csrfToken}}).then(response=>response.json()).then(data=>{const modalBody=document.querySelector('.add-shop-item-modal');if(data.status==='success'){modalBody.innerHTML=`
-                    <div class="alert alert-success" role="alert">
-                        ${data.message}
-                    </div>
-                `;setTimeout(function(){window.location.reload()},2000)}else{modalBody.innerHTML=`
-                    <div class="alert alert-danger" role="alert">
-                        ${data.message}
-                    </div>
-                `;setTimeout(function(){window.location.reload()},4000)}}).catch(error=>{console.error('Error:',error);alert('An error occurred. Please try again.')})})})
+document.addEventListener("DOMContentLoaded",(function(){const e=document.getElementById("addShopItemBtn");e.addEventListener("click",(function(n){n.preventDefault(),e.innerHTML='\n            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n            Adding...\n        ';const t=document.getElementById("addShopItemForm"),o=new FormData(t),r=o.get("csrfmiddlewaretoken");fetch("/vendors/add-shop-item/",{method:"POST",body:o,headers:{"X-CSRFToken":r}}).then((e=>e.json())).then((e=>{const n=document.querySelector(".add-shop-item-modal");"success"===e.status?(n.innerHTML=`\n                    <div class="alert alert-success" role="alert">\n                        ${e.message}\n                    </div>\n                `,setTimeout((function(){window.location.reload()}),2e3)):(n.innerHTML=`\n                    <div class="alert alert-danger" role="alert">\n                        ${e.message}\n                    </div>\n                `,setTimeout((function(){window.location.reload()}),4e3))})).catch((e=>{console.error("Error:",e),alert("An error occurred. Please try again.")}))}))}));
