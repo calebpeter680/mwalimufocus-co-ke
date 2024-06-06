@@ -24,9 +24,15 @@
 
     {% endif %}
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!--
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    -->
+
+    <!-- Combined CSS -->
+    <link rel="stylesheet" href="{% static 'css/combined.min.css' %}">
 
     
 
@@ -480,16 +486,21 @@
     </div>
     
 
-    <script src="{% static 'js/popper.min.js' %}" defer></script>
-    <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'js/sign_up.js' %}"></script>
-    <script src="{% static 'js/login.js' %}"></script>
-    <script src="{% static 'js/image_url_format.js' %}"></script>
-    <script src="{% static 'js/search.js' %}"></script>
-    <script src="{% static 'js/newsletter.js' %}"></script>
-    <script src="{% static 'js/payment_status.js' %}"></script>
-    <script src="{% static 'js/stk.js' %}"></script>
+    <!-- Combined and deferred JS files -->
+    <script src="{% static 'js/product_detail_deferred.min.js' %}" defer></script>
+    <script src="{% static 'js/product_detail_non_deferred.min.js' %}"></script>
+
+    <!-- Original individual files commented out for future reference -->
+    <!-- <script src="{% static 'js/popper.min.js' %}" defer></script> -->
+    <!-- <script src="{% static 'js/bootstrap.min.js' %}" defer></script> -->
+    <!-- <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script> -->
+    <!-- <script src="{% static 'js/sign_up.js' %}" defer></script> -->
+    <!-- <script src="{% static 'js/login.js' %}" defer></script> -->
+    <!-- <script src="{% static 'js/image_url_format.js' %}"></script> -->
+    <!-- <script src="{% static 'js/newsletter.js' %}" defer></script> -->
+    <!-- <script src="{% static 'js/payment_status.js' %}"></script> -->
+    <!-- <script src="{% static 'js/stk.js' %}"></script> -->
+
 
     
   </body>
