@@ -13,6 +13,7 @@
         });
       }
     </script>
+    <link rel="preload" href="{% static 'js/categories_non_deferred.min.js' %}" as="script">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Categories of CBC and 8-4-4 Learning Materials and Resources</title>
@@ -29,6 +30,8 @@
 
     <!-- Combined CSS -->
     <link rel="preload" href="{% static 'css/combined.min.css' %}" type="text/css" as="style" onload="this.onload=null; this.rel='stylesheet';" />
+
+
 
 
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
