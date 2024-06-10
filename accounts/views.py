@@ -200,11 +200,11 @@ def dashboard_view(request):
 
                 vendor_shop.save()
 
-                categories = Category.objects.all()
+                categories = Category.objects.all().order_by('name')
                 context['categories'] = categories
                 education_levels = Education_Level.objects.all()
                 context['education_levels'] = education_levels
-                subjects = Subject.objects.all()
+                subjects = Subject.objects.all().order_by('name')
                 context['subjects'] = subjects
             
             else:
