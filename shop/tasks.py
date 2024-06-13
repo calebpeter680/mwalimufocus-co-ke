@@ -7,6 +7,7 @@ import filetype
 
 from .models import Order, Brand
 
+
 @shared_task
 def send_email_with_attachments_task(order_id):
     order = get_object_or_404(Order, pk=order_id)
@@ -53,6 +54,10 @@ def send_email_with_attachments_task(order_id):
 
     from_email = settings.DEFAULT_FROM_EMAIL
     to_email = order.user.email
+
+    if not to_email:
+        print(f"Error: The email address is None. Cannot send email.")
+        return {'success': False, 'error_message': 'Email address is None'}
 
     email = EmailMessage(subject, plain_message, from_email, [to_email])
 

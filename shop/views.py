@@ -294,8 +294,6 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
 
 
 
-
-
 def shop_items_by_subject_category_education_level(request, education_level_slug, subject_slug, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     subject = get_object_or_404(Subject, slug=subject_slug)
@@ -705,10 +703,8 @@ def webhook_callback(request):
                 if state == 'COMPLETE':
                     order.is_paid = True
                     order.save()
-                    
-                    send_email_with_attachments_task.delay_on_commit(order.id)
 
-                
+                    send_email_with_attachments_task.delay_on_commit(order.id)
 
             return JsonResponse({'message': 'Webhook received successfully'}, status=200)
 
