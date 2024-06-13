@@ -4,7 +4,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import timedelta
-from .models import CustomUser, Customer_Item, ShopItem
+from .models import CustomUser 
+from shop.models import Customer_Item, ShopItem
 from django.conf import settings
 
 def get_purchased_subjects(user):
