@@ -956,7 +956,7 @@ def session_order_detail_view(request):
             order.customer_items_created = True
             order.save()
         else:
-            customer_items = []
+            customer_items = list(order.items.all())
 
     num_shopitems = len(customer_items)
     item_sing_plu = "Item" if num_shopitems == 1 else "Items"
