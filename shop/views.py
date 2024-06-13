@@ -921,70 +921,49 @@ def create_order_for_item(shop_item):
 
 def session_order_detail_view(request):
     session_order_id = request.session.get('session_order_id')
-    print("Session Order ID:", session_order_id)
 
     if not session_order_id:
-        print("Redirecting to home...")
         return redirect('home')
 
     order = get_object_or_404(Order, pk=session_order_id)
-    print("Order:", order)
 
     items = None  
 
     if order.customer_items_created:
-        print("Customer items already created")
         customer_items = order.customer_item_set.all()  
     else:
-        print("Creating customer items...")
         items = order.items.all()
-        print("Items:", items)
         
         customer_items = []
 
-        for item in items:
-            print("Processing item:", item)
-            print("Title:", item.title)
-            print("Category:", item.category.name)
-            print("Education Level:", item.education_level.name)
-            print("Subject:", item.subject.name)
-            print("File:", item.file)
-            print("User:", order.user)
-            print("Order:", order)
-            
-            customer_item = Customer_Item.objects.create(
-                title=item.title,
-                category=item.category.name,
-                education_level=item.education_level.name,
-                subject=item.subject.name,
-                file=item.file,
-                user=order.user,
-                order=order
-            )
+        if order.user:
+            for item in items:
+                customer_item = Customer_Item.objects.create(
+                    title=item.title,
+                    category=item.category.name,
+                    education_level=item.education_level.name,
+                    subject=item.subject.name,
+                    file=item.file,
+                    user=order.user,
+                    order=order
+                )
 
-            print("Customer item saved:", customer_item)
-            customer_items.append(customer_item)
+                customer_items.append(customer_item)
 
-            item.downloads_count += 1
-            item.save()
-            print("Item updated:", item)
+                item.downloads_count += 1
+                item.save()
 
-        order.customer_items_created = True
-        order.save()
-        print("Customer items created and order updated:", order)
+            order.customer_items_created = True
+            order.save()
+        else:
+            customer_items = []
 
     num_shopitems = len(customer_items)
-    print("Number of shop items:", num_shopitems)
     item_sing_plu = "Item" if num_shopitems == 1 else "Items"
-    print("Item singular/plural:", item_sing_plu)
 
     brand = Brand.objects.last()
-    print("Brand:", brand)
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
-    print("Categories with items:", categories_with_items)
     menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
-    print("Menu items:", menu_items)
-
 
     try:
         latest_link = SocialMediaLinks.objects.latest('pk')
@@ -1004,6 +983,7 @@ def session_order_detail_view(request):
     }
 
     return render(request, 'session_order_detail.html', context)
+
 
 
 
