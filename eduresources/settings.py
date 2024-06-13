@@ -169,6 +169,15 @@ INTASEND_PUBLISHABLE_KEY = os.getenv("INTASEND_PUBLISHABLE_KEY")
 
 
 
+CELERY_BROKER_URL = os.getenv('REDISCLOUD_URL')
+CELERY_RESULT_BACKEND = os.getenv('REDISCLOUD_URL')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_ALWAYS_EAGER = False
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.privateemail.com'
 EMAIL_PORT = 587
@@ -181,3 +190,5 @@ SITE_ID = 1
 
 
 django_heroku.settings(locals())
+
+

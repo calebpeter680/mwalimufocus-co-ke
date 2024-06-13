@@ -47,7 +47,7 @@ urlpatterns = [
 
     path('download_item/<int:item_id>/', views.download_customer_item_file, name='download_customer_item_file'),
 
-    path('send_attachment_via_email/<int:order_id>/', views.send_email_with_attachments, name='send_email_with_attachments'),
+    #path('send_attachment_via_email/<int:order_id>/', views.send_email_with_attachments, name='send_email_with_attachments'),
 
     path('search/', views.search_shop_items, name='search_shop_items'),
 
