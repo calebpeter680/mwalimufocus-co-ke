@@ -14,16 +14,9 @@ from validate_email_address import validate_email
 
 
 def get_purchased_subjects(user):
-    orders = Order.objects.filter(user=user)
-    subjects = set()
-
-    for order in orders:
-        items = order.items.all()
-        for item in items:
-            subjects.add(item.subject)
-
-    return subjects
-
+  subject_ids = Order.objects.filter(user=user).values_list('items__subject', flat=True)
+  subjects = Subject.objects.filter(pk__in=subject_ids)
+  return set(subjects) 
 
 
 def get_new_shop_items(subject_names):
