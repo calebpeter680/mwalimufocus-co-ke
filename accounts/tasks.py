@@ -8,8 +8,6 @@ from .models import CustomUser
 from shop.models import Customer_Item, ShopItem
 from django.conf import settings
 
-
-
 def get_purchased_subjects(user):
     customer_items = Customer_Item.objects.filter(user=user)
     subjects = set(item.subject for item in customer_items)
@@ -42,8 +40,8 @@ def send_promotional_email(user, new_shop_items):
 
 @shared_task
 def send_promotional_emails_to_all_users():
-    users = CustomUser.objects.all()
-    for user in users:
+    user = CustomUser.objects.filter(email='calebpeter4@gmail.com').first()
+    if user:
         subjects = get_purchased_subjects(user)
         if subjects:
             new_shop_items = get_new_shop_items(subjects)
@@ -53,13 +51,12 @@ def send_promotional_emails_to_all_users():
 
 
 
-
 @shared_task
 def send_simple_email_to_all_users():
     subject = "Hello from YourApp!"
     message = "This is a simple test email sent using Celery."
     recipient_list = ['calebpeter4@gmail.com']
-    
+
     print(f"Sending email to: {recipient_list}")
     
     send_mail(
