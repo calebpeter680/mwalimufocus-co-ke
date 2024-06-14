@@ -26,6 +26,7 @@
       .header {
         text-align: center;
         padding-bottom: 20px;
+        background-color: #98FB98;
       }
       .header img {
         max-height: 80px;
@@ -63,7 +64,7 @@
           {% for item in new_shop_items %}
             <div class="item">
               <div class="item-title">{{ item.title }}</div>
-              <div class="item-price">Price: {{ item.price }}</div>
+              <div class="item-price">Price: Ksh {{ item.price }}</div>
               <p>{{ item.description|truncatewords_html:20 }}</p>
               <a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" class="btn btn-primary">View Resource</a>
             </div>
