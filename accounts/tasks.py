@@ -5,17 +5,26 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import timedelta
 from .models import CustomUser, EmailPerHourLimit, WeeklyPromotionEmail
-from shop.models import Customer_Item, ShopItem, Discount
+from shop.models import Customer_Item, ShopItem, Discount, Order
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import Decimal
 from validate_email_address import validate_email
 
+
 def get_purchased_subjects(user):
-    customer_items = Customer_Item.objects.filter(user=user)
-    subjects = set(item.subject for item in customer_items)
+    orders = Order.objects.filter(user=user)
+    subjects = set()
+
+    for order in orders:
+        items = order.items.all()
+        for item in items:
+            subjects.add(item.subject)
+
     return subjects
+
+
 
 def get_new_shop_items(subject_names):
     one_week_ago = timezone.now() - timedelta(days=7)
@@ -25,9 +34,12 @@ def get_new_shop_items(subject_names):
     )
     return new_shop_items
 
+
+
 def send_promotional_email(user, new_shop_items):
-    subject = "Check Out Our New Items Just for You!"
     latest_discount = Discount.objects.latest('id')
+    subject = f"🎉 {latest_discount}% Offer! Check Out Our New Resources 📚"
+
     current_site = Site.objects.get_current()
     context = {
         'user': user,
