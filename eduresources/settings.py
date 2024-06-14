@@ -1,6 +1,7 @@
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import os
+from celery.schedules import crontab
 import sys
 import dj_database_url
 from django.conf import settings
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'storages',
     'pages',
     'tinymce',
+    'django_celery_beat',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -175,8 +177,20 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_ALWAYS_EAGER = False
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-
+CELERY_BEAT_SCHEDULE = {
+    'send-promotional-emails': {
+        'task': 'accounts.tasks.send_promotional_emails_to_all_users',
+        'schedule': crontab(hour=14, minute=0, day_of_week='5'),  
+    },
+    'send-simple-emails': {
+        'task': 'accounts.tasks.send_simple_email_to_all_users',
+        'schedule': crontab(hour=14, minute=25, day_of_week='5'),  
+    },
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.privateemail.com'

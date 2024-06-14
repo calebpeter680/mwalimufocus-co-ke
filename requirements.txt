@@ -14,11 +14,13 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
 colorama==0.4.6
+cron-descriptor==1.4.3
 cssmin==0.2.0
 dj-database-url==2.1.0
 Django==5.0.4
 django-admin-interface==0.28.6
 django-appconf==1.0.6
+django-celery-beat==2.6.0
 django-colorfield==0.11.0
 django-compressor==4.4
 django-heroku==0.3.1
@@ -26,6 +28,7 @@ django-htmlmin==0.11.0
 django-js-asset==2.2.0
 django-pipeline==3.1.0
 django-storages==1.14.2
+django-timezone-field==6.1.0
 django-tinymce==4.0.0
 filetype==1.2.0
 gunicorn==22.0.0
@@ -39,6 +42,7 @@ pillow==10.3.0
 prompt_toolkit==3.0.47
 psycopg2==2.9.9
 psycopg2-binary==2.9.9
+python-crontab==3.1.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-dotenv==1.0.1
