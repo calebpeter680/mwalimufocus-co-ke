@@ -53,7 +53,7 @@
     <div class="container">
       <div class="header">
         <a href="{{ protocol }}://{{ domain }}{% url 'home' %}">
-          <img src="{{ protocol }}://{{ domain }}/static/logo.png" alt="Logo">
+          <img src="{{ protocol }}://{{ domain }}/static/img/logo.png" alt="Logo">
         </a>
       </div>
       <div class="content">
@@ -64,7 +64,7 @@
             <div class="item">
               <div class="item-title">{{ item.title }}</div>
               <div class="item-price">Price: {{ item.price }}</div>
-              <p>{{ item.description|truncatewords:20 }}</p>
+              <p>{{ item.description|truncatewords_html:20 }}</p>
               <a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" class="btn btn-primary">View Resource</a>
             </div>
           {% endfor %}

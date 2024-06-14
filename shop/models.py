@@ -95,7 +95,7 @@ class ShopItem(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop_item_detail', kwargs={
-            'category_slug': self.category_slug,
+            'category_slug': self.category.slug,
             'pk': self.pk,
             'slug': self.slug
         })
