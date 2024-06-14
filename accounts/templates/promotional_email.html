@@ -27,6 +27,7 @@
         text-align: center;
         padding-bottom: 20px;
         background-color: #98FB98;
+        border-radius: 8px;
       }
       .header img {
         max-height: 80px;
@@ -48,6 +49,10 @@
       .item-price {
         color: #28a745;
       }
+      .footer {
+        background-color: #98FB98;
+        border-radius: 8px;
+      }
     </style>
   </head>
   <body>
@@ -63,6 +68,7 @@
         <div class="items">
           {% for item in new_shop_items %}
             <div class="item">
+              <div class="item-header" style="font-size: 14px; color: black; border-radius: 10px; padding: 10px; background-color: #98FB98;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</div>
               <div class="item-title">{{ item.title }}</div>
               <div class="item-price">Price: Ksh {{ item.price }}</div>
               <p>{{ item.description|truncatewords_html:20 }}</p>
