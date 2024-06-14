@@ -7,6 +7,7 @@ from datetime import timedelta
 from .models import CustomUser 
 from shop.models import Customer_Item, ShopItem
 from django.conf import settings
+from django.contrib.sites.models import Site
 
 def get_purchased_subjects(user):
     customer_items = Customer_Item.objects.filter(user=user)
@@ -23,9 +24,12 @@ def get_new_shop_items(subject_names):
 
 def send_promotional_email(user, new_shop_items):
     subject = "Check Out Our New Items Just for You!"
+    current_site = Site.objects.get_current()
     context = {
         'user': user,
         'new_shop_items': new_shop_items,
+        'domain': current_site.domain,
+        'protocol': 'https' if settings.SECURE_SSL_REDIRECT else 'http',
     }
     html_message = render_to_string('promotional_email.html', context)
     plain_message = strip_tags(html_message)
