@@ -10,13 +10,13 @@ from django.conf import settings
 
 def get_purchased_subjects(user):
     customer_items = Customer_Item.objects.filter(user=user)
-    subjects = set(item.subject for item in customer_items)
+    subjects = set(item.subject_id for item in customer_items)
     return subjects
 
-def get_new_shop_items(subjects):
+def get_new_shop_items(subject_ids):
     one_week_ago = timezone.now() - timedelta(days=7)
     new_shop_items = ShopItem.objects.filter(
-        subject__in=subjects,
+        subject_id__in=subject_ids,
         date_created__gte=one_week_ago
     )
     return new_shop_items
@@ -42,11 +42,12 @@ def send_promotional_email(user, new_shop_items):
 def send_promotional_emails_to_all_users():
     user = CustomUser.objects.filter(email='calebpeter4@gmail.com').first()
     if user:
-        subjects = get_purchased_subjects(user)
-        if subjects:
-            new_shop_items = get_new_shop_items(subjects)
+        subject_ids = get_purchased_subjects(user)
+        if subject_ids:
+            new_shop_items = get_new_shop_items(subject_ids)
             if new_shop_items:
                 send_promotional_email(user, new_shop_items)
+
 
 
 
