@@ -3,7 +3,7 @@ from .models import EmailPerHourLimit, WeeklyPromotionEmail, CustomUser, Custome
 
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'is_active', 'is_staff', 'date_joined', 'is_vendor', 'is_new')
+    list_display = ('email', 'is_active', 'is_staff', 'date_joined', 'is_vendor', 'send_promotional_emails_to_all_users_is_sent', 'is_new')
 
     list_filter = ('is_active', 'is_staff', 'is_vendor')
 
