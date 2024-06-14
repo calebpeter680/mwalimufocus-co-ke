@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -24,6 +25,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
@@ -36,6 +38,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     agree_to_terms = models.BooleanField(default=True)
 
     is_vendor = models.BooleanField(default=False)
+    send_promotional_emails_to_all_users_is_sent = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -82,3 +85,27 @@ class SocialMediaLinks(models.Model):
 
     def __str__(self):
         return f"SocialMediaLinks(facebook={self.facebook_url}, telegram={self.telegram_url}, whatsapp={self.whatsapp_url})"
+
+
+
+class EmailPerHourLimit(models.Model):
+    limit = models.IntegerField()
+
+    def __str__(self):
+        return f"Email per hour limit: {self.limit}"
+
+
+
+
+class WeeklyPromotionEmail(models.Model):
+    STATUS_CHOICES = [
+        ('SENT', 'Sent'),
+        ('FAILED', 'Failed'),
+    ]
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    status = models.CharField(max_length=6, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return f"Weekly Promotion Email to {self.user.email} - Status: {self.status}"

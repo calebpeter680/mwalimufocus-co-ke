@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber, SocialMediaLinks
+from .models import EmailPerHourLimit, WeeklyPromotionEmail, CustomUser, CustomerFAQ, VendorFAQ, Subscriber, SocialMediaLinks
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -53,3 +53,12 @@ class SubscriberAdmin(admin.ModelAdmin):
 @admin.register(SocialMediaLinks)
 class SocialMediaLinksAdmin(admin.ModelAdmin):
     list_display = ('facebook_url', 'telegram_url', 'whatsapp_url')
+
+@admin.register(EmailPerHourLimit)
+class EmailPerHourLimitAdmin(admin.ModelAdmin):
+    list_display = ('limit',)
+
+@admin.register(WeeklyPromotionEmail)
+class WeeklyPromotionEmailAdmin(admin.ModelAdmin):
+    list_display = ('user', 'date_created', 'status')
+    list_filter = ('status', 'date_created')

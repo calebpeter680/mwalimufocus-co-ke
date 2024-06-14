@@ -179,12 +179,13 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_ALWAYS_EAGER = False
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_EXPIRES = 3600
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
     'send-promotional-emails': {
         'task': 'accounts.tasks.send_promotional_emails_to_all_users',
-        'schedule': crontab(hour=14, minute=0, day_of_week='5'),  
+        'schedule': crontab(hour=5, minute=0, day_of_week='5'),  
     },
     'apply-discount-to-shop-items': {
         'task': 'accounts.tasks.apply_discount_to_shop_items',
@@ -192,6 +193,10 @@ CELERY_BEAT_SCHEDULE = {
     },
     'remove-discount-from-shop-items': {
         'task': 'accounts.tasks.remove_discount_from_shop_items',
+        'schedule': crontab(hour=23, minute=59, day_of_week='0'),
+    },
+    'reset_promotional_emails_status': {
+        'task': 'accounts.tasks.reset_promotional_emails_status',
         'schedule': crontab(hour=23, minute=59, day_of_week='0'),
     },
 }
