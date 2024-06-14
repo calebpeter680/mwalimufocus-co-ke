@@ -186,9 +186,13 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'accounts.tasks.send_promotional_emails_to_all_users',
         'schedule': crontab(hour=14, minute=0, day_of_week='5'),  
     },
-    'send-simple-emails': {
-        'task': 'accounts.tasks.send_simple_email_to_all_users',
-        'schedule': crontab(hour=14, minute=25, day_of_week='5'),  
+    'apply-discount-to-shop-items': {
+        'task': 'accounts.tasks.apply_discount_to_shop_items',
+        'schedule': crontab(hour=23, minute=59, day_of_week='4'),
+    },
+    'remove-discount-from-shop-items': {
+        'task': 'accounts.tasks.remove_discount_from_shop_items',
+        'schedule': crontab(hour=23, minute=59, day_of_week='0'),
     },
 }
 

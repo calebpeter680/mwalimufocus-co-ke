@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
+from shop.models import Discount, Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
 
 @admin.register(ShopItem)
 class ShopItemAdmin(admin.ModelAdmin):
@@ -12,3 +12,4 @@ admin.site.register(Brand)
 admin.site.register(Order)
 admin.site.register(Transaction)
 admin.site.register(Customer_Item)
+admin.site.register(Discount)

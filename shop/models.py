@@ -160,3 +160,11 @@ class Transaction(models.Model):
 
 
 
+
+class Discount(models.Model):
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return f"Discount of {self.amount}%"
+
+
