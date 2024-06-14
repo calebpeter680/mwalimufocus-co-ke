@@ -43,7 +43,7 @@
         border-bottom: none;
       }
       .item-title {
-        font-size: 18px;
+        font-size: 14px;
         font-weight: bold;
       }
       .item-price {
@@ -70,9 +70,8 @@
           {% for item in new_shop_items %}
             <div class="item">
               <div class="item-header" style="font-size: 14px; color: black; border-radius: 10px; padding: 10px; background-color: #98FB98;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</div>
-              <div class="item-title">{{ item.title }}</div>
+              <div class="item-title"><a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" class="btn btn-primary">{{ item.title }}</a></div>
               <div class="item-price">Price: Ksh {{ item.price }}</div>
-              <p>{{ item.description|truncatewords_html:20 }}</p>
               <a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" class="btn btn-primary">View Resource</a>
             </div>
           {% endfor %}

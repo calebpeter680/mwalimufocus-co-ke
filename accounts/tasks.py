@@ -9,6 +9,7 @@ from shop.models import Customer_Item, ShopItem, Discount
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
+from decimal import Decimal
 
 def get_purchased_subjects(user):
     customer_items = Customer_Item.objects.filter(user=user)
@@ -63,7 +64,7 @@ def apply_discount_to_shop_items():
     except ObjectDoesNotExist:
         return "No discounts found. No items updated."
 
-    discount_percentage = latest_discount.amount / 100
+    discount_percentage = Decimal(latest_discount.amount) / Decimal('100')
     shop_items = ShopItem.objects.all()
 
     for item in shop_items:
@@ -75,21 +76,20 @@ def apply_discount_to_shop_items():
 
 
 
-
-
 @shared_task
 def remove_discount_from_shop_items():
     try:
         latest_discount = Discount.objects.latest('id')
-        discount_percentage = latest_discount.amount / 100
+        discount_percentage = Decimal(latest_discount.amount) / Decimal('100')
 
         shop_items = ShopItem.objects.all()
 
         for item in shop_items:
-            original_price = item.price / (1 - discount_percentage)
+            original_price = item.price / (Decimal('1') - discount_percentage)
             item.price = original_price
             item.save()
 
         return f"Increased prices of {len(shop_items)} ShopItems"
     except Discount.DoesNotExist:
         return "No Discount objects found in the database."
+
