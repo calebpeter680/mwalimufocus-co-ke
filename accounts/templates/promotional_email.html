@@ -59,21 +59,21 @@
       </div>
       <div class="content">
         <h2>Hi {{ user.email }},</h2>
-        <p>We have some new items that you might be interested in:</p>
+        <p>We have some new teaching and learning resources that you might be interested in:</p>
         <div class="items">
           {% for item in new_shop_items %}
             <div class="item">
               <div class="item-title">{{ item.title }}</div>
               <div class="item-price">Price: {{ item.price }}</div>
               <p>{{ item.description|truncatewords:20 }}</p>
-              <a href="{{ item.get_absolute_url }}" class="btn btn-primary">View Item</a>
+              <a href="{{ item.get_absolute_url }}" class="btn btn-primary">View Resource</a>
             </div>
           {% endfor %}
         </div>
-        <p>Visit our <a href="{% url 'shop' %}">shop</a> for more items.</p>
+        <p>Visit our <a href="/">online store</a> and utilize the search box to find more CBC and 8-4-4 learning and teaching resources.</p>
       </div>
       <div class="footer text-center">
-        <p>&copy; {{ current_year }} Your Company. All rights reserved.</p>
+        <p>&copy; MwalimuFocus.Co.Ke. All rights reserved.</p>
       </div>
     </div>
   </body>
