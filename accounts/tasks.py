@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import timedelta
 from .models import CustomUser, EmailPerHourLimit, WeeklyPromotionEmail
-from shop.models import Customer_Item, ShopItem, Discount, Order
+from shop.models import Customer_Item, ShopItem, Discount, Order, Subject
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
