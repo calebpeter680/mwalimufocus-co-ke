@@ -164,10 +164,10 @@ def send_payment_reminders():
             continue
 
         user_orders = Order.objects.filter(user=user)
-        if any(user_orders.filter(items__in=order.items.all(), is_paid=True).exists()):
+        if user_orders.filter(items__in=order.items.all(), is_paid=True).exists():
             continue
 
-        if any(user_orders.filter(items__in=order.items.all(), cart_reminder_sent=True).exists()):
+        if user_orders.filter(items__in=order.items.all(), cart_reminder_sent=True).exists():
             continue
 
         original_prices = {}
