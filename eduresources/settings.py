@@ -203,6 +203,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'accounts.tasks.send_payment_reminders',
         #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
     },
+    'restore_item_prices': {
+        'task': 'accounts.tasks.restore_item_prices',
+        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
+    },
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

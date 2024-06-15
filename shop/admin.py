@@ -21,11 +21,23 @@ class PaymentReminderLogAdmin(admin.ModelAdmin):
     user.admin_order_field = 'user__email'
     order.admin_order_field = 'order__display_order_number'
 
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'display_order_number', 
+        'user', 
+        'total_price', 
+        'attachments_sent', 
+        'created_at', 
+        'cart_reminder_sent'
+    )
+
+
 admin.site.register(Category)
 admin.site.register(Education_Level)
 admin.site.register(Subject)
 admin.site.register(Brand)
-admin.site.register(Order)
 admin.site.register(Transaction)
 admin.site.register(Customer_Item)
 admin.site.register(Discount)
