@@ -34,6 +34,10 @@ class OrderAdmin(admin.ModelAdmin):
         'cart_reminder_sent'
     )
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.exclude(user__isnull=True)
+
 
 admin.site.register(Category)
 admin.site.register(Education_Level)
