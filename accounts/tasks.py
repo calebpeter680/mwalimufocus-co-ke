@@ -153,9 +153,7 @@ def send_payment_reminders():
     except ObjectDoesNotExist:
         latest_discount = Discount.objects.create(amount=20)
     discount_decimal = Decimal(latest_discount.amount) / 100
-    user = CustomUser.objects.get(email='calebpeter4@gmail.com')
-    #unpaid_orders = Order.objects.filter(is_paid=False, cart_reminder_sent=False)
-    unpaid_orders = Order.objects.filter(user=user, is_paid=False, cart_reminder_sent=False)
+    unpaid_orders = Order.objects.filter(is_paid=False, cart_reminder_sent=False)
 
     for order in unpaid_orders:
         user = order.user
@@ -174,8 +172,8 @@ def send_payment_reminders():
         for item in order.items.all():
             if item.is_discounted and item.discount_amount is not None and item.discount_amount == latest_discount.amount:
                 remaining_discount_time = item.discount_end_time - timezone.now()
-                if remaining_discount_time.total_seconds() < 600: 
-                    item.discount_end_time += timezone.timedelta(minutes=10) - remaining_discount_time
+                if remaining_discount_time.total_seconds() < 1200: 
+                    item.discount_end_time += timezone.timedelta(minutes=20) - remaining_discount_time
                     item.save()
             else:
                 original_prices[item.id] = item.price
@@ -183,7 +181,7 @@ def send_payment_reminders():
                 item.is_discounted = True
                 item.discount_amount = latest_discount.amount
                 item.discount_start_time = timezone.now()
-                item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=10)
+                item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=20)
                 item.save()
 
         if not original_prices:
@@ -214,7 +212,7 @@ def send_payment_reminders():
         order.cart_reminder_sent = True
         order.save()
 
-        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=600)
+        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=1200)
 
 @shared_task
 def restore_item_prices(original_prices, discount_amount):
