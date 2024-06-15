@@ -189,9 +189,12 @@ def send_payment_reminders():
         if not original_prices:
             continue  
 
+        current_site = Site.objects.get_current()
         html_message = render_to_string('payment_reminder_email.html', {
             'user': user,
             'order': order,
+            'domain': current_site.domain,
+            'protocol': 'https' if settings.SECURE_SSL_REDIRECT else 'http',
             'discount_amount': latest_discount.amount,
             'items': order.items.all()
         })
