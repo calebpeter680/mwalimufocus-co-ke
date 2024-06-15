@@ -160,6 +160,9 @@ def send_payment_reminders():
         if not user:
             continue
 
+        if not validate_email(user.email):
+            continue
+
         user_orders = Order.objects.filter(user=user)
         if user_orders.filter(items__in=order.items.all(), is_paid=True).exists():
             continue
