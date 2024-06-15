@@ -596,7 +596,12 @@
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
                 <td class="text-center">{% if order.attachments_sent %} <i class="bi bi-check"></i>
                   {% else %}<i class="bi bi-x"></i>{% endif %}</td>
+                {% if order.user %}
                 <td class="text-left">{{ order.user.phone_number }} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="{{ order.user.email }}"></i></td>
+                {% else %}
+                <td class="text-left">No User <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="The user didn't provide email address when paying!"></i></td>
+                {% endif %}
+
               </tr>
             {% endfor %}
           </tbody>
