@@ -202,12 +202,12 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.privateemail.com'
+EMAIL_HOST = 'sm1.cloudoon.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'Mwalimu Focus <support@mwalimufocus.com>'
+DEFAULT_FROM_EMAIL = 'Mwalimu Focus <info@mwalimufocus.co.ke>'
 
 SITE_ID = 1
 
