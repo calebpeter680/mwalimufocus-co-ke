@@ -67,6 +67,7 @@
         <h2 style="font-size: 14px;">Hi <span style="text-decoration: none;">{{ user.email }}</span>,</h2>
         <p>Hurry! <b>FurahiDay Series:</b> Enjoy a special <b>{{ latest_discount }}</b> on all products. The discounted prices are already applied. Act now — this offer ends on Sunday at 23:59, after which regular prices will resume on Monday at 00:00.</p>
 
+        {% if new_shop_items %}
         <p>Also, we have some new teaching and learning resources that you might be interested in:</p>
         <div class="items">
           {% for item in new_shop_items %}
@@ -78,6 +79,7 @@
             </div>
           {% endfor %}
         </div>
+        {% endif %}
         <p>Visit our <a style="text-decoration: none;" href="{{ protocol }}://{{ domain }}/">online store</a> and utilize the search box to find more CBC and 8-4-4 learning and teaching resources.</p>
       </div>
       <div class="footer text-center">

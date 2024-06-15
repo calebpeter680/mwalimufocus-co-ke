@@ -54,6 +54,8 @@ def send_promotional_email(user, new_shop_items):
     )
 
 
+
+
 @shared_task
 def send_promotional_emails_to_all_users():
     email_limit_obj = EmailPerHourLimit.objects.first()
@@ -65,24 +67,22 @@ def send_promotional_emails_to_all_users():
     for user in users:
         if not validate_email(user.email):
             WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
-            user.send_promotional_emails_to_all_users_is_sent = True
-            user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
             continue
         
         subjects = get_purchased_subjects(user)
         if subjects:
             new_shop_items = get_new_shop_items(subjects)
-            if new_shop_items:
-                try:
-                    send_promotional_email(user, new_shop_items)
-                    WeeklyPromotionEmail.objects.create(user=user, status='SENT')
-                    user.send_promotional_emails_to_all_users_is_sent = True
-                    user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
-                    sent_emails_count += 1
-                except Exception as e:
-                    WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
-    
+            try:
+                send_promotional_email(user, new_shop_items)
+                WeeklyPromotionEmail.objects.create(user=user, status='SENT')
+                user.send_promotional_emails_to_all_users_is_sent = True
+                user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
+                sent_emails_count += 1
+            except Exception as e:
+                WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
+
     return f"Sent promotional emails to {sent_emails_count} users."
+
 
 
 
@@ -91,13 +91,18 @@ def send_promotional_emails_to_all_users():
 def reset_promotional_emails_status():
     try:
         users = CustomUser.objects.all()
+        updated_users_count = 0
+
         for user in users:
-            user.send_promotional_emails_to_all_users_is_sent = False
-            user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
-        
-        return f"Reset send_promotional_emails_to_all_users_is_sent for {users.count()} users."
+            if validate_email(user.email):
+                user.send_promotional_emails_to_all_users_is_sent = False
+                user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
+                updated_users_count += 1
+
+        return f"Reset send_promotional_emails_to_all_users_is_sent for {updated_users_count} users."
     except Exception as e:
         return f"Failed to reset promotional emails status: {str(e)}"
+
 
 
 
