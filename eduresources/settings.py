@@ -185,19 +185,19 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
     'send-promotional-emails': {
         'task': 'accounts.tasks.send_promotional_emails_to_all_users',
-        'schedule': crontab(hour=5, minute=0, day_of_week='5'),  
+        #'schedule': crontab(hour=5, minute=0, day_of_week='5'),  
     },
     'apply-discount-to-shop-items': {
         'task': 'accounts.tasks.apply_discount_to_shop_items',
-        'schedule': crontab(hour=23, minute=59, day_of_week='4'),
+        #'schedule': crontab(hour=23, minute=59, day_of_week='4'),
     },
     'remove-discount-from-shop-items': {
         'task': 'accounts.tasks.remove_discount_from_shop_items',
-        'schedule': crontab(hour=23, minute=59, day_of_week='0'),
+        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
     },
     'reset_promotional_emails_status': {
         'task': 'accounts.tasks.reset_promotional_emails_status',
-        'schedule': crontab(hour=23, minute=59, day_of_week='0'),
+        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
     },
 }
 

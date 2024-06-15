@@ -31,7 +31,7 @@ def get_new_shop_items(subject_names):
 
 def send_promotional_email(user, new_shop_items):
     latest_discount = Discount.objects.latest('id')
-    subject = f"🎉 {latest_discount}% Offer! Check Out Our New Resources 📚"
+    subject = f"🎉 {latest_discount} Offer! Check Out Our New Resources 📚"
 
     current_site = Site.objects.get_current()
     context = {
