@@ -158,7 +158,6 @@ def send_payment_reminders():
     for order in unpaid_orders:
         user = order.user
         if not user:
-            print(f"Order {order.id} doesn't have user.")
             continue
 
         user_orders = Order.objects.filter(user=user)
