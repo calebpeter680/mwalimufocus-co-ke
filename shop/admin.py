@@ -26,7 +26,8 @@ class PaymentReminderLogAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'display_order_number', 
-        'user', 
+        'user',
+        'is_paid', 
         'total_price', 
         'attachments_sent', 
         'created_at', 
