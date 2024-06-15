@@ -75,6 +75,10 @@ class ShopItem(models.Model):
     Best_Rating_Value = models.IntegerField(default=0)
     Rating_Count = models.IntegerField(default=0)
     image = models.ImageField(upload_to='shopitemimages/', null=True, blank=True)
+    is_discounted = models.BooleanField(default=False)
+    discount_amount = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    discount_start_time = models.DateTimeField(null=True, blank=True)
+    discount_end_time = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -111,6 +115,7 @@ class Order(models.Model):
     attachments_sent = models.BooleanField(default=False)
     customer_items_created = models.BooleanField(default=False, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
+    cart_reminder_sent = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order {self.pk} - Total: Ksh {self.total_price}"

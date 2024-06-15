@@ -143,3 +143,72 @@ def remove_discount_from_shop_items():
     except Discount.DoesNotExist:
         return "No Discount objects found in the database."
 
+
+
+
+@shared_task
+def send_payment_reminders():
+    try:
+        latest_discount = Discount.objects.latest('id')
+    except ObjectDoesNotExist:
+        latest_discount = Discount.objects.create(amount=20)
+    discount_decimal = Decimal(latest_discount.amount) / 100
+    user = CustomUser.objects.get(email='calebpeter4@gmail.com')
+    #unpaid_orders = Order.objects.filter(is_paid=False, cart_reminder_sent=False)
+    unpaid_orders = Order.objects.filter(user=user, is_paid=False, cart_reminder_sent=False)
+
+    for order in unpaid_orders:
+        user = order.user
+        if not user:
+            print(f"Order {order.id} doesn't have user.")
+            continue
+
+        user_orders = Order.objects.filter(user=user)
+        if any(user_orders.filter(items__in=order.items.all(), is_paid=True).exists()):
+            continue
+
+        if any(user_orders.filter(items__in=order.items.all(), cart_reminder_sent=True).exists()):
+            continue
+
+        original_prices = {}
+        for item in order.items.all():
+            if item.is_discounted and item.discount_amount is not None and item.discount_amount == latest_discount.amount:
+                remaining_discount_time = item.discount_end_time - timezone.now()
+                if remaining_discount_time.total_seconds() < 900: 
+                    item.discount_end_time += timezone.timedelta(minutes=15) - remaining_discount_time
+                    item.save()
+            else:
+                original_prices[item.id] = item.price
+                item.price = item.price * (1 - discount_decimal)
+                item.is_discounted = True
+                item.discount_amount = latest_discount.amount
+                item.discount_start_time = timezone.now()
+                item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=15)
+                item.save()
+
+        if not original_prices:
+            continue  
+
+        send_mail(
+            'Payment Reminder',
+            f'Please complete your payment for Order {order.id}. A discount of {latest_discount.amount}% has been applied to your items!',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+        )
+
+        order.cart_reminder_sent = True
+        order.save()
+
+        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=900)
+
+@shared_task
+def restore_item_prices(original_prices, discount_amount):
+    for item_id, original_price in original_prices.items():
+        item = ShopItem.objects.get(id=item_id)
+        if item.discount_amount == discount_amount and item.discount_end_time <= timezone.now():
+            item.price = original_price
+            item.is_discounted = False
+            item.discount_amount = None
+            item.discount_start_time = None
+            item.discount_end_time = None
+            item.save()
