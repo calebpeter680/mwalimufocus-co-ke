@@ -207,6 +207,7 @@ def send_payment_reminders():
             html_message=html_message,
         )
 
+        PaymentReminderLog.objects.create(user=user, order=order)
 
         order.cart_reminder_sent = True
         order.save()

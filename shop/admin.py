@@ -1,9 +1,25 @@
 from django.contrib import admin
-from shop.models import Discount, Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
+from shop.models import PaymentReminderLog, Discount, Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
 
 @admin.register(ShopItem)
 class ShopItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'is_search_engine_indexible')
+
+
+@admin.register(PaymentReminderLog)
+class PaymentReminderLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'order', 'reminder_sent_at')
+    list_filter = ('user', 'reminder_sent_at')
+    search_fields = ('user__email', 'order__id')
+
+    def user(self, obj):
+        return obj.user.email
+
+    def order(self, obj):
+        return obj.order.display_order_number
+
+    user.admin_order_field = 'user__email'
+    order.admin_order_field = 'order__display_order_number'
 
 admin.site.register(Category)
 admin.site.register(Education_Level)

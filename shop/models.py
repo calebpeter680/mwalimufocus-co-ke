@@ -173,3 +173,11 @@ class Discount(models.Model):
         return f"Discount of {self.amount}%"
 
 
+
+class PaymentReminderLog(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    reminder_sent_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Reminder sent for Order {self.order.id} to {self.user.email} at {self.reminder_sent_at}"
