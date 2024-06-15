@@ -174,8 +174,8 @@ def send_payment_reminders():
         for item in order.items.all():
             if item.is_discounted and item.discount_amount is not None and item.discount_amount == latest_discount.amount:
                 remaining_discount_time = item.discount_end_time - timezone.now()
-                if remaining_discount_time.total_seconds() < 900: 
-                    item.discount_end_time += timezone.timedelta(minutes=15) - remaining_discount_time
+                if remaining_discount_time.total_seconds() < 600: 
+                    item.discount_end_time += timezone.timedelta(minutes=10) - remaining_discount_time
                     item.save()
             else:
                 original_prices[item.id] = item.price
@@ -183,23 +183,35 @@ def send_payment_reminders():
                 item.is_discounted = True
                 item.discount_amount = latest_discount.amount
                 item.discount_start_time = timezone.now()
-                item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=15)
+                item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=10)
                 item.save()
 
         if not original_prices:
             continue  
 
+        html_message = render_to_string('payment_reminder_email.html', {
+            'user': user,
+            'order': order,
+            'discount_amount': latest_discount.amount,
+            'items': order.items.all()
+        })
+
+        plain_message = strip_tags(html_message)
+        subject = f"🔔 Payment Reminder: {latest_discount.amount}% Discount on Your Order! 🏷️"
+
         send_mail(
-            'Payment Reminder',
-            f'Please complete your payment for Order {order.id}. A discount of {latest_discount.amount}% has been applied to your items!',
+            subject,
+            plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
+            html_message=html_message,
         )
+
 
         order.cart_reminder_sent = True
         order.save()
 
-        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=900)
+        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=600)
 
 @shared_task
 def restore_item_prices(original_prices, discount_amount):
