@@ -65,6 +65,8 @@ def send_promotional_emails_to_all_users():
     for user in users:
         if not validate_email(user.email):
             WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
+            user.send_promotional_emails_to_all_users_is_sent = True
+            user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
             continue
         
         subjects = get_purchased_subjects(user)
@@ -75,7 +77,7 @@ def send_promotional_emails_to_all_users():
                     send_promotional_email(user, new_shop_items)
                     WeeklyPromotionEmail.objects.create(user=user, status='SENT')
                     user.send_promotional_emails_to_all_users_is_sent = True
-                    user.save()
+                    user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
                     sent_emails_count += 1
                 except Exception as e:
                     WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
