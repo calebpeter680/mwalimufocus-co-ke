@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import timedelta
 from .models import CustomUser, EmailPerHourLimit, WeeklyPromotionEmail
-from shop.models import Customer_Item, ShopItem, Discount, Order, Subject
+from shop.models import Customer_Item, ShopItem, Discount, Order, Subject, PaymentReminderLog
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
@@ -212,7 +212,8 @@ def send_payment_reminders():
         order.cart_reminder_sent = True
         order.save()
 
-        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=1200)
+        restore_item_prices.apply_async((original_prices, latest_discount.amount), countdown=0.2)
+
 
 @shared_task
 def restore_item_prices(original_prices, discount_amount):
