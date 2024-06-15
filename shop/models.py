@@ -120,6 +120,12 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.pk} - Total: Ksh {self.total_price}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_paid', 'cart_reminder_sent']),
+            models.Index(fields=['user']),
+        ]
+
 
 
 

@@ -49,7 +49,7 @@ def send_promotional_email(user, new_shop_items):
         plain_message,
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
-        fail_silently=False,
+        fail_silently=True,
         html_message=html_message,
     )
 
@@ -153,11 +153,14 @@ def send_payment_reminders():
     except ObjectDoesNotExist:
         latest_discount = Discount.objects.create(amount=20)
     discount_decimal = Decimal(latest_discount.amount) / 100
-    unpaid_orders = Order.objects.filter(is_paid=False, cart_reminder_sent=False)
+    unpaid_orders = Order.objects.select_related('user').filter(is_paid=False, cart_reminder_sent=False, user__isnull=False)
 
     for order in unpaid_orders:
         user = order.user
         if not user:
+            continue
+
+        if not order.items.exists():
             continue
 
         if not validate_email(user.email):
@@ -203,6 +206,7 @@ def send_payment_reminders():
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
             html_message=html_message,
+            fail_silently=True
         )
 
         PaymentReminderLog.objects.create(user=user, order=order)
