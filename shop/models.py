@@ -118,7 +118,7 @@ class Order(models.Model):
     cart_reminder_sent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Order {self.pk} - Total: Ksh {self.total_price}"
+        return f"Order {self.display_order_number} - Total: Ksh {self.total_price}"
 
     class Meta:
         indexes = [
