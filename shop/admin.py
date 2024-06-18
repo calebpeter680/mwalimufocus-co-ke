@@ -39,10 +39,16 @@ class OrderAdmin(admin.ModelAdmin):
         return qs.exclude(user__isnull=True)
 
 
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('transaction_id', 'status', 'order', 'created_at')
+
+
+
 admin.site.register(Category)
 admin.site.register(Education_Level)
 admin.site.register(Subject)
 admin.site.register(Brand)
-admin.site.register(Transaction)
 admin.site.register(Customer_Item)
 admin.site.register(Discount)

@@ -733,7 +733,10 @@ def login_and_assign_user(request):
             phone_number = data.get('phone_number')
             order_id = data.get('order_id')
 
-            if not email or not phone_number or not order_id:
+            if not email:
+                email = 'usernoemail@mwalimufocus.co.ke'
+
+            if not phone_number or not order_id:
                 return JsonResponse({'error': 'Missing required data'})
 
             order = get_object_or_404(Order, id=order_id)
