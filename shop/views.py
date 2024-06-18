@@ -734,7 +734,12 @@ def login_and_assign_user(request):
             order_id = data.get('order_id')
 
             if not email:
-                email = 'usernoemail@mwalimufocus.co.ke'
+                latest_user = CustomUser.objects.order_by('-pk').first()
+                if latest_user:
+                    unique_suffix = latest_user.pk + 1
+                else:
+                    unique_suffix = 1
+                email = f"usernoemail{unique_suffix}@mwalimufocus.co.ke"
 
             if not phone_number or not order_id:
                 return JsonResponse({'error': 'Missing required data'})
