@@ -20,11 +20,15 @@ def get_purchased_subjects(user):
 
 
 def get_new_shop_items(subject_names):
-    one_week_ago = timezone.now() - timedelta(days=7)
+    two_months_ago = timezone.now() - timedelta(days=60)
     new_shop_items = ShopItem.objects.filter(
         subject__name__in=subject_names,
-        date_created__gte=one_week_ago
+        date_created__gte=two_months_ago
     )
+
+    if not new_shop_items.exists():
+        new_shop_items = ShopItem.objects.filter(subject__name__in=subject_names)
+
     return new_shop_items
 
 
