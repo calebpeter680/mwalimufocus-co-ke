@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 import requests
 import filetype
+from validate_email_address import validate_email
 
 from .models import Order, Brand
 
@@ -76,9 +77,11 @@ def send_email_with_attachments_task(order_id):
 
 
 
+
+
+
 @shared_task
 def send_attachments_for_paid_orders():
-    # Fetch orders where is_paid is True but attachments_sent is False
     paid_orders = Order.objects.filter(is_paid=True, attachments_sent=False)
 
     for order in paid_orders:
@@ -124,6 +127,10 @@ def send_attachments_for_paid_orders():
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = order.user.email
 
+        if not validate_email(to_email):
+            print(f"Invalid email address detected: {to_email}")
+            continue  
+
         email = EmailMessage(subject, plain_message, from_email, [to_email])
 
         for filename, content, content_type in attachments:
@@ -142,3 +149,4 @@ def send_attachments_for_paid_orders():
             print(f"Attachments sent for Order {order.display_order_number}")
         except Exception as e:
             print(f"Failed to send attachments for Order {order.display_order_number}: {e}")
+
