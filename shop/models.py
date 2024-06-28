@@ -54,7 +54,7 @@ class Subject(models.Model):
 
 
 class ShopItem(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     education_level = models.ForeignKey(Education_Level, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -62,7 +62,7 @@ class ShopItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, default=100)
     file = models.FileField(null=True, blank=True, upload_to='shopitemfiles/')
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(blank=True, max_length=300)
     education_level_slug = models.SlugField(blank=True)
     subject_slug = models.SlugField(blank=True)
     category_slug = models.SlugField(blank=True)
