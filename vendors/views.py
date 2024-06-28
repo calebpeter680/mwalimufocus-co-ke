@@ -17,6 +17,9 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.views.decorators.http import require_POST
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -52,9 +55,6 @@ class VendorShopEditView(View):
 
 
 
-
-
-
 class AddShopItemView(View):
     def post(self, request):
         data = request.POST
@@ -82,20 +82,9 @@ class AddShopItemView(View):
         print("Extracted data - File:", file)
 
         if not all([title, description, new_price, old_price, file]):
-            missing_fields = []
-            if not title:
-                missing_fields.append('title')
-            if not description:
-                missing_fields.append('description')
-            if not new_price:
-                missing_fields.append('new_price')
-            if not old_price:
-                missing_fields.append('old_price')
-            if not file:
-                missing_fields.append('file')
-
+            missing_fields = [field for field in ['title', 'description', 'new_price', 'old_price', 'file'] if not data.get(field)]
             error_message = f"Please provide the following fields: {', '.join(missing_fields)}"
-            return JsonResponse({'status': 'success', 'message': error_message})
+            return JsonResponse({'status': 'error', 'message': error_message})
 
         try:
             min_price_obj = ProductMinPrice.objects.latest('id')
@@ -108,38 +97,48 @@ class AddShopItemView(View):
         if float(new_price) < min_price:
             return JsonResponse({'status': 'error', 'message': f'The required minimum new price is Ksh {min_price}.'})
 
-        category = get_object_or_404(Category, id=category_id)
-        education_level = get_object_or_404(Education_Level, id=education_level_id)
-        subject = get_object_or_404(Subject, id=subject_id)
+        try:
+            category = get_object_or_404(Category, id=category_id)
+            education_level = get_object_or_404(Education_Level, id=education_level_id)
+            subject = get_object_or_404(Subject, id=subject_id)
+        except Exception as e:
+            logger.error("Error fetching related objects: %s", e)
+            return JsonResponse({'status': 'error', 'message': 'Error fetching related objects.'})
 
-        shop_item = ShopItem.objects.create(
-            title=title,
-            category=category,
-            education_level=education_level,
-            subject=subject,
-            description=description,
-            price=new_price,
-            old_price=old_price,
-            file=file
-        )
+        try:
+            shop_item = ShopItem.objects.create(
+                title=title,
+                category=category,
+                education_level=education_level,
+                subject=subject,
+                description=description,
+                price=new_price,
+                old_price=old_price,
+                file=file
+            )
 
-        vendor_shop = get_object_or_404(VendorShop, user=request.user)
+            vendor_shop = get_object_or_404(VendorShop, user=request.user)
 
-        vendor_shop_item = VendorShopItem.objects.create(
-            shop=vendor_shop,
-            item=shop_item,
-            created_at=timezone.now()
-        )
+            vendor_shop_item = VendorShopItem.objects.create(
+                shop=vendor_shop,
+                item=shop_item,
+                created_at=timezone.now()
+            )
 
-        # Print success message for debugging
-        print("Product added successfully.")
+            # Print success message for debugging
+            print("Product added successfully.")
 
-        response_data = {
-            'status': 'success',
-            'message': 'Product added successfully.'
-        }
+            response_data = {
+                'status': 'success',
+                'message': 'Product added successfully.'
+            }
 
-        return JsonResponse(response_data)
+            return JsonResponse(response_data)
+
+        except Exception as e:
+            logger.error("Error adding product: %s", e)
+            return JsonResponse({'status': 'error', 'message': 'An error occurred while adding the product.'})
+
 
 
 
