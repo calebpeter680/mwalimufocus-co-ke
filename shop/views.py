@@ -892,6 +892,7 @@ def shop_item_detail(request, category_slug, pk, slug):
         latest_link = None
 
     related_items = ShopItem.objects.filter(
+        is_search_engine_indexible=True, 
         category=shop_item.category,
         education_level=shop_item.education_level
     ).exclude(pk=shop_item.pk)
