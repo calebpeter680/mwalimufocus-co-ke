@@ -891,9 +891,12 @@ def shop_item_detail(request, category_slug, pk, slug):
     except SocialMediaLinks.DoesNotExist:
         latest_link = None
 
-    same_education_level_items = ShopItem.objects.filter(education_level=shop_item.education_level).exclude(pk=shop_item.pk)
+    related_items = ShopItem.objects.filter(
+        category=shop_item.category,
+        education_level=shop_item.education_level
+    ).exclude(pk=shop_item.pk)
 
-    return render(request, 'product_detail.html', {'same_education_level_items': same_education_level_items, 'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+    return render(request, 'product_detail.html', {'related_items': related_items, 'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 
