@@ -156,12 +156,8 @@
                 <div class="col-sm-3"><strong>Description:</strong></div>
                 <div class="col-sm-9">
                   {{ shop_item.description|safe }}
-                  {% if related_items %}
-                    {% if shop_item.subject.name == "ALL SUBJECTS" %}
+                  {% if related_items and shop_item.subject.name == "ALL SUBJECTS" %}
                       <p class="mt-2"><b>If you want to download specific {{ shop_item.education_level }} {{ shop_item.category }}, check below:</b> </p>
-                    {% else %}
-                      <p class="mt-2"><b>Related {{ shop_item.education_level }} {{ shop_item.category }}:</b> </p>
-                    {% endif %}
                     {% for item in related_items %}
                       <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">

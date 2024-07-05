@@ -5,6 +5,7 @@ from .models import CustomUser, CustomerFAQ, VendorFAQ, Subscriber
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
+from examgenerator.models import Topic
 from shop.models import ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
 from django.db.models import Count, Q
 from vendors.models import VendorShop, VendorShopItem, Vendor_Order, VendorCommission, WithdrawalRequest, ProductMinPrice
@@ -150,8 +151,17 @@ def dashboard_view(request):
                 context['percentage_difference_conversion'] = percentage_difference_conversion
 
 
+                education_levels = Education_Level.objects.all()
+                subjects = Subject.objects.exclude(Q(name__iexact='ALL SUBJECTS') | Q(name__iexact='All Subjects')).order_by('name')
+                topics = Topic.objects.all()
+
+                context['education_levels'] = education_levels
+                context['subjects'] = subjects
+                context['topics'] = topics
 
 
+
+                
 
             elif user.is_vendor:
 

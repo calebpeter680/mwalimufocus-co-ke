@@ -204,6 +204,11 @@
   <symbol id="search" viewBox="0 0 16 16">
     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
   </symbol>
+
+  <symbol id="AddQuestion" viewBox="0 0 16 16">
+    <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+  </symbol>
 </svg>
 
 <header class="navbar sticky-top flex-md-nowrap p-0 shadow" data-bs-theme="dark" style="background: {{ brand.primary_color }};">
@@ -293,6 +298,14 @@
               <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#" data-bs-target="#FAQsModal" data-bs-toggle="modal">
                 <svg class="bi"><use xlink:href="#Customers"/></svg>
                 Customers
+              </a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#" data-bs-target="#AddQuestionModal" data-bs-toggle="modal">
+                <svg class="bi"><use xlink:href="#AddQuestion"/></svg>
+                Add Question
               </a>
             </li>
 
@@ -643,62 +656,130 @@
 
 
 
-  <!-- FAQs Modal -->
-  <div class="modal fade modal-lg" id="FAQsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Frequently Asked Questions</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="accordion accordion-flush" id="accordionFlushExample">
-
-            {% if request.user.is_vendor %}
-            <div class="accordion-item">
-              {% for faq in vendor_faqs %}
-                <h2 class="accordion-header" id="flush-headingOne">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ faq.id}}" aria-expanded="false" aria-controls="flush-collapseOne">
-                    {{ faq.title }}
-                  </button>
-                </h2>
-                <div id="flush-collapseOne{{ faq.id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                  {% if faq.image %}
-                    <div class="accordion-body">{{ faq.image.url }}</div>
-                  {% endif %}
-                  <div class="accordion-body">{{ faq.description }}</div>
-                </div>
-              {% endfor %}
-            </div>
-            {% else %}
-
-            <div class="accordion-item">
-              {% for faq in customer_faqs %}
-                <h2 class="accordion-header" id="flush-headingOne">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    {{ faq.title }}
-                  </button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                  {% if faq.image %}
-                    <div class="accordion-body">{{ faq.image.url }}</div>
-                  {% endif %}
-                  <div class="accordion-body">{{ faq.description }}</div>
-                </div>
-              {% endfor %}
-            </div>
-
-            {% endif %}
-
-
+    <!-- FAQs Modal -->
+    <div class="modal fade modal-lg" id="FAQsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Frequently Asked Questions</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          <div class="modal-body">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+
+              {% if request.user.is_vendor %}
+              <div class="accordion-item">
+                {% for faq in vendor_faqs %}
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ faq.id}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                      {{ faq.title }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne{{ faq.id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    {% if faq.image %}
+                      <div class="accordion-body">{{ faq.image.url }}</div>
+                    {% endif %}
+                    <div class="accordion-body">{{ faq.description }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+              {% else %}
+
+              <div class="accordion-item">
+                {% for faq in customer_faqs %}
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                      {{ faq.title }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    {% if faq.image %}
+                      <div class="accordion-body">{{ faq.image.url }}</div>
+                    {% endif %}
+                    <div class="accordion-body">{{ faq.description }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              {% endif %}
+
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+
+
+    <!-- Add Question Modal -->
+    <div class="modal fade modal-lg" id="AddQuestionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add a Question to Question-Answer Bank</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="questionForm">
+              {% csrf_token %}
+              <div class="row mb-3">
+                  <div class="col-md-6">
+                      <label for="education_level" class="form-label">Education Level</label>
+                      <select class="form-select" id="education_level" name="education_level" required>
+                          {% if education_levels %}
+                              {% for level in education_levels %}
+                                  <option value="{{ level.id }}">{{ level.name }}</option>
+                              {% endfor %}
+                          {% else %}
+                              <option value="0">Nothing to select</option>
+                          {% endif %}
+                      </select>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="subject" class="form-label">Subject</label>
+                      <select class="form-select" id="subject" name="subject" required>
+                          {% if subjects %}
+                              {% for subject in subjects %}
+                                  <option value="{{ subject.id }}">{{ subject.name }}</option>
+                              {% endfor %}
+                          {% else %}
+                              <option value="0">Nothing to select</option>
+                          {% endif %}
+                      </select>
+                  </div>
+              </div>
+              <div class="mb-3">
+                  <label for="topic_id" class="form-label">Topic</label>
+                  <select class="form-select" id="topic_id" name="topic" required>
+                      <option value="0">Select a topic</option>
+                  </select>
+              </div>
+              <div class="mb-3">
+                  <label for="question_text" class="form-label">Question Text</label>
+                  <textarea class="form-control" id="question_text" name="question_text" rows="3" required></textarea>
+              </div>
+              <div class="mb-3">
+                  <label for="answer_text" class="form-label">Answer Text</label>
+                  <textarea class="form-control" id="answer_text" name="answer_text" rows="2"></textarea>
+              </div>
+              <div id="subQuestions">
+              </div>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                  <button type="button" class="btn btn-outline-dark mb-3 mb-md-0" id="addSubQuestionBtn">Add Sub-Question <i class="bi bi-plus"></i></button>
+                  <button type="submit" class="btn btn-dark">Save Question <i class="bi bi-check"></i></button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <!-- Vendor Registration Form -->
@@ -1225,5 +1306,180 @@
     <script src="{% static 'js/change_phone_number.js' %}"></script>
     <script src="{% static 'js/password_change.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const educationLevelSelect = document.getElementById('education_level');
+          const subjectSelect = document.getElementById('subject');
+          const topicSelect = document.getElementById('topic_id');
+
+          function updateTopics() {
+              const educationLevelId = educationLevelSelect.value;
+              const subjectId = subjectSelect.value;
+
+              if (educationLevelId && subjectId) {
+                  fetch(`/exam-gen/get_topics/?education_level_id=${educationLevelId}&subject_id=${subjectId}`)
+                      .then(response => response.json())
+                      .then(data => {
+                          topicSelect.innerHTML = '';
+
+                          if (data.length > 0) {
+                              data.forEach(topic => {
+                                  const option = document.createElement('option');
+                                  option.value = topic.id;
+                                  option.textContent = topic.name;
+                                  topicSelect.appendChild(option);
+                              });
+                          } else {
+                              const option = document.createElement('option');
+                              option.textContent = 'Nothing to Select';
+                              topicSelect.appendChild(option);
+                          }
+                      });
+              } else {
+                  topicSelect.innerHTML = '';
+              }
+          }
+          function loadInitialTopics() {
+              updateTopics();
+          }
+          loadInitialTopics();
+          educationLevelSelect.addEventListener('change', updateTopics);
+          subjectSelect.addEventListener('change', updateTopics);
+      });
+    </script>
+
+
+
+
+    <script>
+      $(document).ready(function() {
+          let subQuestionCount = 0;
+
+          $('#addSubQuestionBtn').click(function() {
+              subQuestionCount++;
+              $('#subQuestions').append(
+                  `<div class="mb-3" id="subQuestion_${subQuestionCount}">
+                      <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
+                      <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2" required></textarea>
+                      <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
+                      <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2" required></textarea>
+                      <div class="mb-3" id="subSubQuestions_${subQuestionCount}">
+                          <button type="button" class="btn btn-outline-dark mb-5 mb-md-0" id="addSubSubQuestionBtn_${subQuestionCount}">Add Sub-Sub-Question <i class="bi bi-plus"></i></button>
+                      </div>
+                  </div>`
+              );
+
+              $(`#addSubSubQuestionBtn_${subQuestionCount}`).click(function() {
+                  const subSubQuestionCount = $(`#subSubQuestions_${subQuestionCount} > .subSubQuestion`).length + 1;
+                  $(`#subSubQuestions_${subQuestionCount}`).append(
+                      `<div class="subSubQuestion mb-3">
+                          <label for="sub_sub_question_text_${subQuestionCount}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionCount}_${subSubQuestionCount}" name="sub_questions[${subQuestionCount}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2" required></textarea>
+                          <label for="sub_sub_answer_text_${subQuestionCount}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionCount}_${subSubQuestionCount}" name="sub_questions[${subQuestionCount}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2" required></textarea>
+                      </div>`
+                  );
+              });
+          });
+
+          const questionForm = document.getElementById('questionForm');
+          const submitButton = questionForm.querySelector('button[type="submit"]');
+
+          function handleFormSubmission(event) {
+              event.preventDefault();
+              console.log("Form submission triggered");
+
+              submitButton.disabled = true;
+              const originalButtonText = submitButton.innerHTML;
+              submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+
+              const formData = new FormData(questionForm);
+              console.log("Form data collected:", formData);
+
+              const subQuestions = [];
+              document.querySelectorAll('#subQuestions > .mb-3').forEach((subQuestionDiv) => {
+                  const sub_question_text = subQuestionDiv.querySelector(`textarea[name*="[sub_question_text]"]`).value;
+                  const sub_answer_text = subQuestionDiv.querySelector(`textarea[name*="[sub_answer_text]"]`).value;
+                  const sub_sub_questions = [];
+                  subQuestionDiv.querySelectorAll('.subSubQuestion').forEach((subSubQuestionDiv) => {
+                      const sub_sub_question_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_question_text]"]`).value;
+                      const sub_sub_answer_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_answer_text]"]`).value;
+                      sub_sub_questions.push({
+                          sub_sub_question_text: sub_sub_question_text,
+                          sub_sub_answer_text: sub_sub_answer_text
+                      });
+                  });
+
+                  subQuestions.push({
+                      sub_question_text: sub_question_text,
+                      sub_answer_text: sub_answer_text,
+                      sub_sub_questions: sub_sub_questions
+                  });
+              });
+
+              const data = {
+                  csrfmiddlewaretoken: formData.get('csrfmiddlewaretoken'),
+                  topic_id: formData.get('topic'),
+                  question_text: formData.get('question_text'),
+                  answer_text: formData.get('answer_text'),
+                  sub_questions: subQuestions
+              };
+
+              console.log("Data to be sent:", JSON.stringify(data));
+
+              fetch('/exam-gen/save_question/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                  },
+                  body: JSON.stringify(data)
+              })
+              .then(response => response.json())
+              .then(responseData => {
+                  console.log("Response data:", responseData);
+                  if (responseData.status === 'success') {
+                      const successAlert = `
+                          <div class="alert alert-secondary" role="alert">
+                              The Question and Its Data Have Been Saved Successfully!
+                          </div>
+                      `;
+                      questionForm.innerHTML = successAlert;
+                  } else {
+                      const errorAlert = `
+                          <div class="alert alert-secondary" role="alert">
+                              The Question and Its Data Haven't Been Saved Because of an Error!
+                          </div>
+                      `;
+                      questionForm.innerHTML = errorAlert;
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  const errorAlert = `
+                      <div class="alert alert-secondary" role="alert">
+                          The Question and Its Data Haven't Been Saved Because of an Error!
+                      </div>
+                  `;
+                  questionForm.innerHTML = errorAlert;
+              })
+              .finally(() => {
+                  submitButton.disabled = false;
+                  submitButton.innerHTML = originalButtonText;
+                  setTimeout(() => {
+                      location.reload();
+                  }, 2500);
+              });
+          }
+
+          questionForm.addEventListener('submit', handleFormSubmission);
+      });
+    </script>
+
+
+
+
+
   </body>
 </html>
