@@ -30,6 +30,9 @@ from django.views.decorators.http import require_GET
 from django.http import HttpResponseNotFound
 from storages.backends.s3boto3 import S3Boto3Storage
 from .tasks import send_email_with_attachments_task
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def search_shop_items(request):
@@ -677,6 +680,7 @@ def normalize_phone_number(phone_number):
 
 @csrf_exempt
 def webhook_callback(request):
+    logger.info("Webhook received: %s", request.body)
     if request.method == 'POST':
         try:
             print("Webhook received a POST request")
