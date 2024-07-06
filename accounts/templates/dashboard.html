@@ -754,7 +754,7 @@
               </div>
               <div class="mb-3">
                   <label for="topic_id" class="form-label">Topic</label>
-                  <select class="form-select" id="topic_id" name="topic" required>
+                  <select class="form-select" id="topic_id" name="topic_id" required>
                       <option value="0">Select a topic</option>
                   </select>
               </div>
@@ -762,11 +762,22 @@
                   <label for="question_text" class="form-label">Question Text</label>
                   <textarea class="form-control" id="question_text" name="question_text" rows="3" required></textarea>
               </div>
+
+              <div class="mb-3">
+                  <label for="question_image" class="form-label">Question Image</label>
+                  <input class="form-control" type="file" id="question_image" name="question_image">
+              </div>
+
               <div class="mb-3">
                   <label for="answer_text" class="form-label">Answer Text</label>
                   <textarea class="form-control" id="answer_text" name="answer_text" rows="2"></textarea>
               </div>
-              <div id="subQuestions">
+
+              <div class="mb-3">
+                  <label for="answer_image" class="form-label">Answer Image</label>
+                  <input class="form-control" type="file" id="answer_image" name="answer_image">
+              </div>
+                        <div id="subQuestions">
               </div>
               <div class="d-grid gap-2 d-md-flex justify-content-md-between">
                   <button type="button" class="btn btn-outline-dark mb-3 mb-md-0" id="addSubQuestionBtn">Add Sub-Question <i class="bi bi-plus"></i></button>
@@ -1355,7 +1366,9 @@
           let subQuestionCount = 0;
 
           $('#addSubQuestionBtn').click(function() {
+
               $('#answer_text').val('').closest('.mb-3').hide();
+              $('#answer_image').val('').closest('.mb-3').hide();
               $('#answer_text').prop('required', false);
 
               subQuestionCount++;
@@ -1365,8 +1378,16 @@
                       <div class="card-body">
                           <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
                           <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2" required></textarea>
+                          <div class="mb-3">
+                              <label for="sub_question_image_${subQuestionCount}" class="form-label">Sub-Question Image</label>
+                              <input type="file" class="form-control" id="sub_question_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_image]">
+                          </div>
                           <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
                           <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2" required></textarea>
+                          <div class="mb-3">
+                              <label for="sub_answer_image_${subQuestionCount}" class="form-label">Sub-Answer Image</label>
+                              <input type="file" class="form-control" id="sub_answer_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_image]">
+                          </div>
                           <div class="mb-3" id="subSubQuestions_${subQuestionCount}">
                               <!-- Keep this div for dynamic sub-sub-question cards -->
                           </div>
@@ -1377,11 +1398,14 @@
           });
 
           $(document).on('click', '.addSubSubQuestionBtn', function() {
-              const subQuestionId = $(this).data('subquestion');
-              $(`#sub_answer_text_${subQuestionId}`).val('').closest('.mb-3').hide();
-              $(`#sub_answer_text_${subQuestionId}`).prop('required', false);
-              $(`label[for="sub_answer_text_${subQuestionId}"]`).hide();
 
+              $(`#sub_answer_text_${subQuestionCount}`).val('').closest('.mb-3').hide();
+              $(`#sub_answer_image_${subQuestionCount}`).val('').closest('.mb-3').hide();
+              $(`#sub_answer_text_${subQuestionCount}`).prop('required', false); 
+
+              $(`label[for="sub_answer_text_${subQuestionCount}"]`).hide();
+
+              const subQuestionId = $(this).data('subquestion');
               const subSubQuestionCount = $(`#subSubQuestions_${subQuestionId} > .sub-sub-question-card`).length + 1;
               $(`#subSubQuestions_${subQuestionId}`).append(
                   `<div class="card sub-sub-question-card mt-3 mb-3" style="background-color: aliceblue; position: relative;">
@@ -1389,8 +1413,16 @@
                       <div class="card-body">
                           <label for="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
                           <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2" required></textarea>
+                          <div class="mb-3">
+                              <label for="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Image</label>
+                              <input type="file" class="form-control" id="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_image]">
+                          </div>
                           <label for="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
                           <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2" required></textarea>
+                          <div class="mb-3">
+                              <label for="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Image</label>
+                              <input type="file" class="form-control" id="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_image]">
+                          </div>
                       </div>
                   </div>`
               );
@@ -1413,6 +1445,7 @@
                   $(`#sub_answer_text_${subQuestionId}`).closest('.mb-3').show();
                   $(`#sub_answer_text_${subQuestionId}`).prop('required', true);
                   $(`label[for="sub_answer_text_${subQuestionId}"]`).show();
+                  $(`#sub_answer_image_${subQuestionId}`).closest('.mb-3').show();
               }
           });
 
@@ -1431,61 +1464,29 @@
               submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
 
               const formData = new FormData(questionForm);
-              console.log("Form data collected:", formData);
-
-              const subQuestions = [];
-              document.querySelectorAll('#subQuestions > .card.sub-question-card').forEach((subQuestionDiv) => {
-                  const subQuestionId = subQuestionDiv.id.split('_')[1];
-                  const sub_question_text = subQuestionDiv.querySelector(`textarea[name="sub_questions[${subQuestionId}][sub_question_text]"]`).value;
-                  const sub_answer_text = subQuestionDiv.querySelector(`textarea[name="sub_questions[${subQuestionId}][sub_answer_text]"]`).value;
-                  const sub_sub_questions = [];
-                  subQuestionDiv.querySelectorAll('.sub-sub-question-card').forEach((subSubQuestionDiv) => {
-                      const sub_sub_question_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_question_text]"]`).value;
-                      const sub_sub_answer_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_answer_text]"]`).value;
-                      sub_sub_questions.push({
-                          sub_sub_question_text: sub_sub_question_text,
-                          sub_sub_answer_text: sub_sub_answer_text
-                      });
-                  });
-
-                  subQuestions.push({
-                      sub_question_text: sub_question_text,
-                      sub_answer_text: sub_answer_text,
-                      sub_sub_questions: sub_sub_questions
-                  });
-              });
-
-              const data = {
-                  csrfmiddlewaretoken: formData.get('csrfmiddlewaretoken'),
-                  topic_id: formData.get('topic'),
-                  question_text: formData.get('question_text'),
-                  answer_text: formData.get('answer_text'),
-                  sub_questions: subQuestions
-              };
-
-              console.log("Data to be sent:", JSON.stringify(data));
+              console.log("Form data collected:", Array.from(formData.entries()));
 
               fetch('/exam-gen/save_question/', {
                   method: 'POST',
+                  body: formData,
                   headers: {
-                      'Content-Type': 'application/json',
+                      'X-Requested-With': 'XMLHttpRequest',
                       'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                  },
-                  body: JSON.stringify(data)
+                  }
               })
               .then(response => response.json())
               .then(responseData => {
                   console.log("Response data:", responseData);
                   if (responseData.status === 'success') {
                       const successAlert = `
-                          <div class="alert alert-secondary" role="alert">
+                          <div class="alert alert-success" role="alert">
                               The Question and Its Data Have Been Saved Successfully!
                           </div>
                       `;
                       questionForm.innerHTML = successAlert;
                   } else {
                       const errorAlert = `
-                          <div class="alert alert-secondary" role="alert">
+                          <div class="alert alert-danger" role="alert">
                               The Question and Its Data Haven't Been Saved Because of an Error!
                           </div>
                       `;
@@ -1495,7 +1496,7 @@
               .catch(error => {
                   console.error('Error:', error);
                   const errorAlert = `
-                      <div class="alert alert-secondary" role="alert">
+                      <div class="alert alert-danger" role="alert">
                           The Question and Its Data Haven't Been Saved Because of an Error!
                       </div>
                   `;
@@ -1506,12 +1507,13 @@
                   submitButton.innerHTML = originalButtonText;
                   setTimeout(() => {
                       location.reload();
-                  }, 2500);
+                  }, 250000);
               });
           }
 
           questionForm.addEventListener('submit', handleFormSubmission);
       });
+
     </script>
 
 
