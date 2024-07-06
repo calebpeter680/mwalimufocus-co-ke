@@ -673,45 +673,58 @@ def normalize_phone_number(phone_number):
 
 
 
+
+
 @csrf_exempt
 def webhook_callback(request):
     if request.method == 'POST':
         try:
-            event_data = json.loads(request.body.decode('utf-8'))
-            print(event_data)
+            print("Webhook received a POST request")
 
+            event_data = json.loads(request.body.decode('utf-8'))
+            print("Event data received:", event_data)
 
             invoice_id = event_data.get('invoice_id')
             state = event_data.get('state')
 
-            print(state)
+            print("Invoice ID:", invoice_id)
+            print("State:", state)
 
             if invoice_id and state:
+                print("Fetching transaction for invoice ID:", invoice_id)
                 transaction = get_object_or_404(Transaction, transaction_id=invoice_id)
                 order = transaction.order
 
+                print("Updating transaction status to:", state)
                 transaction.status = state
                 transaction.save()
 
                 if state == 'COMPLETE':
+                    print("Payment complete. Marking order as paid and sending email.")
                     order.is_paid = True
                     order.save()
 
                     send_email_with_attachments_task.delay_on_commit(order.id)
 
+            print("Webhook processed successfully")
             return JsonResponse({'message': 'Webhook received successfully'}, status=200)
 
         except json.JSONDecodeError as e:
+            print("JSON decode error:", e)
             return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
 
         except Transaction.DoesNotExist:
+            print("Transaction not found for invoice ID:", invoice_id)
             return JsonResponse({'error': 'Transaction not found'}, status=404)
 
         except Exception as e:
+            print("An error occurred:", e)
             return JsonResponse({'error': str(e)}, status=400)
 
     else:
+        print("Invalid request method:", request.method)
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 
 

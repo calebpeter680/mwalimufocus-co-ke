@@ -38,7 +38,7 @@ class SubQuestion(models.Model):
         verbose_name_plural = "Sub Questions"
 
 class SubAnswer(models.Model):
-    sub_question = models.OneToOneField(SubQuestion, on_delete=models.CASCADE, related_name='sub_answer')
+    sub_question = models.OneToOneField(SubQuestion, on_delete=models.CASCADE, related_name='sub_answer', null=True, blank=True)
     sub_answer_text = models.TextField()
     image = models.ImageField(upload_to='subanswerimages/', null=True, blank=True)
 

@@ -1350,37 +1350,70 @@
     </script>
 
 
-
-
     <script>
       $(document).ready(function() {
           let subQuestionCount = 0;
 
           $('#addSubQuestionBtn').click(function() {
+              $('#answer_text').val('').closest('.mb-3').hide();
+              $('#answer_text').prop('required', false);
+
               subQuestionCount++;
               $('#subQuestions').append(
-                  `<div class="mb-3" id="subQuestion_${subQuestionCount}">
-                      <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
-                      <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2" required></textarea>
-                      <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
-                      <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2" required></textarea>
-                      <div class="mb-3" id="subSubQuestions_${subQuestionCount}">
-                          <button type="button" class="btn btn-outline-dark mb-5 mb-md-0" id="addSubSubQuestionBtn_${subQuestionCount}">Add Sub-Sub-Question <i class="bi bi-plus"></i></button>
+                  `<div class="card sub-question-card mb-3" id="subQuestion_${subQuestionCount}" style="background-color: lavender; position: relative;">
+                      <button type="button" class="btn mb-3 btn-dark removeSubQuestionBtn" data-subquestion="${subQuestionCount}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
+                      <div class="card-body">
+                          <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
+                          <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2" required></textarea>
+                          <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
+                          <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2" required></textarea>
+                          <div class="mb-3" id="subSubQuestions_${subQuestionCount}">
+                              <!-- Keep this div for dynamic sub-sub-question cards -->
+                          </div>
+                          <button type="button" class="btn btn-outline-dark mb-5 mb-md-0 addSubSubQuestionBtn" data-subquestion="${subQuestionCount}">Add Sub-Sub-Question <i class="bi bi-plus"></i></button>
                       </div>
                   </div>`
               );
+          });
 
-              $(`#addSubSubQuestionBtn_${subQuestionCount}`).click(function() {
-                  const subSubQuestionCount = $(`#subSubQuestions_${subQuestionCount} > .subSubQuestion`).length + 1;
-                  $(`#subSubQuestions_${subQuestionCount}`).append(
-                      `<div class="subSubQuestion mb-3">
-                          <label for="sub_sub_question_text_${subQuestionCount}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionCount}_${subSubQuestionCount}" name="sub_questions[${subQuestionCount}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2" required></textarea>
-                          <label for="sub_sub_answer_text_${subQuestionCount}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionCount}_${subSubQuestionCount}" name="sub_questions[${subQuestionCount}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2" required></textarea>
-                      </div>`
-                  );
-              });
+          $(document).on('click', '.addSubSubQuestionBtn', function() {
+              const subQuestionId = $(this).data('subquestion');
+              $(`#sub_answer_text_${subQuestionId}`).val('').closest('.mb-3').hide();
+              $(`#sub_answer_text_${subQuestionId}`).prop('required', false);
+              $(`label[for="sub_answer_text_${subQuestionId}"]`).hide();
+
+              const subSubQuestionCount = $(`#subSubQuestions_${subQuestionId} > .sub-sub-question-card`).length + 1;
+              $(`#subSubQuestions_${subQuestionId}`).append(
+                  `<div class="card sub-sub-question-card mt-3 mb-3" style="background-color: aliceblue; position: relative;">
+                      <button type="button" class="mb-3 btn btn-dark removeSubSubQuestionBtn" data-subquestion="${subQuestionId}" data-subsubquestion="${subSubQuestionCount}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
+                      <div class="card-body">
+                          <label for="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2" required></textarea>
+                          <label for="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2" required></textarea>
+                      </div>
+                  </div>`
+              );
+          });
+
+          $(document).on('click', '.removeSubQuestionBtn', function() {
+              const subQuestionId = $(this).data('subquestion');
+              $(`#subQuestion_${subQuestionId}`).remove();
+              if ($('.sub-question-card').length === 0) {
+                  $('#answer_text').closest('.mb-3').show();
+                  $('#answer_text').prop('required', true);
+              }
+          });
+
+          $(document).on('click', '.removeSubSubQuestionBtn', function() {
+              const subQuestionId = $(this).data('subquestion');
+              const subSubQuestionId = $(this).data('subsubquestion');
+              $(`#subQuestion_${subQuestionId} .sub-sub-question-card`).eq(subSubQuestionId - 1).remove();
+              if ($(`#subQuestion_${subQuestionId} .sub-sub-question-card`).length === 0) {
+                  $(`#sub_answer_text_${subQuestionId}`).closest('.mb-3').show();
+                  $(`#sub_answer_text_${subQuestionId}`).prop('required', true);
+                  $(`label[for="sub_answer_text_${subQuestionId}"]`).show();
+              }
           });
 
           const questionForm = document.getElementById('questionForm');
@@ -1390,6 +1423,9 @@
               event.preventDefault();
               console.log("Form submission triggered");
 
+              $('#answer_text:hidden').prop('required', false);
+              $('textarea:hidden').prop('required', false);
+
               submitButton.disabled = true;
               const originalButtonText = submitButton.innerHTML;
               submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
@@ -1398,11 +1434,12 @@
               console.log("Form data collected:", formData);
 
               const subQuestions = [];
-              document.querySelectorAll('#subQuestions > .mb-3').forEach((subQuestionDiv) => {
-                  const sub_question_text = subQuestionDiv.querySelector(`textarea[name*="[sub_question_text]"]`).value;
-                  const sub_answer_text = subQuestionDiv.querySelector(`textarea[name*="[sub_answer_text]"]`).value;
+              document.querySelectorAll('#subQuestions > .card.sub-question-card').forEach((subQuestionDiv) => {
+                  const subQuestionId = subQuestionDiv.id.split('_')[1];
+                  const sub_question_text = subQuestionDiv.querySelector(`textarea[name="sub_questions[${subQuestionId}][sub_question_text]"]`).value;
+                  const sub_answer_text = subQuestionDiv.querySelector(`textarea[name="sub_questions[${subQuestionId}][sub_answer_text]"]`).value;
                   const sub_sub_questions = [];
-                  subQuestionDiv.querySelectorAll('.subSubQuestion').forEach((subSubQuestionDiv) => {
+                  subQuestionDiv.querySelectorAll('.sub-sub-question-card').forEach((subSubQuestionDiv) => {
                       const sub_sub_question_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_question_text]"]`).value;
                       const sub_sub_answer_text = subSubQuestionDiv.querySelector(`textarea[name*="[sub_sub_answer_text]"]`).value;
                       sub_sub_questions.push({
@@ -1476,9 +1513,6 @@
           questionForm.addEventListener('submit', handleFormSubmission);
       });
     </script>
-
-
-
 
 
   </body>
