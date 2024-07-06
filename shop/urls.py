@@ -35,7 +35,7 @@ urlpatterns = [
 
     path('trigger_stk_push/', views.stk_push_view, name='trigger_stk_push'),
 
-    path('webhook/', views.webhook_callback, name='webhook_callback'),
+    path('webhook/v1/', views.webhook_callback, name='webhook_callback'),
 
     path('payment-status/', views.payment_status, name='payment_status'),
 
