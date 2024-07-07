@@ -760,7 +760,7 @@
               </div>
               <div class="mb-3">
                   <label for="question_text" class="form-label">Question Text</label>
-                  <textarea class="form-control" id="question_text" name="question_text" rows="3" required></textarea>
+                  <textarea class="form-control" id="question_text" name="question_text" rows="3"></textarea>
               </div>
 
               <div class="mb-3">
@@ -1363,6 +1363,7 @@
 
     <script>
       $(document).ready(function() {
+
           let subQuestionCount = 0;
 
           $('#addSubQuestionBtn').click(function() {
@@ -1377,13 +1378,13 @@
                       <button type="button" class="btn mb-3 btn-dark removeSubQuestionBtn" data-subquestion="${subQuestionCount}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
                       <div class="card-body">
                           <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
-                          <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2" required></textarea>
+                          <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2"></textarea>
                           <div class="mb-3">
                               <label for="sub_question_image_${subQuestionCount}" class="form-label">Sub-Question Image</label>
                               <input type="file" class="form-control" id="sub_question_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_image]">
                           </div>
                           <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
-                          <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2" required></textarea>
+                          <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2"></textarea>
                           <div class="mb-3">
                               <label for="sub_answer_image_${subQuestionCount}" class="form-label">Sub-Answer Image</label>
                               <input type="file" class="form-control" id="sub_answer_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_image]">
@@ -1412,13 +1413,13 @@
                       <button type="button" class="mb-3 btn btn-dark removeSubSubQuestionBtn" data-subquestion="${subQuestionId}" data-subsubquestion="${subSubQuestionCount}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
                       <div class="card-body">
                           <label for="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2" required></textarea>
+                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2"></textarea>
                           <div class="mb-3">
                               <label for="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Image</label>
                               <input type="file" class="form-control" id="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_image]">
                           </div>
                           <label for="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2" required></textarea>
+                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2"></textarea>
                           <div class="mb-3">
                               <label for="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Image</label>
                               <input type="file" class="form-control" id="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_image]">
@@ -1455,6 +1456,15 @@
           function handleFormSubmission(event) {
               event.preventDefault();
               console.log("Form submission triggered");
+
+
+              const questionText = $('#question_text').val().trim();
+              const questionImage = $('#question_image').val();
+
+              if (!questionText && !questionImage) {
+                  alert('Please provide either a Question Text or upload a Question Image.');
+                  return;
+              }
 
               $('#answer_text:hidden').prop('required', false);
               $('textarea:hidden').prop('required', false);
@@ -1507,7 +1517,7 @@
                   submitButton.innerHTML = originalButtonText;
                   setTimeout(() => {
                       location.reload();
-                  }, 250000);
+                  }, 2500);
               });
           }
 
