@@ -428,6 +428,10 @@
               <li class="nav-item mb-2"><a href="tel:{{ brand.phone_number }}" class="nav-link p-0 text-body-secondary"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a></li>
               <li class="nav-item mb-2"><a href="mailto:{{ brand.email }}" class="nav-link p-0 text-body-secondary email-link"><i class="bi bi-envelope"></i> {{ brand.email }}</a></li>
             </ul>
+            <h5>Programs & Apps</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="{% url 'exam_generator_form' %}" style="text-decoration: none; color: blue;">Exam Generator</a></li>
+            </ul>
           </div>
 
           <div class="col-md-5 offset-md-1 mb-3 subscriber-creation-div">

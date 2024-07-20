@@ -724,7 +724,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="questionForm">
+            <form id="questionForm" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="row mb-3">
                   <div class="col-md-6">
@@ -763,10 +763,17 @@
                   <textarea class="form-control" id="question_text" name="question_text" rows="3"></textarea>
               </div>
 
-              <div class="mb-3">
-                  <label for="question_image" class="form-label">Question Image</label>
-                  <input class="form-control" type="file" id="question_image" name="question_image">
+              <div class="row">
+                  <div class="col-md-9 col-sm-12 mb-3">
+                      <label for="question_image" class="form-label">Question Image</label>
+                      <input class="form-control" type="file" id="question_image" name="question_image">
+                  </div>
+                  <div class="col-md-3 col-sm-12 mb-3">
+                      <label for="question_marks" class="form-label">Question Marks</label>
+                      <input class="form-control" type="number" id="question_marks" min="0" name="question_marks" required>
+                  </div>
               </div>
+
 
               <div class="mb-3">
                   <label for="answer_text" class="form-label">Answer Text</label>
@@ -777,7 +784,8 @@
                   <label for="answer_image" class="form-label">Answer Image</label>
                   <input class="form-control" type="file" id="answer_image" name="answer_image">
               </div>
-                        <div id="subQuestions">
+
+              <div id="subQuestions">
               </div>
               <div class="d-grid gap-2 d-md-flex justify-content-md-between">
                   <button type="button" class="btn btn-outline-dark mb-3 mb-md-0" id="addSubQuestionBtn">Add Sub-Question <i class="bi bi-plus"></i></button>
@@ -1329,7 +1337,7 @@
               const subjectId = subjectSelect.value;
 
               if (educationLevelId && subjectId) {
-                  fetch(`/exam-gen/get_topics/?education_level_id=${educationLevelId}&subject_id=${subjectId}`)
+                  fetch(`/exam-generator/get_topics/?education_level_id=${educationLevelId}&subject_id=${subjectId}`)
                       .then(response => response.json())
                       .then(data => {
                           topicSelect.innerHTML = '';
@@ -1370,7 +1378,11 @@
 
               $('#answer_text').val('').closest('.mb-3').hide();
               $('#answer_image').val('').closest('.mb-3').hide();
+              $('#question_marks').val('').closest('.mb-3').hide()
               $('#answer_text').prop('required', false);
+              $('#question_marks').prop('required', false);
+              $('#question_image').closest('div').removeClass('col-md-9 col-sm-12');
+
 
               subQuestionCount++;
               $('#subQuestions').append(
@@ -1379,9 +1391,15 @@
                       <div class="card-body">
                           <label for="sub_question_text_${subQuestionCount}" class="form-label">Sub-Question Text</label>
                           <textarea class="form-control mb-3" id="sub_question_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_text]" rows="2"></textarea>
-                          <div class="mb-3">
-                              <label for="sub_question_image_${subQuestionCount}" class="form-label">Sub-Question Image</label>
-                              <input type="file" class="form-control" id="sub_question_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_image]">
+                          <div class="row">
+                              <div class="col-md-9 col-sm-12 mb-3">
+                                <label for="sub_question_image_${subQuestionCount}" class="form-label">Sub-Question Image</label>
+                                <input type="file" class="form-control" id="sub_question_image_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_question_image]">
+                              </div>
+                              <div class="col-md-3 col-sm-12 mb-3">
+                                <label for="sub_question_marks_${subQuestionCount}" class="form-label">Sub-Question Marks</label>
+                                <input class="form-control" type="number" id="sub_question_marks_${subQuestionCount}" min="0" name="sub_questions[${subQuestionCount}][sub_question_marks]" required>
+                              </div>
                           </div>
                           <label for="sub_answer_text_${subQuestionCount}" class="form-label">Sub-Answer Text</label>
                           <textarea class="form-control mb-3" id="sub_answer_text_${subQuestionCount}" name="sub_questions[${subQuestionCount}][sub_answer_text]" rows="2"></textarea>
@@ -1399,35 +1417,45 @@
           });
 
           $(document).on('click', '.addSubSubQuestionBtn', function() {
-
-              $(`#sub_answer_text_${subQuestionCount}`).val('').closest('.mb-3').hide();
-              $(`#sub_answer_image_${subQuestionCount}`).val('').closest('.mb-3').hide();
-              $(`#sub_answer_text_${subQuestionCount}`).prop('required', false); 
-
-              $(`label[for="sub_answer_text_${subQuestionCount}"]`).hide();
-
               const subQuestionId = $(this).data('subquestion');
-              const subSubQuestionCount = $(`#subSubQuestions_${subQuestionId} > .sub-sub-question-card`).length + 1;
+              const subSubQuestionCount = $(`#subSubQuestions_${subQuestionId} > .sub-sub-question-card`).length;
+              
+              $(`#sub_answer_text_${subQuestionId}`).val('').closest('.mb-3').hide();
+              $(`#sub_answer_image_${subQuestionId}`).val('').closest('.mb-3').hide();
+              $(`#sub_question_marks_${subQuestionId}`).val('').closest('.mb-3').hide();
+              $(`#sub_answer_text_${subQuestionId}`).prop('required', false); 
+              $(`#sub_question_marks_${subQuestionId}`).prop('required', false);
+              $(`#sub_question_image_${subQuestionId}`).closest('div').removeClass('col-md-9 col-sm-12');
+              $(`label[for="sub_answer_text_${subQuestionId}"]`).hide();
+              
+              const newSubSubQuestionId = subSubQuestionCount + 1;
               $(`#subSubQuestions_${subQuestionId}`).append(
                   `<div class="card sub-sub-question-card mt-3 mb-3" style="background-color: aliceblue; position: relative;">
-                      <button type="button" class="mb-3 btn btn-dark removeSubSubQuestionBtn" data-subquestion="${subQuestionId}" data-subsubquestion="${subSubQuestionCount}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
+                      <button type="button" class="mb-3 btn btn-dark removeSubSubQuestionBtn" data-subquestion="${subQuestionId}" data-subsubquestion="${newSubSubQuestionId}" style="position: absolute; top: 5px; right: 5px;"><i class="bi bi-trash"></i></button>
                       <div class="card-body">
-                          <label for="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_text]" rows="2"></textarea>
-                          <div class="mb-3">
-                              <label for="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Question Image</label>
-                              <input type="file" class="form-control" id="sub_sub_question_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_question_image]">
+                          <label for="sub_sub_question_text_${subQuestionId}_${newSubSubQuestionId}" class="form-label">Sub-Sub-Question Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_question_text_${subQuestionId}_${newSubSubQuestionId}" name="sub_questions[${subQuestionId}][sub_sub_questions][${newSubSubQuestionId - 1}][sub_sub_question_text]" rows="2"></textarea>
+                          <div class="row">
+                              <div class="col-md-9 col-sm-12 mb-3">
+                                <label for="sub_sub_question_image_${subQuestionId}_${newSubSubQuestionId}" class="form-label">Sub-Sub-Question Image</label>
+                                <input type="file" class="form-control" id="sub_sub_question_image_${subQuestionId}_${newSubSubQuestionId}" name="sub_questions[${subQuestionId}][sub_sub_questions][${newSubSubQuestionId - 1}][sub_sub_question_image]">
+                              </div>
+                              <div class="col-md-3 col-sm-12 mb-3">
+                                <label for="sub_sub_question_marks_${subQuestionId}_${newSubSubQuestionId}" class="form-label">S_S_Question Marks</label>
+                                <input class="form-control" type="number" id="sub_sub_question_marks_${subQuestionId}_${newSubSubQuestionId}" min="0" name="sub_questions[${subQuestionId}][sub_sub_questions][${newSubSubQuestionId - 1}][sub_sub_question_marks]" required>
+                              </div>
                           </div>
-                          <label for="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Text</label>
-                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_text]" rows="2"></textarea>
+                          <label for="sub_sub_answer_text_${subQuestionId}_${newSubSubQuestionId}" class="form-label">Sub-Sub-Answer Text</label>
+                          <textarea class="form-control mb-3" id="sub_sub_answer_text_${subQuestionId}_${newSubSubQuestionId}" name="sub_questions[${subQuestionId}][sub_sub_questions][${newSubSubQuestionId - 1}][sub_sub_answer_text]" rows="2"></textarea>
                           <div class="mb-3">
-                              <label for="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" class="form-label">Sub-Sub-Answer Image</label>
-                              <input type="file" class="form-control" id="sub_sub_answer_image_${subQuestionId}_${subSubQuestionCount}" name="sub_questions[${subQuestionId}][sub_sub_questions][${subSubQuestionCount - 1}][sub_sub_answer_image]">
+                              <label for="sub_sub_answer_image_${subQuestionId}_${newSubSubQuestionId}" class="form-label">Sub-Sub-Answer Image</label>
+                              <input type="file" class="form-control" id="sub_sub_answer_image_${subQuestionId}_${newSubSubQuestionId}" name="sub_questions[${subQuestionId}][sub_sub_questions][${newSubSubQuestionId - 1}][sub_sub_answer_image]">
                           </div>
                       </div>
                   </div>`
               );
           });
+
 
           $(document).on('click', '.removeSubQuestionBtn', function() {
               const subQuestionId = $(this).data('subquestion');
@@ -1435,6 +1463,9 @@
               if ($('.sub-question-card').length === 0) {
                   $('#answer_text').closest('.mb-3').show();
                   $('#answer_text').prop('required', true);
+                  $('#question_marks').closest('.mb-3').show();
+                  $('#question_marks').prop('required', true);
+                  $('#question_image').closest('div').addClass('col-md-9 col-sm-12');
               }
           });
 
@@ -1444,9 +1475,12 @@
               $(`#subQuestion_${subQuestionId} .sub-sub-question-card`).eq(subSubQuestionId - 1).remove();
               if ($(`#subQuestion_${subQuestionId} .sub-sub-question-card`).length === 0) {
                   $(`#sub_answer_text_${subQuestionId}`).closest('.mb-3').show();
+                  $(`#sub_question_marks_${subQuestionId}`).closest('.mb-3').show();
                   $(`#sub_answer_text_${subQuestionId}`).prop('required', true);
+                  $(`#sub_question_marks_${subQuestionId}`).prop('required', true);
                   $(`label[for="sub_answer_text_${subQuestionId}"]`).show();
                   $(`#sub_answer_image_${subQuestionId}`).closest('.mb-3').show();
+                  $(`#sub_question_image_${subQuestionCount}`).closest('div').addClass('col-md-9 col-sm-12');
               }
           });
 
@@ -1461,11 +1495,6 @@
               const questionText = $('#question_text').val().trim();
               const questionImage = $('#question_image').val();
 
-              if (!questionText && !questionImage) {
-                  alert('Please provide either a Question Text or upload a Question Image.');
-                  return;
-              }
-
               $('#answer_text:hidden').prop('required', false);
               $('textarea:hidden').prop('required', false);
 
@@ -1476,7 +1505,7 @@
               const formData = new FormData(questionForm);
               console.log("Form data collected:", Array.from(formData.entries()));
 
-              fetch('/exam-gen/save_question/', {
+              fetch('{% url 'save_question' %}', {
                   method: 'POST',
                   body: formData,
                   headers: {

@@ -11,7 +11,7 @@ urlpatterns = [
     path('vendors/', include('vendors.urls')),
     path('', include('pages.urls')),
     path('tinymce/', include('tinymce.urls')),
-    path('exam-gen/', include('examgenerator.urls')),
+    path('exam-generator/', include('examgenerator.urls')),
 
 
 ]
