@@ -18,9 +18,10 @@ from django.shortcuts import get_object_or_404, render
 
 def generated_exam_preview(request):
     task_id = request.session.get('task_id')
+    print("Task ID:", task_id)
 
     if task_id:
-        generated_exam = get_object_or_404(GeneratedExam, task_id=task_id)
+        generated_exam = GeneratedExam.objects.filter(task_id=task_id).first()
 
         marking_scheme = getattr(generated_exam, 'marking_scheme', None)
     else:
@@ -122,6 +123,7 @@ def exam_data_preparation(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
 
 
 #return redirect(reverse('task_status', args=[task.id]))
