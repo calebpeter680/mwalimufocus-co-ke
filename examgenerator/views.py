@@ -47,6 +47,7 @@ def generated_exam_preview(request):
         'latest_link': latest_link,
         'generated_exam': generated_exam,
         'marking_scheme': marking_scheme,
+        'task_id': task_id,
     }
 
     return render(request, 'generated_exam_preview.html', context)

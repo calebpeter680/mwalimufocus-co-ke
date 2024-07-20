@@ -23,6 +23,7 @@
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
     <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
 
+
   </head>
   <body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -109,9 +110,7 @@
       {% if generated_exam and marking_scheme %}
       <h1 class="mt-4 mb-2" style="font-size: 20px;"><i class="bi bi-check-circle-fill"></i> Generated Successfully!</h1>
       {% else %}
-      <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
-      </div>
+      <h1 class="mt-4 mb-2" style="font-size: 24px;"><i class="bi bi-arrow-clockwise"></i> Generation in Progress!</h1>
       {% endif %}
 
       <div class="row">
@@ -155,12 +154,29 @@
 
         {% else %}
 
-          <div>
-            <div class="card">
-              <div class="card-body">
-               No exam/assignment generated yet! Refresh the page after 20 seconds to check if it has been generated.
-              </div>
-              <button type="button" class="btn btn-dark p-2 m-2"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+          <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#examPreview"><b>Exam/Assignment</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#markingSchemePreview"><b>Marking Scheme</b></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <!-- Exam Preview Tab -->
+                    <div id="examPreview" class="tab-pane fade show active">
+                        <iframe id="generated_exam" src="" style="width:100%; height:500px;" frameborder="0"></iframe>
+                    </div>
+
+                    <!-- Marking Scheme Preview Tab -->
+                    <div id="markingSchemePreview" class="tab-pane fade">
+                        <iframe id="marking_scheme" src="" style="width:100%; height:500px;" frameborder="0"></iframe>
+                    </div>
+                </div>
             </div>
           </div>
 
@@ -456,6 +472,23 @@
         </div>
     </div>
 
+    <!-- Generation Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+              The Generation Process is Finalizing...
+          </div>
+          <div class="modal-body">
+              <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="99" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-dark progress-bar-striped progress-bar-animated" style="width: 99%"></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Fifth Modal - Login -->
     <div class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -486,6 +519,7 @@
         </div>
       </div>
     </div>
+
     <script src="{% static 'js/popper.min.js' %}" defer></script>
     <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
@@ -493,6 +527,62 @@
     <script defer src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script defer src="{% static 'js/newsletter.js' %}"></script>
+
+
+    {% if not generated_exam or not marking_scheme %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var modalElement = document.getElementById('progressModal');
+                var myModal = new bootstrap.Modal(modalElement);
+                myModal.show();
+
+                var taskId = "{{ task_id }}";
+                
+                if (!taskId || taskId.trim() === '') {
+                    window.location.href = "{% url 'exam_generator_form' %}";
+                    return; 
+                }
+
+                var taskStatusUrl = "{% url 'task_status' 'TASK_ID' %}".replace('TASK_ID', taskId);
+
+                function checkTaskStatus() {
+                    fetch(taskStatusUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'SUCCESS') {
+                                clearInterval(checkInterval); 
+                                window.location.reload();
+                            } else if (data.status === 'FAILURE') {
+                                clearInterval(checkInterval);
+                                modalElement.querySelector('.modal-body').innerHTML = `
+                                    <p>An Error Occurred, Try Again</p>
+                                `;
+                                setTimeout(function() {
+                                    window.location.href = "{% url 'exam_generator_form' %}";
+                                }, 2500); 
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            clearInterval(checkInterval); // Stop checking
+                            modalElement.querySelector('.modal-body').innerHTML = `
+                                <p>An Error Occurred, Try Again</p>
+                            `;
+                            setTimeout(function() {
+                                window.location.href = "{% url 'exam_generator_form' %}";
+                            }, 2500);
+                        });
+                }
+                var checkInterval = setInterval(function() {
+                    checkTaskStatus();
+                }, 500); 
+            });
+        </script>
+    {% endif %}
+
+
+
+
 
 
 
