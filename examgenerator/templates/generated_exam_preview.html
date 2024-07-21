@@ -110,6 +110,16 @@
 
       {% if generated_exam and marking_scheme %}
       <h1 class="mt-4 mb-2" style="font-size: 20px;"><i class="bi bi-check-circle-fill"></i> Generated Successfully!</h1>
+      
+      <div class="d-flex">
+          <p class="mb-0 me-3" style="font-size: 12px;">
+              <i class="bi bi-shield-check"></i> 100% original
+          </p>
+          <p class="mb-0" style="font-size: 12px;">
+              <i class="bi bi-cloud-download"></i> Instant download after payment
+          </p>
+      </div>
+
       {% else %}
       <h1 class="mt-4 mb-2" style="font-size: 24px;"><i class="bi bi-arrow-clockwise"></i> Generation in Progress!</h1>
       {% endif %}
@@ -131,23 +141,37 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                  <!-- Exam Preview Tab -->
-                  <div id="examPreview" class="tab-pane fade show active">
-                      {% if generated_exam.file %}
-                          <canvas id="pdf-canvas-exam" style="width:100%; height:100%;"></canvas>
-                      {% else %}
-                          <p>No preview available.</p>
-                      {% endif %}
-                  </div>
+                    <!-- Exam Preview Tab -->
+                    <div id="examPreview" class="tab-pane fade show active">
+                        {% if generated_exam.file %}
+                            <div>
+                                <button class="btn btn-dark btn-sm" id="prev-exam" style="margin-right: 10px;">< Previous</button>
+                                <button class="btn btn-dark btn-sm" id="next-exam">Next ></button>
+                                &nbsp; &nbsp;
+                                <span>Page: <span id="page_num_exam"></span> / <span id="page_count_exam"></span></span>
+                            </div>
+                            <hr>
+                            <canvas id="pdf-canvas-exam" style="width:100%; height:100%;"></canvas>
+                        {% else %}
+                            <p>No preview available.</p>
+                        {% endif %}
+                    </div>
 
-                  <!-- Marking Scheme Preview Tab -->
-                  <div id="markingSchemePreview" class="tab-pane fade">
-                      {% if marking_scheme and marking_scheme.file %}
-                          <canvas id="pdf-canvas-marking" style="width:100%; height:100%;"></canvas>
-                      {% else %}
-                          <p>No preview available.</p>
-                      {% endif %}
-                  </div>
+                    <!-- Marking Scheme Preview Tab -->
+                    <div id="markingSchemePreview" class="tab-pane fade">
+                        {% if marking_scheme and marking_scheme.file %}
+                            <div>
+                                <button class="btn btn-dark btn-sm" id="prev-marking" style="margin-right: 10px;">< Previous</button>
+                                <button class="btn btn-dark btn-sm" id="next-marking">Next ></button>
+                                &nbsp; &nbsp;
+                                <span>Page: <span id="page_num_marking"></span> / <span id="page_count_marking"></span></span>
+                            </div>
+                            <hr>
+                            <canvas id="pdf-canvas-marking" style="width:100%; height:100%;"></canvas>
+                        {% else %}
+                            <p>No preview available.</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -591,51 +615,88 @@
     {% endif %}
 
 
-    <script>
-        console.log("Script loaded");
+        <script>
+          function renderPDF(url, canvasId, pageNumId, pageCountId, prevBtnId, nextBtnId, firstPageScale, otherPagesScale) {
+              var pdfDoc = null,
+                  pageNum = 1,
+                  pageRendering = false,
+                  pageNumPending = null,
+                  scale = firstPageScale,
+                  canvas = document.getElementById(canvasId),
+                  ctx = canvas.getContext('2d');
 
-        function renderPDF(url, canvasId) {
-            console.log("Rendering PDF:", url, canvasId);
-            
-            var loadingTask = pdfjsLib.getDocument(url);
-            loadingTask.promise.then(function(pdf) {
-                console.log("PDF loaded");
-                pdf.getPage(1).then(function(page) {
-                    console.log("Page loaded");
-                    var scale = 2.0;
-                    var viewport = page.getViewport({ scale: scale });
-                    var canvas = document.getElementById(canvasId);
-                    var context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+              function renderPage(num) {
+                  pageRendering = true;
+                  pdfDoc.getPage(num).then(function(page) {
+                      scale = (num <= 2) ? firstPageScale : otherPagesScale;
 
-                    var renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    page.render(renderContext).promise.then(function() {
-                        console.log("Page rendered");
-                    });
-                }).catch(function(error) {
-                    console.error("Error loading page:", error);
-                });
-            }).catch(function(error) {
-                console.error("Error loading PDF:", error);
-            });
-        }
+                      var viewport = page.getViewport({ scale: scale });
+                      canvas.height = viewport.height;
+                      canvas.width = viewport.width;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded and parsed");
-            {% if generated_exam.file %}
-                console.log("Rendering generated_exam file");
-                renderPDF('{{ generated_exam.file.url }}', 'pdf-canvas-exam');
-            {% endif %}
-            {% if marking_scheme and marking_scheme.file %}
-                console.log("Rendering marking_scheme file");
-                renderPDF('{{ marking_scheme.file.url }}', 'pdf-canvas-marking');
-            {% endif %}
-        });
-    </script>
+                      var renderContext = {
+                          canvasContext: ctx,
+                          viewport: viewport
+                      };
+                      var renderTask = page.render(renderContext);
+
+                      renderTask.promise.then(function() {
+                          pageRendering = false;
+                          if (pageNumPending !== null) {
+                              renderPage(pageNumPending);
+                              pageNumPending = null;
+                          }
+                      });
+                  });
+
+                  document.getElementById(pageNumId).textContent = num;
+              }
+
+              function queueRenderPage(num) {
+                  if (pageRendering) {
+                      pageNumPending = num;
+                  } else {
+                      renderPage(num);
+                  }
+              }
+
+              function onPrevPage() {
+                  if (pageNum <= 1) {
+                      return;
+                  }
+                  pageNum--;
+                  queueRenderPage(pageNum);
+              }
+
+              function onNextPage() {
+                  if (pageNum >= pdfDoc.numPages) {
+                      return;
+                  }
+                  pageNum++;
+                  queueRenderPage(pageNum);
+              }
+
+              document.getElementById(prevBtnId).addEventListener('click', onPrevPage);
+              document.getElementById(nextBtnId).addEventListener('click', onNextPage);
+
+              pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                  pdfDoc = pdfDoc_;
+                  document.getElementById(pageCountId).textContent = pdfDoc.numPages;
+                  renderPage(pageNum);
+              });
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              {% if generated_exam.file %}
+                  renderPDF('{{ generated_exam.file.url }}', 'pdf-canvas-exam', 'page_num_exam', 'page_count_exam', 'prev-exam', 'next-exam', 5.0, 0.2);
+              {% endif %}
+              {% if marking_scheme and marking_scheme.file %}
+                  renderPDF('{{ marking_scheme.file.url }}', 'pdf-canvas-marking', 'page_num_marking', 'page_count_marking', 'prev-marking', 'next-marking', 5.0, 0.2);
+              {% endif %}
+          });
+      </script>
+
+
 
 
 
