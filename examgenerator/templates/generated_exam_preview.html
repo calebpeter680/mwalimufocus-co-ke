@@ -22,7 +22,34 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
     <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+
+    <style>
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 10; 
+        }
+
+        .alert {
+            margin: 0; 
+        }
+    </style>
+
 
 
   </head>
@@ -110,7 +137,7 @@
 
       {% if generated_exam and marking_scheme %}
       <h1 class="mt-4 mb-2" style="font-size: 20px;"><i class="bi bi-check-circle-fill"></i> Generated Successfully!</h1>
-      
+
       <div class="d-flex">
           <p class="mb-0 me-3" style="font-size: 12px;">
               <i class="bi bi-shield-check"></i> 100% original
@@ -141,38 +168,54 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                    <!-- Exam Preview Tab -->
-                    <div id="examPreview" class="tab-pane fade show active">
-                        {% if generated_exam.file %}
-                            <div>
-                                <button class="btn btn-dark btn-sm" id="prev-exam" style="margin-right: 10px;">< Previous</button>
-                                <button class="btn btn-dark btn-sm" id="next-exam">Next ></button>
-                                &nbsp; &nbsp;
-                                <span>Page: <span id="page_num_exam"></span> / <span id="page_count_exam"></span></span>
-                            </div>
-                            <hr>
-                            <canvas id="pdf-canvas-exam" style="width:100%; height:100%;"></canvas>
-                        {% else %}
-                            <p>No preview available.</p>
-                        {% endif %}
-                    </div>
+                  <!-- Exam Preview Tab -->
+                  <div id="examPreview" class="tab-pane fade show active">
+                      {% if generated_exam.file %}
+                          <div>
+                              <button class="btn btn-dark btn-sm" id="prev-exam" style="margin-right: 10px;">< Previous</button>
+                              <button class="btn btn-dark btn-sm" id="next-exam">Next ></button>
+                              &nbsp; &nbsp;
+                              <span>Page: <span id="page_num_exam"></span> / <span id="page_count_exam"></span></span>
+                          </div>
+                          <hr>
+                          <div class="pdf-container" style="position: relative; width: 100%; height: 100%;">
+                              <canvas id="pdf-canvas-exam" style="width:100%; height:100%;"></canvas>
+                              <div id="overlay-exam" class="overlay" style="display: none;">
+                                  <div id="main_exam_pay_preview" class="alert btn btn-dark alert-dark" role="alert">
+                                      Pay and Download to View Content
+                                  </div>
+                              </div>
+                          </div>
+                      {% else %}
+                          <p>No preview available.</p>
+                      {% endif %}
+                  </div>
 
-                    <!-- Marking Scheme Preview Tab -->
-                    <div id="markingSchemePreview" class="tab-pane fade">
-                        {% if marking_scheme and marking_scheme.file %}
-                            <div>
-                                <button class="btn btn-dark btn-sm" id="prev-marking" style="margin-right: 10px;">< Previous</button>
-                                <button class="btn btn-dark btn-sm" id="next-marking">Next ></button>
-                                &nbsp; &nbsp;
-                                <span>Page: <span id="page_num_marking"></span> / <span id="page_count_marking"></span></span>
-                            </div>
-                            <hr>
-                            <canvas id="pdf-canvas-marking" style="width:100%; height:100%;"></canvas>
-                        {% else %}
-                            <p>No preview available.</p>
-                        {% endif %}
-                    </div>
-                </div>
+                  <!-- Marking Scheme Preview Tab -->
+                  <div id="markingSchemePreview" class="tab-pane fade">
+                      {% if marking_scheme and marking_scheme.file %}
+                          <div>
+                              <button class="btn btn-dark btn-sm" id="prev-marking" style="margin-right: 10px;">< Previous</button>
+                              <button class="btn btn-dark btn-sm" id="next-marking">Next ></button>
+                              &nbsp; &nbsp;
+                              <span>Page: <span id="page_num_marking"></span> / <span id="page_count_marking"></span></span>
+                          </div>
+                          <hr>
+                          <div class="pdf-container" style="position: relative; width: 100%; height: 100%;">
+                              <canvas id="pdf-canvas-marking" style="width:100%; height:100%;"></canvas>
+                              <div id="overlay-marking" class="overlay" style="display: none;">
+                                  <div id="ms_pay_preview" class="btn btn-dark alert alert-dark" role="alert">
+                                      Pay and Download to View Content
+                                  </div>
+                              </div>
+                          </div>
+                      {% else %}
+                          <p>No preview available.</p>
+                      {% endif %}
+                  </div>
+              </div>
+
+
             </div>
         </div>
 
@@ -195,7 +238,7 @@
                     <!-- Exam Preview Tab -->
                     <div id="examPreview" class="tab-pane fade show active">
                         {% if generated_exam.file %}
-                            <canvas id="generated_exam_canvas" style="width:100%; height:500px;"></canvas>
+                            <canvas id="generated_exam_canvas" style="width:100%; height:100%;"></canvas>
                         {% else %}
                             <p>No preview available.</p>
                         {% endif %}
@@ -204,7 +247,7 @@
                     <!-- Marking Scheme Preview Tab -->
                     <div id="markingSchemePreview" class="tab-pane fade">
                         {% if marking_scheme and marking_scheme.file %}
-                            <canvas id="marking_scheme_canvas" style="width:100%; height:500px;"></canvas>
+                            <canvas id="marking_scheme_canvas" style="width:100%; height:100%;"></canvas>
                         {% else %}
                             <p>No preview available.</p>
                         {% endif %}
@@ -220,7 +263,7 @@
 
 
 
-        <div class="col-md-4 order-1 order-md-2">
+        <div id="payment_position" class="col-md-4 order-1 order-md-2">
           <h2 class="text-left mt-4 mb-3" style="font-size: 18px;"><strong>Pay Ksh {{ generated_exam.price }} to Download PDF</strong></h2>
           <p>Enter your details below to initiate a payment using MPESA.</p>
           <div class="card p-4"> 
@@ -561,6 +604,7 @@
     <script defer src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script defer src="{% static 'js/newsletter.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
 
     {% if not generated_exam or not marking_scheme %}
@@ -617,84 +661,117 @@
 
         <script>
           function renderPDF(url, canvasId, pageNumId, pageCountId, prevBtnId, nextBtnId, firstPageScale, otherPagesScale) {
-              var pdfDoc = null,
-                  pageNum = 1,
-                  pageRendering = false,
-                  pageNumPending = null,
-                  scale = firstPageScale,
-                  canvas = document.getElementById(canvasId),
-                  ctx = canvas.getContext('2d');
+            var pdfDoc = null,
+                pageNum = 1,
+                pageRendering = false,
+                pageNumPending = null,
+                scale = firstPageScale,
+                canvas = document.getElementById(canvasId),
+                ctx = canvas.getContext('2d'),
+                overlay = document.getElementById(`overlay-${canvasId.split('-')[2]}`);
 
-              function renderPage(num) {
-                  pageRendering = true;
-                  pdfDoc.getPage(num).then(function(page) {
-                      scale = (num <= 2) ? firstPageScale : otherPagesScale;
+            function renderPage(num) {
+                pageRendering = true;
+                pdfDoc.getPage(num).then(function(page) {
+                    scale = (num <= 2) ? firstPageScale : otherPagesScale;
 
-                      var viewport = page.getViewport({ scale: scale });
-                      canvas.height = viewport.height;
-                      canvas.width = viewport.width;
+                    var viewport = page.getViewport({ scale: scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
 
-                      var renderContext = {
-                          canvasContext: ctx,
-                          viewport: viewport
-                      };
-                      var renderTask = page.render(renderContext);
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
 
-                      renderTask.promise.then(function() {
-                          pageRendering = false;
-                          if (pageNumPending !== null) {
-                              renderPage(pageNumPending);
-                              pageNumPending = null;
-                          }
-                      });
-                  });
+                    renderTask.promise.then(function() {
+                        pageRendering = false;
+                        if (pageNumPending !== null) {
+                            renderPage(pageNumPending);
+                            pageNumPending = null;
+                        }
+                        if (scale === otherPagesScale) {
+                            overlay.style.display = 'flex'; 
+                        } else {
+                            overlay.style.display = 'none';
+                        }
+                    });
+                });
 
-                  document.getElementById(pageNumId).textContent = num;
-              }
+                document.getElementById(pageNumId).textContent = num;
+            }
 
-              function queueRenderPage(num) {
-                  if (pageRendering) {
-                      pageNumPending = num;
-                  } else {
-                      renderPage(num);
-                  }
-              }
+            function queueRenderPage(num) {
+                if (pageRendering) {
+                    pageNumPending = num;
+                } else {
+                    renderPage(num);
+                }
+            }
 
-              function onPrevPage() {
-                  if (pageNum <= 1) {
-                      return;
-                  }
-                  pageNum--;
-                  queueRenderPage(pageNum);
-              }
+            function onPrevPage() {
+                if (pageNum <= 1) {
+                    return;
+                }
+                pageNum--;
+                queueRenderPage(pageNum);
+            }
 
-              function onNextPage() {
-                  if (pageNum >= pdfDoc.numPages) {
-                      return;
-                  }
-                  pageNum++;
-                  queueRenderPage(pageNum);
-              }
+            function onNextPage() {
+                if (pageNum >= pdfDoc.numPages) {
+                    return;
+                }
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
 
-              document.getElementById(prevBtnId).addEventListener('click', onPrevPage);
-              document.getElementById(nextBtnId).addEventListener('click', onNextPage);
+            document.getElementById(prevBtnId).addEventListener('click', onPrevPage);
+            document.getElementById(nextBtnId).addEventListener('click', onNextPage);
 
-              pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-                  pdfDoc = pdfDoc_;
-                  document.getElementById(pageCountId).textContent = pdfDoc.numPages;
-                  renderPage(pageNum);
-              });
-          }
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById(pageCountId).textContent = pdfDoc.numPages;
+                renderPage(pageNum);
+            });
+        }
 
-          document.addEventListener('DOMContentLoaded', function() {
-              {% if generated_exam.file %}
-                  renderPDF('{{ generated_exam.file.url }}', 'pdf-canvas-exam', 'page_num_exam', 'page_count_exam', 'prev-exam', 'next-exam', 5.0, 0.2);
-              {% endif %}
-              {% if marking_scheme and marking_scheme.file %}
-                  renderPDF('{{ marking_scheme.file.url }}', 'pdf-canvas-marking', 'page_num_marking', 'page_count_marking', 'prev-marking', 'next-marking', 5.0, 0.2);
-              {% endif %}
-          });
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if generated_exam.file %}
+                renderPDF('{{ generated_exam.file.url }}', 'pdf-canvas-exam', 'page_num_exam', 'page_count_exam', 'prev-exam', 'next-exam', 5.0, 0.2);
+            {% endif %}
+            {% if marking_scheme and marking_scheme.file %}
+                renderPDF('{{ marking_scheme.file.url }}', 'pdf-canvas-marking', 'page_num_marking', 'page_count_marking', 'prev-marking', 'next-marking', 5.0, 0.2);
+            {% endif %}
+        });
+
       </script>
+
+
+      <script>
+        function scrollToPaymentPosition() {
+            const targetElement = document.getElementById('payment_position');
+            
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start' 
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainExamPayPreview = document.getElementById('main_exam_pay_preview');
+            const msPayPreview = document.getElementById('ms_pay_preview');
+
+            if (mainExamPayPreview) {
+                mainExamPayPreview.addEventListener('click', scrollToPaymentPosition);
+            }
+
+            if (msPayPreview) {
+                msPayPreview.addEventListener('click', scrollToPaymentPosition);
+            }
+        });
+    </script>
+
 
 
 
