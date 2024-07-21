@@ -147,14 +147,15 @@
           </p>
       </div>
 
-      <button class="btn btn-dark btn-sm mt-2 d-none d-sm-block d-md-none"><i class="bi bi-eye"></i> See Preview</button>
+      <button id="previewBtn" class="btn btn-dark btn-sm mt-2 d-block d-sm-none d-md-none"><i class="bi bi-eye"></i> See Preview</button>
+
 
       {% else %}
       <h1 class="mt-4 mb-2" style="font-size: 24px;"><i class="bi bi-arrow-clockwise"></i> Generation in Progress!</h1>
       {% endif %}
 
       <div class="row">
-        <div class="col-md-8 order-2 order-md-1">
+        <div id="preview_section" class="col-md-8 order-2 order-md-1">
           <h2 class="text-left mt-4 mb-2" style="font-size: 18px;"><strong>Previews</strong></h2>
           {% if generated_exam and marking_scheme %}
           <div class="card text-center">
@@ -770,6 +771,26 @@
 
             if (msPayPreview) {
                 msPayPreview.addEventListener('click', scrollToPaymentPosition);
+            }
+        });
+    </script>
+
+
+    <script>
+        function scrollToPreviewSection() {
+            const targetElement = document.getElementById('preview_section');
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start' 
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewBtn = document.getElementById('previewBtn');
+            if (previewBtn) {
+                previewBtn.addEventListener('click', scrollToPreviewSection);
             }
         });
     </script>
