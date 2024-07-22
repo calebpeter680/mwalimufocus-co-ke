@@ -66,7 +66,7 @@ def exam_session_order_detail(request):
 
     }
     
-    return render(request, 'session_order_detail.html', context)
+    return render(request, 'session_exam_order_detail.html', context)
 
 
 
