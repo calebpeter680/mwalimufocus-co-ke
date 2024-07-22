@@ -608,7 +608,7 @@
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script defer src="{% static 'js/newsletter.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-    <script src="{% static 'js/payment_status.js' %}"></script>
+    <script src="{% static 'js/payment_status_exams.js' %}"></script>
     <script src="{% static 'js/stk.js' %}"></script>
 
 
@@ -644,7 +644,7 @@
                                 console.log('Task status is SUCCESS. Reloading page...');
                                 setTimeout(function() {
                                       window.location.reload();
-                                  }, 2500);
+                                  }, 500);
                                 clearInterval(checkInterval); 
                                 
                             } else if (data.status === 'FAILURE') {
