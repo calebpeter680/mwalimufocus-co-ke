@@ -116,6 +116,8 @@ class Order(models.Model):
     customer_items_created = models.BooleanField(default=False, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     cart_reminder_sent = models.BooleanField(default=False)
+    generated_exam = models.OneToOneField('examgenerator.GeneratedExam', on_delete=models.CASCADE, null=True, blank=True)
+
 
     def __str__(self):
         return f"Order {self.display_order_number} - Total: Ksh {self.total_price}"

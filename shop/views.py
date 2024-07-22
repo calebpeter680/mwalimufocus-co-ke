@@ -18,7 +18,6 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 import filetype
-from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import string
 import secrets
@@ -755,9 +754,15 @@ def login_and_assign_user(request):
                 return JsonResponse({'error': 'Missing required data'})
 
             order = get_object_or_404(Order, id=order_id)
+            
 
             if order.user:
+                if order.user.email != email:
+                    order.user.email = email
+                    order.user.save()
+
                 return JsonResponse({'success': 'Order already has a user assigned.'})
+
             else:
                 try:
                     user = CustomUser.objects.get(email=email)

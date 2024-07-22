@@ -1,0 +1,425 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXNCD5KZR9" defer></script>
+    <script>
+      function initializeGA() {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXNCD5KZR9', {
+          'transport_type': 'beacon'
+        });
+      }
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order #{{ order.display_order_number }}</title>
+
+
+
+    <!--
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    -->
+
+    <!-- Combined CSS -->
+    <link rel="stylesheet" href="{% static 'css/combined.min.css' %}">
+
+
+    <link rel="icon" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32" type="image/png">
+
+    <link rel="icon" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16" type="image/png">
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center" style="padding-top: 0.1rem; padding-bottom: 0.1rem;">
+      <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-lg-row"> <!-- Remove 'flex-column' class -->
+                <li class="nav-item">
+                    <a class="nav-link" href="tel:{{ brand.phone_number }}" style="font-size: 0.9rem;">
+                        <i class="bi bi-telephone"></i> {{ brand.phone_number }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mailto:{{ brand.email }}" style="font-size: 0.9rem;">
+                        <i class="bi bi-envelope"></i> {{ brand.email }}
+                    </a>
+                </li>
+              </ul>
+          </div>
+      </div>
+    </nav>
+
+
+
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background: {{ brand.primary_color }};">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <img src="{% static 'img/logo.webp' %}" alt="MwalimuFocus.Co.Ke" height="70" width="170" loading="lazy">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+          <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            {% for item in menu_items %}
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/{{ item.slug }}">{{ item.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                <li>
+                  <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                      <i class="bi bi-person-circle"></i> My Profile
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                      <li><a class="dropdown-item" href="/accounts/dashboard/">Dashboard</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                  </div>
+                </li>
+            {% else %}
+                <li>
+                    <button class="btn btn-dark" data-bs-target="#accountModal" data-bs-toggle="modal">My Account</button>
+                </li>
+            {% endif %}
+          </ul>
+
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container">
+
+      {% if order.is_paid %}
+
+      <h1 class="mt-4 mb-2" style="font-size: 20px;"><strong>Thank You!</strong> Order #{{ order.display_order_number }} Has Been Marked As Paid!</h1>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="text-left mt-4 mb-2">Order Summary</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-3"><strong>Order ID:</strong></div>
+                <div class="col-sm-9">#{{ order.display_order_number }}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-3"><strong>Amount Paid:</strong></div>
+                <div class="col-sm-9">Ksh {{ order.total_price }}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="alert alert-info" role="alert">
+                    <p>Hello! We have sent the attachments to <strong>{{ order.user.email }}</strong>! If you didn't receive the email, kindly check your spam folder.
+                    {% if user.is_authenticated %}You can similarly access your orders from your dashboard. You have <strong>UNLIMITED</strong> downloads for all items associated with this order! {% else %} If you would like to enjoy <strong>UNLIMITED</strong> downloads for each item associated with this order, kindly login to your account. If you don't have an account yet, we have emailed you your login details together with the attachments.{% endif %}</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-6">
+          <h2 class="text-left mt-4 mb-3">Download Files</h2>
+          <div class="card p-4"> 
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.title }} [<strong>Level:</strong> {{ item.education_level }} || <strong>Category:</strong> {{ item.category }} || <strong>Subject:</strong> {{ item.subject }}]</td>
+                    <td><a href="{% url 'download_customer_item_file' item.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <a href="{% url 'exam_generator_form' %}" class="btn btn-dark btn-sm mt-2 mb-2">Generate Another One</a>
+          </div>
+        </div>
+        
+      </div>
+
+    {% endif %}
+
+    </div>
+
+
+    <div class="container">
+      <footer class="py-5">
+        <div class="row">
+          <div class="col-12 col-md-3 mb-3">
+            <h5>Quick Links</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2">
+                <a href="/categories/" style="text-decoration: none; color: blue;">All Categories</a>
+              </li>
+              {% for item in categories_with_items %}
+              <li class="nav-item mb-2">
+                <a href="/categories/{{ item.slug }}/" style="text-decoration: none; color: blue;">{{ item.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+
+          <div class="col-12 col-md-3 mb-3">
+            <h5>Contact Us</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="tel:{{ brand.phone_number }}" class="nav-link p-0 text-body-secondary"><i class="bi bi-telephone"></i> {{ brand.phone_number }}</a></li>
+              <li class="nav-item mb-2"><a href="mailto:{{ brand.email }}" class="nav-link p-0 text-body-secondary email-link"><i class="bi bi-envelope"></i> {{ brand.email }}</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-5 offset-md-1 mb-3 subscriber-creation-div">
+            <h5>Subscribe to our newsletter</h5>
+            <p>Monthly digest of what's new and exciting from us.</p>
+            <div class="input-group">
+                <input id="newsletterEmail" type="text" class="form-control" placeholder="Email address">
+                <button id="subscribeButton" class="btn btn-dark">Subscribe</button>
+            </div>
+            <div id="subscriptionMessageContainer" class="mt-2"></div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p>&copy; 2024 MwalimuFocus.Co.Ke. All rights reserved.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>MwalimuFocus.Co.Ke collaborates with professional teachers across Kenya to outsource high-quality schemes of work, lesson plans, lesson notes, revision booklets, and past papers with marking schemes. Kenyan teachers, parents, and students can download these materials from our website for FREE or at a small fee. Learn more <a href="/about-us/" style="text-decoration: none; color: blue;">about us.</a></p>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-1 col-md-6 col-sm-6">
+                  <p><a href="/terms-and-conditions/" style="text-decoration: none; color: blue;">Terms</a></p>
+              </div>
+              <div class="col-lg-1 col-md-6 col-sm-6">
+                  <p><a href="/privacy-policy/" style="text-decoration: none; color: blue;">Privacy</a></p>
+              </div>
+            </div>
+          </div>
+
+          {% if latest_link %}
+          <ul class="list-unstyled d-flex">
+              {% if latest_link.facebook_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.facebook_url }}" target="_blank">
+                          <i class="bi bi-facebook"></i>
+                      </a>
+                  </li>
+              {% endif %}
+              {% if latest_link.telegram_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.telegram_url }}" target="_blank">
+                          <i class="bi bi-telegram"></i>
+                      </a>
+                  </li>
+              {% endif %}
+              {% if latest_link.whatsapp_url %}
+                  <li class="ms-3" style="font-size: 20px;">
+                      <a class="link-body-emphasis" href="{{ latest_link.whatsapp_url }}" target="_blank">
+                          <i class="bi bi-whatsapp"></i>
+                      </a>
+                  </li>
+              {% endif %}
+          </ul>
+          {% endif %}
+        </div>
+      </footer>
+    </div>
+
+
+
+    <!-- First Modal - Account Activity Selection -->
+    <div class="modal fade" id="accountModal" aria-hidden="true" aria-labelledby="accountModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <p class="modal-title" id="accountModalLabel" style="font-size: 24px;">I want to:</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <button class="btn btn-dark" data-bs-target="#registerModal" data-bs-toggle="modal" data-bs-dismiss="modal">Register</button>
+                    <button class="btn btn-dark" data-bs-target="#loginModal" data-bs-toggle="modal" data-bs-dismiss="modal">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Modal - Register or Login -->
+    <div class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="registerModalLabel" style="font-size: 24px;">Register as:</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <button class="btn btn-dark" data-bs-target="#customerRegisterModal" data-bs-toggle="modal" data-bs-dismiss="modal">Customer</button>
+                    <button class="btn btn-dark" data-bs-target="#vendorRegisterModal" data-bs-toggle="modal" data-bs-dismiss="modal">Vendor</button>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#accountModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Modal - Customer Registration Form -->
+    <div class="modal fade" id="customerRegisterModal" aria-hidden="true" aria-labelledby="customerRegisterModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="customerRegisterModalLabel" style="font-size: 24px;">Customer Registration</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body customer_registration_modal">
+                    <form id="customerRegistrationForm" method="post">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="emailInput1" class="form-label">Email Address (required)</label>
+                          <input type="email" class="form-control" id="emailInput1" name="email" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="passwordInput1" class="form-label">Password (required)</label>
+                          <input type="password" class="form-control" id="passwordInput1" name="password" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="phoneNumberInput1" class="form-label">Phone Number (optional)</label>
+                          <input type="tel" class="form-control" id="phoneNumberInput1" name="phone_number">
+                      </div>
+                      <div class="mb-3 form-check">
+                          <input type="checkbox" class="form-check-input" id="agreeTermsInput1" name="agree_to_terms" checked>
+                          <label class="form-check-label" for="agreeTermsInput1">Agree to Terms</label>
+                      </div>
+                      <input type="hidden" name="is_vendor" value="False">
+
+                      <button type="submit" class="btn btn-dark" id="registerCustomerBtn">Register</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#registerModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fourth Modal - Vendor Registration Form -->
+    <div class="modal fade" id="vendorRegisterModal" aria-hidden="true" aria-labelledby="vendorRegisterModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="vendorRegisterModalLabel" style="font-size: 24px;">Vendor Registration</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="vendor-registration-modal modal-body">
+                  <form id="registrationForm" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email Address (required)</label>
+                        <input type="email" class="form-control" id="emailInput" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password (required)</label>
+                        <input type="password" class="form-control" id="passwordInput" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumberInput" class="form-label">Phone Number (optional)</label>
+                        <input type="tel" class="form-control" id="phoneNumberInput" name="phone_number">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeTermsInput" name="agree_to_terms" checked>
+                        <label class="form-check-label" for="agreeTermsInput">Agree to Terms</label>
+                    </div>
+                    <input type="hidden" name="is_vendor" value="True">
+
+                    <button type="submit" class="btn btn-dark" id="registerBtn">Register</button>
+                  </form>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-outline-dark" data-bs-target="#registerModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fifth Modal - Login -->
+    <div class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="loginModalLabel" style="font-size: 24px;">Login</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body login-modal">
+                    <form>
+                      <div class="mb-3">
+                        <label for="InputEmail2" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="InputEmail2" aria-describedby="emailHelp">
+                      </div>
+                      <div class="mb-3">
+                        <label for="InputPassword2" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="InputPassword2">
+                      </div>
+                      <button type="submit" class="btn btn-dark" id="loginBtn">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                  <a href="{% url 'reset_password' %}" class="text-decoration-none">Forgot Password</a>
+                  <button class="btn btn-outline-dark" data-bs-target="#accountModal" data-bs-toggle="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" id="order-id" value="{{ order.id }}">
+
+    <script src="{% static 'js/popper.min.js' %}" defer></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script defer src="{% static 'js/sign_up.js' %}"></script>
+    <script defer src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/order_detail.js' %}"></script>
+    <script src="{% static 'js/attachments_via_email.js' %}"></script>
+    <script src="{% static 'js/image_url_format.js' %}"></script>
+    <script defer src="{% static 'js/newsletter.js' %}"></script>
+    
+  </body>
+</html>

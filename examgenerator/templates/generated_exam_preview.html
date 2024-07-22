@@ -185,7 +185,7 @@
                               <canvas id="pdf-canvas-exam" style="width:100%; height:100%;"></canvas>
                               <div id="overlay-exam" class="overlay" style="display: none;">
                                   <div id="main_exam_pay_preview" class="alert btn btn-dark alert-dark" role="alert">
-                                      Pay and Download to View Content
+                                      Pay & Download to View
                                   </div>
                               </div>
                           </div>
@@ -608,32 +608,44 @@
     <script src="{% static 'js/image_url_format.js' %}"></script>
     <script defer src="{% static 'js/newsletter.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script src="{% static 'js/payment_status.js' %}"></script>
+    <script src="{% static 'js/stk.js' %}"></script>
 
 
     {% if not generated_exam or not marking_scheme %}
-        <script>
+          <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var modalElement = document.getElementById('progressModal');
                 var myModal = new bootstrap.Modal(modalElement);
                 myModal.show();
 
                 var taskId = "{{ task_id }}";
-                
+                console.log('Task ID:', taskId); 
+
                 if (!taskId || taskId.trim() === '') {
+                    console.log('Task ID is invalid or empty. Redirecting to exam_generator_form.');
                     window.location.href = "{% url 'exam_generator_form' %}";
                     return; 
                 }
 
                 var taskStatusUrl = "{% url 'task_status' 'TASK_ID' %}".replace('TASK_ID', taskId);
+                console.log('Task Status URL:', taskStatusUrl); 
 
                 function checkTaskStatus() {
+                    console.log('Checking task status...');
                     fetch(taskStatusUrl)
-                        .then(response => response.json())
+                        .then(response => {
+                            console.log('Response received:', response); 
+                            return response.json();
+                        })
                         .then(data => {
+                            console.log('Data received:', data); 
                             if (data.status === 'SUCCESS') {
+                                console.log('Task status is SUCCESS. Reloading page...');
                                 clearInterval(checkInterval); 
-                                window.location.reload();
+                                
                             } else if (data.status === 'FAILURE') {
+                                console.log('Task status is FAILURE. Displaying error message and redirecting...');
                                 clearInterval(checkInterval);
                                 modalElement.querySelector('.modal-body').innerHTML = `
                                     <p>An Error Occurred, Try Again</p>
@@ -644,7 +656,7 @@
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
+                            console.error('Error occurred during fetch:', error); 
                             clearInterval(checkInterval); // Stop checking
                             modalElement.querySelector('.modal-body').innerHTML = `
                                 <p>An Error Occurred, Try Again</p>
@@ -654,11 +666,13 @@
                             }, 2500);
                         });
                 }
+
                 var checkInterval = setInterval(function() {
                     checkTaskStatus();
                 }, 1000); 
             });
         </script>
+
     {% endif %}
 
 
@@ -793,6 +807,10 @@
                 previewBtn.addEventListener('click', scrollToPreviewSection);
             }
         });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded",function(){const paymentStatusModalElement=document.getElementById("paymentStatus");paymentStatusModalElement.addEventListener("show.bs.modal",function(event){const form=document.getElementById("paymentForm");if(!form.checkValidity()){event.preventDefault();form.classList.add("was-validated")}})});function validateForm(event){const form=document.getElementById("paymentForm");const paymentStatusModal=new bootstrap.Modal(document.getElementById("paymentStatus"));if(form.checkValidity()){paymentStatusModal.show()}else{form.classList.add("was-validated")}}
     </script>
 
 

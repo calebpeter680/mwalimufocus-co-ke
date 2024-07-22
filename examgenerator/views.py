@@ -16,17 +16,76 @@ from django.shortcuts import redirect, reverse
 from django.shortcuts import get_object_or_404, render
 
 
+
+
+def exam_session_order_detail(request):
+    order_id = request.session.get('exam_order_id')
+    if order_id:
+        order = get_object_or_404(Order, id=order_id)
+    else:
+        order = None
+
+    categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
+    menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
+    brand = Brand.objects.last()
+    subjects_with_items = Subject.objects.annotate(num_items=Count('shopitem'))
+    education_levels_with_items = Education_Level.objects.annotate(num_items=Count('shopitem'))
+
+    try:
+        latest_link = SocialMediaLinks.objects.latest('pk')
+    except SocialMediaLinks.DoesNotExist:
+        latest_link = None
+    
+    context = {
+        'order': order,
+        'categories_with_items': categories_with_items,
+        'menu_items': menu_items,
+        'brand': brand,
+        'subjects_with_items': subjects_with_items,
+        'education_levels_with_items': education_levels_with_items,
+        'latest_link': latest_link,
+    }
+    
+    return render(request, 'session_order_detail.html', context)
+
+
+
 def generated_exam_preview(request):
     task_id = request.session.get('task_id')
     print("Task ID:", task_id)
 
     if task_id:
         generated_exam = GeneratedExam.objects.filter(task_id=task_id).first()
-
         marking_scheme = getattr(generated_exam, 'marking_scheme', None)
+        if generated_exam:
+            order = Order.objects.filter(generated_exam=generated_exam).first()
+
+            print("Order:", order)
+
+            if order:
+                current_order_id = order.id
+                session_order_id = request.session.get('exam_order_id')
+
+                if session_order_id and session_order_id != current_order_id:
+                    del request.session['exam_order_id']
+
+                request.session['exam_order_id'] = current_order_id
+
+                exam_order_id = request.session.get('exam_order_id')
+
+                print("Exam Order ID:", exam_order_id)
+            else:
+                if 'exam_order_id' in request.session:
+                    del request.session['exam_order_id']
+                order = None
+        else:
+            order = None
+
     else:
         generated_exam = None
         marking_scheme = None
+        order = None
+
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5]
     brand = Brand.objects.last()
@@ -48,6 +107,7 @@ def generated_exam_preview(request):
         'generated_exam': generated_exam,
         'marking_scheme': marking_scheme,
         'task_id': task_id,
+        'order': order,
     }
 
     return render(request, 'generated_exam_preview.html', context)

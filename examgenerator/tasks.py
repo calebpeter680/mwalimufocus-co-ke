@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import ExamGeneratorPrices, MarkingScheme, InstructionsToExaminees, Topic, Question, Answer, SubQuestion, SubAnswer, SubSubQuestion, SubSubAnswer, GeneratedExam
-from shop.models import Subject, Education_Level
+from shop.models import Subject, Education_Level, Order
 from accounts.models import CustomUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
@@ -31,6 +31,19 @@ from django.urls import reverse
 from celery.result import AsyncResult
 from django.conf import settings
 from django.db.models import Case, When
+from django.utils import timezone
+
+
+def display_order_number(number):
+    try:
+        input_number = int(number)
+        result = input_number + 100234
+        return result
+    except ValueError:
+        return None
+
+
+
 
 
 @shared_task(bind=True)
@@ -503,10 +516,15 @@ def generate_pdf_task(self, school_name, academic_term, assessment_type, educati
         pdf_file = ContentFile(buffer.getvalue(), pdf_file_name)
 
         # Get or create the default user
-        default_email = "default@gmail.com"
-        default_user, created = CustomUser.objects.get_or_create(email=default_email)
+        current_time = timezone.now()
+
+        formatted_time = current_time.strftime('%Y%m%d%H%M%S')
+        
+        unique_email = f"default{formatted_time}@gmail.com"
+
+        default_user, created = CustomUser.objects.get_or_create(email=unique_email)
         if created:
-            default_user.set_password(default_email.split('@')[0])
+            default_user.set_password(unique_email.split('@')[0])
             default_user.save()
 
         # Create the GeneratedExam object
@@ -539,6 +557,16 @@ def generate_pdf_task(self, school_name, academic_term, assessment_type, educati
             price=generated_exam_price
         )
 
+
+        order = Order.objects.create(
+            user=generated_exam.user,
+            total_price=generated_exam.price,
+            generated_exam=generated_exam,
+        )
+
+        result = display_order_number(order.id)
+        order.display_order_number = result
+        order.save()
 
 
         questions_with_answers = question_ids_in_order

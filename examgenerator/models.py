@@ -11,6 +11,8 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+
+
 class Question(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
@@ -30,6 +32,8 @@ class Question(models.Model):
     def __str__(self):
         return self.question_text
 
+
+
 class Answer(models.Model):
     question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='answer', null=True, blank=True)
     answer_text = models.TextField()
@@ -37,6 +41,8 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.answer_text
+
+
 
 class SubQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='sub_questions')
@@ -61,6 +67,8 @@ class SubQuestion(models.Model):
         verbose_name = "Sub Question"
         verbose_name_plural = "Sub Questions"
 
+
+
 class SubAnswer(models.Model):
     sub_question = models.OneToOneField(SubQuestion, on_delete=models.CASCADE, related_name='sub_answer', null=True, blank=True)
     sub_answer_text = models.TextField()
@@ -68,6 +76,8 @@ class SubAnswer(models.Model):
 
     def __str__(self):
         return self.sub_answer_text
+
+
 
 class SubSubQuestion(models.Model):
     sub_question = models.ForeignKey(SubQuestion, on_delete=models.CASCADE, related_name='sub_sub_questions')
@@ -85,6 +95,8 @@ class SubSubQuestion(models.Model):
     class Meta:
         verbose_name = "SubSub Question"
         verbose_name_plural = "SubSub Questions"
+
+
 
 class SubSubAnswer(models.Model):
     sub_sub_question = models.OneToOneField(SubSubQuestion, on_delete=models.CASCADE, related_name='sub_sub_answer')

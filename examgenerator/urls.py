@@ -9,5 +9,6 @@ urlpatterns = [
     path('task_status/<task_id>/', views.task_status, name='task_status'),
     path('exam-data-preparation/', views.exam_data_preparation, name='exam_data_preparation'),
     path('generated-exam-preview/', views.generated_exam_preview, name='generated_exam_preview'),
+    path('exam-session-order-detail/', views.exam_session_order_detail, name='exam_session_order_detail'),
 
 ]

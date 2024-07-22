@@ -17,6 +17,7 @@ def send_email_with_attachments_task(order_id):
         return {'success': True}
 
     order_items = order.items.all()
+    order_generated_exam = order.generated_exam
     brand = Brand.objects.last()
     attachments = []
 
