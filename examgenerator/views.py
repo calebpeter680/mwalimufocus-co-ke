@@ -17,11 +17,28 @@ from django.shortcuts import get_object_or_404, render
 
 
 
+def download_exam_file(request, exam_id):
+    exam = get_object_or_404(GeneratedExam, id=exam_id)
+    file = exam.file
+    response = FileResponse(file)
+    response['Content-Disposition'] = f'attachment; filename="{file.name}"'
+    return response
+
+
+def download_marking_scheme_file(request, ms_id):
+    ms = get_object_or_404(MarkingScheme, id=ms_id)
+    file = ms.file
+    response = FileResponse(file)
+    response['Content-Disposition'] = f'attachment; filename="{file.name}"'
+    return response
+
 
 def exam_session_order_detail(request):
     order_id = request.session.get('exam_order_id')
     if order_id:
         order = get_object_or_404(Order, id=order_id)
+        generated_exam = order.generated_exam
+        marking_scheme = generated_exam.marking_scheme
     else:
         order = None
 
@@ -44,6 +61,9 @@ def exam_session_order_detail(request):
         'subjects_with_items': subjects_with_items,
         'education_levels_with_items': education_levels_with_items,
         'latest_link': latest_link,
+        'generated_exam': generated_exam,
+        'marking_scheme': marking_scheme
+
     }
     
     return render(request, 'session_order_detail.html', context)

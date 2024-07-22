@@ -157,9 +157,15 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.title }} [<strong>Level:</strong> {{ item.education_level }} || <strong>Category:</strong> {{ item.category }} || <strong>Subject:</strong> {{ item.subject }}]</td>
-                    <td><a href="{% url 'download_customer_item_file' item.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td>
+                    <td>{{ generated_exam.id }}</td>
+                    <td>{{ generated_exam.title }}</td>
+                    <td><a href="{% url 'download_exam_file' generated_exam.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td>
+                  </tr>
+
+                  <tr>
+                    <td>{{ marking_scheme.id }}</td>
+                    <td>{{ marking_scheme.title }}</td>
+                    <td><a href="{% url 'download_customer_item_file' marking_scheme.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td>
                   </tr>
                 </tbody>
               </table>

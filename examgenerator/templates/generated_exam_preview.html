@@ -642,6 +642,9 @@
                             console.log('Data received:', data); 
                             if (data.status === 'SUCCESS') {
                                 console.log('Task status is SUCCESS. Reloading page...');
+                                setTimeout(function() {
+                                      window.location.href = "{% url 'exam_session_order_detail' %}";
+                                  }, 2500);
                                 clearInterval(checkInterval); 
                                 
                             } else if (data.status === 'FAILURE') {

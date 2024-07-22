@@ -92,9 +92,6 @@ def search_shop_items(request):
 
 
 
-
-
-
 def display_order_number(request, number):
     try:
         input_number = int(number)
