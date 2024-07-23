@@ -164,7 +164,7 @@
 
                   <tr>
                     <td>{{ marking_scheme.id }}</td>
-                    <td>{{ marking_scheme.title }}</td>
+                    <td>Marking Scheme for <b>{{ generated_exam.title }}</b></td>
                     <td><a href="{% url 'download_marking_scheme_file' marking_scheme.id %}" target="_blank" style="text-decoration: none; color: blue;">Download Now</a></td>
                   </tr>
                 </tbody>
