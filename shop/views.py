@@ -739,6 +739,8 @@ def login_and_assign_user(request):
             phone_number = data.get('phone_number')
             order_id = data.get('order_id')
 
+            print("Data at Login and Assign User:", data)
+
             if not email:
                 latest_user = CustomUser.objects.order_by('-pk').first()
                 if latest_user:
