@@ -756,11 +756,19 @@ def login_and_assign_user(request):
             
 
             if order.user:
-                if order.user.email != email:
-                    order.user.email = email
-                    order.user.save()
+                try:
+                    existing_user = CustomUser.objects.get(email=email)
+                    order.user = existing_user
+                    order.save()
+                    
+                    return JsonResponse({'success': 'Existing user assigned to order successfully!'})
 
-                return JsonResponse({'success': 'Order already has a user assigned.'})
+                except CustomUser.DoesNotExist:
+                    if order.user.email != email:
+                        order.user.email = email
+                        order.user.save()
+
+                    return JsonResponse({'success': 'Order already has a user assigned.'})
 
             else:
                 try:
