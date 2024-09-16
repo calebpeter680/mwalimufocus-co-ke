@@ -743,7 +743,7 @@ def normalize_phone_number(phone_number):
 
 
 def get_mpesa_access_token():
-    oauth_url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    oauth_url = "https://api.safaricom.co.ke/oauth/v1/generate"
     
     consumer_key = settings.MPESA_CONSUMER_KEY
     consumer_secret = settings.MPESA_CONSUMER_SECRET
