@@ -22,7 +22,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 #DEBUG = True
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,mwalimufocus.co.ke,mwalimufocus.com,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,63a9-102-6-193-121.ngrok-free.app,mwalimufocus.co.ke,mwalimufocus.com,localhost,mwalimufocus-ec482d83d7a7.herokuapp.com").split(",") + ['testserver', 'www.testserver']
 
 # Installed Apps
 INSTALLED_APPS = [
@@ -147,7 +147,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
-    'https://mwalimufocus-ec482d83d7a7.herokuapp.com'
+    'https://mwalimufocus-ec482d83d7a7.herokuapp.com',
+    'https://63a9-102-6-193-121.ngrok-free.app'
 ]
 
 
@@ -169,6 +170,11 @@ AWS_S3_VERIFY_SSL = os.getenv('AWS_S3_VERIFY_SSL') == 'True'
 INTASEND_TOKEN = os.getenv("INTASEND_TOKEN")
 INTASEND_PUBLISHABLE_KEY = os.getenv("INTASEND_PUBLISHABLE_KEY")
 
+
+MPESA_SHORTCODE = os.getenv("MPESA_SHORTCODE")
+MPESA_PASSKEY = os.getenv("MPESA_PASSKEY")
+MPESA_CONSUMER_KEY = os.getenv("MPESA_CONSUMER_KEY")
+MPESA_CONSUMER_SECRET = os.getenv("MPESA_CONSUMER_SECRET")
 
 
 

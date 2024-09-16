@@ -145,7 +145,7 @@ def fetch_topics(request):
         topics = Topic.objects.filter(
             education_level__name__in=education_level_ids,
             subject_id=subject_id,
-            question__isnull=False  # Ensure there is at least one associated question
+            question__isnull=False  
         ).distinct()  
 
         topics_data = [
@@ -207,7 +207,6 @@ def exam_data_preparation(request):
 
 
 
-#return redirect(reverse('task_status', args=[task.id]))
 
 def exam_generator_form(request):
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)

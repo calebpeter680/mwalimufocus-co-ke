@@ -6,6 +6,48 @@ import json
 from django.urls import reverse
 from django.utils import timezone
 from tinymce.models import HTMLField
+from django.core.exceptions import ValidationError
+
+
+
+
+class PromotionalEmails(models.Model):
+    subject = models.CharField(max_length=255)
+    body = models.TextField()
+    is_delivered_to_all = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.subject
+
+
+
+
+class PaymentOption(models.Model):
+    PAYMENT_CHOICES = [
+        ('MPESA', 'M-Pesa Express'),
+        ('INTASEND', 'IntaSend'),
+    ]
+
+    name = models.CharField(max_length=20, choices=PAYMENT_CHOICES, unique=True)
+    is_selected = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.get_name_display()
+
+    def save(self, *args, **kwargs):
+        if self.is_selected:
+            PaymentOption.objects.filter(is_selected=True).exclude(id=self.id).update(is_selected=False)
+        
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def ensure_at_least_one_selected(cls):
+        if not cls.objects.filter(is_selected=True).exists():
+            raise ValidationError("At least one payment option must be selected.")
+
+
+
+
 
 
 class Category(models.Model):

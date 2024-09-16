@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from shop.models import ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
+from shop.models import PaymentOption, ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Q, F
 from django.views import View
@@ -30,6 +30,9 @@ from django.http import HttpResponseNotFound
 from storages.backends.s3boto3 import S3Boto3Storage
 from .tasks import send_email_with_attachments_task
 import logging
+from django.conf import settings
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -537,10 +540,12 @@ def remove_from_cart_at_checkout(request):
 
 
 
+#Start of payment integration
 
 service = APIService(token=settings.INTASEND_TOKEN, publishable_key=settings.INTASEND_PUBLISHABLE_KEY, test=False)
 
 
+@csrf_exempt
 def stk_push_view(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phonenumber')
@@ -565,83 +570,148 @@ def stk_push_view(request):
 
         phone_number = normalize_phone_number(phone_number)
 
-        try:
-            response = service.collect.mpesa_stk_push(
-                phone_number=phone_number,
-                email=email,
-                amount=total_price,
-                narrative="Order Payment"
-            )
-
-            print("STK Push Response:", response)
-
-            if response:
-                invoice_id = response['invoice']['invoice_id']
-                status = response['invoice']['state']
-
-                order = get_object_or_404(Order, id=order_id)
-
-                transaction = Transaction.objects.create(
-                    transaction_id=invoice_id,
-                    status=status,
-                    order=order
-                )
-
-                print("Transaction:", transaction)
-
-                stored_invoice_id = request.session.get('invoice_id')
-                print("Current Invoice ID in Session:", stored_invoice_id)
-
-                if stored_invoice_id is None:
-                    request.session['invoice_id'] = invoice_id
-                    stored_new_invoice_id = request.session.get('invoice_id')
-                    print("New Invoice ID in Session (Initialized):", stored_new_invoice_id)
-                elif stored_invoice_id != invoice_id:
-                    request.session['invoice_id'] = invoice_id
-                    stored_new_invoice_id = request.session.get('invoice_id')
-                    print("New Invoice ID in Session (Updated):", stored_new_invoice_id)
-                else:
-                    print("Invoice ID already set in session.")
-
-                next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
-                print("Next View URL:", next_view_url)
 
 
+        selected_payment_option = PaymentOption.objects.filter(is_selected=True).order_by('-id').first()
+        
+        if not selected_payment_option:
+            return JsonResponse({'error': 'No payment option selected.'})
 
-                headers = {'Content-Type': 'application/json'}
+        if selected_payment_option.name == 'MPESA':
+            try:
+                response = initiate_mpesa_payment(phone_number, email, total_price, order_id)
+                print("M-Pesa Response:", response)
                 
-                payload_next = {
-                    'email': email,
-                    'phone_number': phone_number,
-                    'order_id': order_id
-                }
+                response_code = response.get('ResponseCode', None)
+                checkout_request_id = response.get('CheckoutRequestID', None)
+                customer_message = response.get('CustomerMessage', None)
+                response_description = response.get('ResponseDescription', None)
+                print(f"ResponseCode: {response_code}, CheckoutRequestID: {checkout_request_id}, CustomerMessage: {customer_message}")
 
-                try:
-                    r = requests.post(next_view_url, json=payload_next, headers=headers)
-                    print("Post Request Status Code:", r.status_code)
-                    print("Post Request Response:", r.text)
+                if response_code == '0':
+                    order = get_object_or_404(Order, id=order_id)
 
-                except requests.exceptions.RequestException as e:
-                    print('Request failed:', e)
+                    transaction = Transaction.objects.create(
+                        transaction_id=checkout_request_id,
+                        status="PROCESSING",
+                        order=order
+                    )
+                    print("Transaction Created:", transaction)
 
-                return JsonResponse({'success': True})
-            else:
-                print("Failed to trigger M-Pesa STK Push.")
-                return JsonResponse({'error': 'Failed to trigger M-Pesa STK Push.'})
 
-        except Exception as e:
-            print("Exception occurred:", e)
-            return JsonResponse({'error': str(e)})
+                    stored_invoice_id = request.session.get('invoice_id')
+                    print("Current Invoice ID in Session:", stored_invoice_id)
+
+                    if stored_invoice_id is None:
+                        request.session['invoice_id'] = checkout_request_id
+                        stored_new_invoice_id = request.session.get('invoice_id')
+                        print("New Invoice ID in Session (Initialized):", stored_new_invoice_id)
+                    elif stored_invoice_id != checkout_request_id:
+                        request.session['invoice_id'] = checkout_request_id
+                        stored_new_invoice_id = request.session.get('invoice_id')
+                        print("New Invoice ID in Session (Updated):", stored_new_invoice_id)
+                    else:
+                        print("Invoice ID already set in session.")
+
+
+                    next_view_url = "https://63a9-102-6-193-121.ngrok-free.app/login-and-assign/"
+                    print("Next View URL:", next_view_url)
+
+                    headers = {'Content-Type': 'application/json'}
+                    payload_next = {
+                        'email': email,
+                        'phone_number': phone_number,
+                        'order_id': order_id
+                    }
+
+                    try:
+                        r = requests.post(next_view_url, json=payload_next, headers=headers)
+                        print("Post Request Status Code:", r.status_code)
+                        print("Post Request Response:", r.text)
+
+                    except requests.exceptions.RequestException as e:
+                        print('Request failed:', e)
+
+                    return JsonResponse({'success': True, 'message': customer_message})
+                else:
+
+
+                    print("M-Pesa payment failed with message:", customer_message)
+                    return JsonResponse({'error': response_description, 'message': customer_message})
+
+            except Exception as e:
+                print("Exception occurred:", e)
+                return JsonResponse({'error': str(e)})
+
+        elif selected_payment_option.name == 'INTASEND':
+            try:
+                response = service.collect.mpesa_stk_push(
+                    phone_number=phone_number,
+                    email=email,
+                    amount=total_price,
+                    narrative="Order Payment"
+                )
+                print("STK Push Response:", response)
+
+                if response:
+                    invoice_id = response['invoice']['invoice_id']
+                    status = response['invoice']['state']
+
+                    order = get_object_or_404(Order, id=order_id)
+
+                    transaction = Transaction.objects.create(
+                        transaction_id=invoice_id,
+                        status=status,
+                        order=order
+                    )
+
+                    print("Transaction:", transaction)
+
+                    stored_invoice_id = request.session.get('invoice_id')
+                    print("Current Invoice ID in Session:", stored_invoice_id)
+
+                    if stored_invoice_id is None:
+                        request.session['invoice_id'] = invoice_id
+                        stored_new_invoice_id = request.session.get('invoice_id')
+                        print("New Invoice ID in Session (Initialized):", stored_new_invoice_id)
+                    elif stored_invoice_id != invoice_id:
+                        request.session['invoice_id'] = invoice_id
+                        stored_new_invoice_id = request.session.get('invoice_id')
+                        print("New Invoice ID in Session (Updated):", stored_new_invoice_id)
+                    else:
+                        print("Invoice ID already set in session.")
+
+                    next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
+                    print("Next View URL:", next_view_url)
+
+                    headers = {'Content-Type': 'application/json'}
+                    
+                    payload_next = {
+                        'email': email,
+                        'phone_number': phone_number,
+                        'order_id': order_id
+                    }
+
+                    try:
+                        r = requests.post(next_view_url, json=payload_next, headers=headers)
+                        print("Post Request Status Code:", r.status_code)
+                        print("Post Request Response:", r.text)
+
+                    except requests.exceptions.RequestException as e:
+                        print('Request failed:', e)
+
+                    return JsonResponse({'success': True})
+                else:
+                    print("Failed to trigger M-Pesa STK Push.")
+                    return JsonResponse({'error': 'Failed to trigger M-Pesa STK Push.'})
+
+            except Exception as e:
+                print("Exception occurred:", e)
+                return JsonResponse({'error': str(e)})
 
     else:
         print("Invalid request method.")
         return JsonResponse({'error': 'Invalid request method.'})
-
-
-
-
-
-
 
 
 def normalize_phone_number(phone_number):
@@ -672,49 +742,158 @@ def normalize_phone_number(phone_number):
 
 
 
+def get_mpesa_access_token():
+    oauth_url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    
+    consumer_key = settings.MPESA_CONSUMER_KEY
+    consumer_secret = settings.MPESA_CONSUMER_SECRET
+    
+    auth = requests.auth.HTTPBasicAuth(consumer_key, consumer_secret)
+    
+    response = requests.get(oauth_url, auth=auth)
+    
+    if response.status_code == 200:
+        access_token = response.json().get('access_token')
+        return access_token
+    else:
+        return None
+
+
+
+def initiate_mpesa_payment(phone_number, email, amount, order_id):
+    access_token = get_mpesa_access_token()
+    if not access_token:
+        return {"error": "Unable to fetch M-Pesa access token"}
+
+    daraja_api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+
+    shortcode = settings.MPESA_SHORTCODE
+    passkey = settings.MPESA_PASSKEY
+    
+    data_to_encode = shortcode + passkey + timestamp
+
+    encoded_password = base64.b64encode(data_to_encode.encode()).decode('utf-8')
+
+    order = get_object_or_404(Order, id=order_id)
+
+    account_reference = f"Order #{order.display_order_number or order_id}"
+
+    headers = {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+    }
+
+    payload = {
+        "BusinessShortCode": shortcode,
+        "Password": encoded_password,  
+        "Timestamp": timestamp,        
+        "TransactionType": "CustomerBuyGoodsOnline",
+        "Amount": amount,
+        "PartyA": phone_number,
+        "PartyB": shortcode,
+        "PhoneNumber": phone_number,
+        "CallBackURL": "https://mwalimufocus.co.ke/webhook/",
+        "AccountReference": account_reference,
+        "TransactionDesc": f"Payment for Order #{order.display_order_number or order_id}"
+    }
+
+    response = requests.post(daraja_api_url, json=payload, headers=headers)
+
+    return response.json()
+
+
+
+
+
 
 
 @csrf_exempt
 def webhook_callback(request):
-    logger.info("Webhook received: %s", request.body)
+    
     if request.method == 'POST':
         try:
             print("Webhook received a POST request")
 
+            selected_payment_option = PaymentOption.objects.filter(is_selected=True).order_by('-id').first()
+            if selected_payment_option is None:
+                return JsonResponse({'error': 'No payment option selected'}, status=400)
+
             event_data = json.loads(request.body.decode('utf-8'))
             print("Event data received:", event_data)
 
-            invoice_id = event_data.get('invoice_id')
-            state = event_data.get('state')
+            if selected_payment_option.name == 'INTASEND':
 
-            print("Invoice ID:", invoice_id)
-            print("State:", state)
+                invoice_id = event_data.get('invoice_id')
+                state = event_data.get('state')
 
-            if invoice_id and state:
-                print("Fetching transaction for invoice ID:", invoice_id)
-                transaction = get_object_or_404(Transaction, transaction_id=invoice_id)
-                order = transaction.order
+                print("Invoice ID:", invoice_id)
+                print("State:", state)
 
-                print("Updating transaction status to:", state)
-                transaction.status = state
-                transaction.save()
+                if invoice_id and state:
+                    transaction = get_object_or_404(Transaction, transaction_id=invoice_id)
+                    order = transaction.order
 
-                if state == 'COMPLETE':
-                    print("Payment complete. Marking order as paid and sending email.")
+                    print("Updating transaction status to:", state)
+                    transaction.status = state
+                    transaction.save()
+
+                    if state == 'COMPLETE':
+                        print("Payment complete. Marking order as paid and sending email.")
+                        order.is_paid = True
+                        order.save()
+                        send_email_with_attachments_task.delay_on_commit(order.id)
+
+                print("Webhook processed successfully")
+                return JsonResponse({'message': 'IntaSend Webhook received successfully'}, status=200)
+
+            elif selected_payment_option.name == 'MPESA':
+
+                stk_callback = event_data.get('Body', {}).get('stkCallback', {})
+                result_code = stk_callback.get('ResultCode')
+                result_desc = stk_callback.get('ResultDesc')
+                checkout_request_id = stk_callback.get('CheckoutRequestID')
+                callback_metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
+
+                print("M-Pesa Callback received:", stk_callback)
+
+                if result_code == 0:
+                    amount = next((item['Value'] for item in callback_metadata if item['Name'] == 'Amount'), None)
+                    mpesa_receipt_number = next((item['Value'] for item in callback_metadata if item['Name'] == 'MpesaReceiptNumber'), None)
+                    transaction_date = next((item['Value'] for item in callback_metadata if item['Name'] == 'TransactionDate'), None)
+                    phone_number = next((item['Value'] for item in callback_metadata if item['Name'] == 'PhoneNumber'), None)
+
+                    print(f"M-Pesa Payment Successful: {amount}, {mpesa_receipt_number}, {transaction_date}, {phone_number}")
+
+
+
+                    transaction = get_object_or_404(Transaction, transaction_id=checkout_request_id)
+                    order = transaction.order
+                    transaction.status = 'COMPLETE'
+                    transaction.save()
+
                     order.is_paid = True
                     order.save()
 
                     send_email_with_attachments_task.delay_on_commit(order.id)
 
-            print("Webhook processed successfully")
-            return JsonResponse({'message': 'Webhook received successfully'}, status=200)
+                    return JsonResponse({'message': 'M-Pesa payment successful'}, status=200)
+
+                else:
+
+                    print(f"M-Pesa payment failed: {result_desc}")
+                    transaction = get_object_or_404(Transaction, transaction_id=checkout_request_id)
+                    transaction.status = 'FAILED'
+                    transaction.save()
+
+                    return JsonResponse({'error': result_desc, 'message': 'M-Pesa payment failed'}, status=400)
 
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
             return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
 
         except Transaction.DoesNotExist:
-            print("Transaction not found for invoice ID:", invoice_id)
             return JsonResponse({'error': 'Transaction not found'}, status=404)
 
         except Exception as e:
@@ -722,8 +901,8 @@ def webhook_callback(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     else:
-        print("Invalid request method:", request.method)
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 
 
@@ -884,7 +1063,7 @@ def payment_status(request):
 
 
 
-#end of intensend configuration
+#end of Payment configuration
 
 
 

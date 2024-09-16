@@ -44,8 +44,6 @@ def display_order_number(number):
 
 
 
-
-
 @shared_task(bind=True)
 def generate_pdf_task(self, school_name, academic_term, assessment_type, education_level,
                       exam_type, subjects, month, year, exam_duration, max_score,

@@ -595,12 +595,7 @@
               <tr>
                 <td>
                   #{{ order.display_order_number }}
-                  <i class="bi bi-info-circle" 
-                     data-bs-toggle="tooltip" 
-                     data-bs-placement="top" 
-                     data-bs-custom-class="custom-tooltip" 
-                     data-bs-title="{% for item in order.items.all %}{{ item.title }}{% if not forloop.last %}, {% endif %}{% endfor %}">
-                  </i>
+                  
                 </td>
 
                 <td>{{ order.latest_transaction_created_at }}</td>

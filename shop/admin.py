@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import PaymentReminderLog, Discount, Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
+from shop.models import PaymentOption, PaymentReminderLog, Discount, Order, Transaction, Category, Education_Level, Subject, ShopItem, Brand, Customer_Item
 
 @admin.register(ShopItem)
 class ShopItemAdmin(admin.ModelAdmin):
@@ -43,6 +43,20 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_id', 'status', 'order', 'created_at')
+
+
+@admin.register(PaymentOption)
+class PaymentOptionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_selected')
+
+    fieldsets = (
+        (None, {
+            'fields': ('name',),
+        }),
+        ('Selection Status', {
+            'fields': ('is_selected',),
+        }),
+    )
 
 
 
