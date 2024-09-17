@@ -614,7 +614,7 @@ def stk_push_view(request):
                         print("Invoice ID already set in session.")
 
 
-                    next_view_url = "https://63a9-102-6-193-121.ngrok-free.app/login-and-assign/"
+                    next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
                     print("Next View URL:", next_view_url)
 
                     headers = {'Content-Type': 'application/json'}
