@@ -744,9 +744,21 @@ def normalize_phone_number(phone_number):
 
 
 def get_mpesa_access_token():
-    oauth_url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+
+
+    if not settings.DEVELOPMENT_MODE:
+
+        oauth_url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+
+    else:
+
+        oauth_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+
+        print(f"URL: {oauth_url}")
     
     consumer_key = settings.MPESA_CONSUMER_KEY
+
+
     consumer_secret = settings.MPESA_CONSUMER_SECRET
     
     auth = requests.auth.HTTPBasicAuth(consumer_key, consumer_secret)
@@ -755,7 +767,7 @@ def get_mpesa_access_token():
     
     if response.status_code == 200:
         access_token = response.json().get('access_token')
-        
+
         print(f"Access Token: {access_token}")
         return access_token
     else:
@@ -797,7 +809,7 @@ def initiate_mpesa_payment(phone_number, email, amount, order_id):
         "TransactionType": "CustomerBuyGoodsOnline",
         "Amount": amount,
         "PartyA": phone_number,
-        "PartyB": shortcode,
+        "PartyB": "961835",
         "PhoneNumber": phone_number,
         "CallBackURL": "https://mwalimufocus.co.ke/webhook/",
         "AccountReference": account_reference,
