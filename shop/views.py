@@ -553,7 +553,6 @@ def stk_push_view(request):
         total_price = request.POST.get('total_price')
         order_id = request.POST.get('order_id')
 
-
         if not total_price:
             return JsonResponse({'error': 'Total price not provided.'})
 
@@ -564,20 +563,17 @@ def stk_push_view(request):
             return JsonResponse({'error': 'Invalid total price format.'})
 
         phone_number = normalize_phone_number(phone_number)
-
         total_price = format_total_price(total_price)
 
-
-
         selected_payment_option = PaymentOption.objects.filter(is_selected=True).order_by('-id').first()
-        
+
         if not selected_payment_option:
             return JsonResponse({'error': 'No payment option selected.'})
 
         if selected_payment_option.name == 'MPESA':
             try:
                 response = initiate_mpesa_payment(phone_number, email, total_price, order_id)
-                
+
                 response_code = response.get('ResponseCode', None)
                 checkout_request_id = response.get('CheckoutRequestID', None)
                 customer_message = response.get('CustomerMessage', None)
@@ -592,7 +588,6 @@ def stk_push_view(request):
                         order=order
                     )
 
-
                     stored_invoice_id = request.session.get('invoice_id')
 
                     if stored_invoice_id is None:
@@ -606,9 +601,7 @@ def stk_push_view(request):
                     else:
                         print("Invoice ID already set in session.")
 
-
                     next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
-
                     headers = {'Content-Type': 'application/json'}
                     payload_next = {
                         'email': email,
@@ -618,16 +611,14 @@ def stk_push_view(request):
 
                     try:
                         r = requests.post(next_view_url, json=payload_next, headers=headers)
-
                     except requests.exceptions.RequestException as e:
+                        print('Request failed:', e)
 
                     return JsonResponse({'success': True, 'message': customer_message})
                 else:
-
                     return JsonResponse({'error': response_description, 'message': customer_message})
 
             except Exception as e:
-
                 return JsonResponse({'error': str(e)})
 
         elif selected_payment_option.name == 'INTASEND':
@@ -672,7 +663,7 @@ def stk_push_view(request):
                     print("Next View URL:", next_view_url)
 
                     headers = {'Content-Type': 'application/json'}
-                    
+
                     payload_next = {
                         'email': email,
                         'phone_number': phone_number,
