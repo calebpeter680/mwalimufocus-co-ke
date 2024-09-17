@@ -553,13 +553,8 @@ def stk_push_view(request):
         total_price = request.POST.get('total_price')
         order_id = request.POST.get('order_id')
 
-        print("Phone Number:", phone_number)
-        print("Email:", email)
-        print("Total Price:", total_price)
-        print("Order ID:", order_id)
 
         if not total_price:
-            print("Total price not provided.")
             return JsonResponse({'error': 'Total price not provided.'})
 
         try:
@@ -569,6 +564,8 @@ def stk_push_view(request):
             return JsonResponse({'error': 'Invalid total price format.'})
 
         phone_number = normalize_phone_number(phone_number)
+
+        total_price = format_total_price(total_price)
 
 
 
@@ -580,13 +577,11 @@ def stk_push_view(request):
         if selected_payment_option.name == 'MPESA':
             try:
                 response = initiate_mpesa_payment(phone_number, email, total_price, order_id)
-                print("M-Pesa Response:", response)
                 
                 response_code = response.get('ResponseCode', None)
                 checkout_request_id = response.get('CheckoutRequestID', None)
                 customer_message = response.get('CustomerMessage', None)
                 response_description = response.get('ResponseDescription', None)
-                print(f"ResponseCode: {response_code}, CheckoutRequestID: {checkout_request_id}, CustomerMessage: {customer_message}")
 
                 if response_code == '0':
                     order = get_object_or_404(Order, id=order_id)
@@ -596,26 +591,23 @@ def stk_push_view(request):
                         status="PROCESSING",
                         order=order
                     )
-                    print("Transaction Created:", transaction)
 
 
                     stored_invoice_id = request.session.get('invoice_id')
-                    print("Current Invoice ID in Session:", stored_invoice_id)
 
                     if stored_invoice_id is None:
                         request.session['invoice_id'] = checkout_request_id
                         stored_new_invoice_id = request.session.get('invoice_id')
-                        print("New Invoice ID in Session (Initialized):", stored_new_invoice_id)
+
                     elif stored_invoice_id != checkout_request_id:
                         request.session['invoice_id'] = checkout_request_id
                         stored_new_invoice_id = request.session.get('invoice_id')
-                        print("New Invoice ID in Session (Updated):", stored_new_invoice_id)
+
                     else:
                         print("Invoice ID already set in session.")
 
 
                     next_view_url = "https://mwalimufocus.co.ke/login-and-assign/"
-                    print("Next View URL:", next_view_url)
 
                     headers = {'Content-Type': 'application/json'}
                     payload_next = {
@@ -626,21 +618,16 @@ def stk_push_view(request):
 
                     try:
                         r = requests.post(next_view_url, json=payload_next, headers=headers)
-                        print("Post Request Status Code:", r.status_code)
-                        print("Post Request Response:", r.text)
 
                     except requests.exceptions.RequestException as e:
-                        print('Request failed:', e)
 
                     return JsonResponse({'success': True, 'message': customer_message})
                 else:
 
-
-                    print("M-Pesa payment failed with message:", customer_message)
                     return JsonResponse({'error': response_description, 'message': customer_message})
 
             except Exception as e:
-                print("Exception occurred:", e)
+
                 return JsonResponse({'error': str(e)})
 
         elif selected_payment_option.name == 'INTASEND':
@@ -712,6 +699,20 @@ def stk_push_view(request):
     else:
         print("Invalid request method.")
         return JsonResponse({'error': 'Invalid request method.'})
+
+
+
+
+def format_total_price(total_price):
+    try:
+        total_price = float(total_price)
+
+        formatted_price = round(total_price)
+        
+        return formatted_price
+    except ValueError:
+        raise ValueError("Invalid total price format. Please ensure it's a valid number.")
+
 
 
 def normalize_phone_number(phone_number):
@@ -831,38 +832,31 @@ def webhook_callback(request):
     
     if request.method == 'POST':
         try:
-            print("Webhook received a POST request")
 
             selected_payment_option = PaymentOption.objects.filter(is_selected=True).order_by('-id').first()
             if selected_payment_option is None:
                 return JsonResponse({'error': 'No payment option selected'}, status=400)
 
             event_data = json.loads(request.body.decode('utf-8'))
-            print("Event data received:", event_data)
 
             if selected_payment_option.name == 'INTASEND':
 
                 invoice_id = event_data.get('invoice_id')
                 state = event_data.get('state')
 
-                print("Invoice ID:", invoice_id)
-                print("State:", state)
-
                 if invoice_id and state:
                     transaction = get_object_or_404(Transaction, transaction_id=invoice_id)
                     order = transaction.order
 
-                    print("Updating transaction status to:", state)
                     transaction.status = state
                     transaction.save()
 
                     if state == 'COMPLETE':
-                        print("Payment complete. Marking order as paid and sending email.")
+
                         order.is_paid = True
                         order.save()
                         send_email_with_attachments_task.delay_on_commit(order.id)
 
-                print("Webhook processed successfully")
                 return JsonResponse({'message': 'IntaSend Webhook received successfully'}, status=200)
 
             elif selected_payment_option.name == 'MPESA':
@@ -873,15 +867,12 @@ def webhook_callback(request):
                 checkout_request_id = stk_callback.get('CheckoutRequestID')
                 callback_metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
 
-                print("M-Pesa Callback received:", stk_callback)
 
                 if result_code == 0:
                     amount = next((item['Value'] for item in callback_metadata if item['Name'] == 'Amount'), None)
                     mpesa_receipt_number = next((item['Value'] for item in callback_metadata if item['Name'] == 'MpesaReceiptNumber'), None)
                     transaction_date = next((item['Value'] for item in callback_metadata if item['Name'] == 'TransactionDate'), None)
                     phone_number = next((item['Value'] for item in callback_metadata if item['Name'] == 'PhoneNumber'), None)
-
-                    print(f"M-Pesa Payment Successful: {amount}, {mpesa_receipt_number}, {transaction_date}, {phone_number}")
 
 
 
@@ -899,7 +890,6 @@ def webhook_callback(request):
 
                 else:
 
-                    print(f"M-Pesa payment failed: {result_desc}")
                     transaction = get_object_or_404(Transaction, transaction_id=checkout_request_id)
                     transaction.status = 'FAILED'
                     transaction.save()
@@ -907,14 +897,12 @@ def webhook_callback(request):
                     return JsonResponse({'error': result_desc, 'message': 'M-Pesa payment failed'}, status=400)
 
         except json.JSONDecodeError as e:
-            print("JSON decode error:", e)
             return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
 
         except Transaction.DoesNotExist:
             return JsonResponse({'error': 'Transaction not found'}, status=404)
 
         except Exception as e:
-            print("An error occurred:", e)
             return JsonResponse({'error': str(e)}, status=400)
 
     else:
