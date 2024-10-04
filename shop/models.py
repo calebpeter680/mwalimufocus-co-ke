@@ -122,6 +122,24 @@ class ShopItem(models.Model):
     discount_start_time = models.DateTimeField(null=True, blank=True)
     discount_end_time = models.DateTimeField(null=True, blank=True)
 
+    YEAR_CHOICES = [(r, str(r)) for r in range(1980, timezone.now().year + 1)]
+    year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year, null=True, blank=True)
+
+    TERM_CHOICES = [
+        ('Term 1', 'Term 1'),
+        ('Term 2', 'Term 2'),
+        ('Term 3', 'Term 3'),
+    ]
+    term = models.CharField(max_length=10, choices=TERM_CHOICES, null=True, blank=True)
+
+    TERM_LEVEL_CHOICES = [
+        ('Opener', 'Opener'),
+        ('Mid', 'Mid'),
+        ('End', 'End'),
+    ]
+    term_level = models.CharField(max_length=6, choices=TERM_LEVEL_CHOICES, null=True, blank=True)
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.title}")
