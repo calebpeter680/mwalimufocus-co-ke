@@ -166,7 +166,7 @@
                         </li>
                       </ul>
                     {% endfor %}
-                  {% elif related_items and shop_item.setbook_type_questions %}
+                  {% elif related_items and subject and shop_item.setbook_type_questions %}
                     <p class="mt-2"><b>You may also like:</b> </p>
                     {% for item in related_items %}
                       {% if item.setbook_type_questions %}
