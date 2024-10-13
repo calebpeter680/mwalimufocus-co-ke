@@ -140,6 +140,14 @@ class ShopItem(models.Model):
     term_level = models.CharField(max_length=6, choices=TERM_LEVEL_CHOICES, null=True, blank=True)
 
 
+    SETBOOK_QUESTIONS_TYPE_CHOICES = [
+        ('Excerpt', 'Excerpt'),
+        ('Essay', 'Essay'),
+        ('General', 'General'),
+    ]
+    setbook_type_questions = models.CharField(max_length=60, choices=SETBOOK_QUESTIONS_TYPE_CHOICES, null=True, blank=True)
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.title}")

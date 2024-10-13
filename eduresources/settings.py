@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'shop.middleware.DomainRedirectMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'eduresources.urls'

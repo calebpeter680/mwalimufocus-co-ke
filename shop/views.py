@@ -1106,6 +1106,14 @@ def shop_item_detail(request, category_slug, pk, slug):
             term_level=shop_item.term_level
         ).exclude(pk=shop_item.pk)
 
+    elif shop_item.category.name == "Set Book Guides":
+
+        related_items = ShopItem.objects.filter(
+            is_search_engine_indexible=True, 
+            category=shop_item.category,
+            subject=shop_item.subject,
+        ).exclude(pk=shop_item.pk)
+
     else:
 
         related_items = ShopItem.objects.filter(
@@ -1114,7 +1122,16 @@ def shop_item_detail(request, category_slug, pk, slug):
             education_level=shop_item.education_level
         ).exclude(pk=shop_item.pk)
 
-    return render(request, 'product_detail.html', {'related_items': related_items, 'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
+
+
+    subject = None
+    if 'Kiswahili' in shop_item.subject.name or 'Fasihi' in shop_item.subject.name:
+        subject = 'Kiswahili'
+    elif 'English' in shop_item.subject.name or 'Literature' in shop_item.subject.name:
+        subject = 'English'
+
+
+    return render(request, 'product_detail.html', {'subject': subject, 'related_items': related_items, 'latest_link': latest_link, 'percentage_saved': percentage_saved,'category': category, 'user': request.user, 'order': order, 'cart_items': cart_items, 'num_cart_items': num_cart_items, 'shop_item': shop_item, 'brand': brand, 'categories_with_items': categories_with_items, 'menu_items': menu_items})
 
 
 
