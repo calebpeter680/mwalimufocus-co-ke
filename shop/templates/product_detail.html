@@ -184,33 +184,6 @@
             {% endif %}
 
 
-            {% if shop_item.setbook_type_questions %}
-            <li class="list-group-item">
-              <div class="row">
-                <div class="col-sm-3"><strong>Type:</strong></div>
-                <div class="col-sm-9">
-                  {% if subject %}
-                    {% if subject == "English" %}
-                        {% if shop_item.setbook_type_questions == "General" %}
-                          Both Excerpt and Essay Questions
-                        {% else %}
-                          {{ shop_item.setbook_type_questions }} Questions
-                        {% endif %}
-                    {% elif subject == "Kiswahili" %}
-                        {% if shop_item.setbook_type_questions == "Excerpt" %}
-                            Maswali ya Dondoo
-                        {% elif shop_item.setbook_type_questions == "Essay" %}
-                            Essay Questions
-                        {% else %}
-                            Both Excerpt (Maswali ya Dondoo) and Essay Questions
-                        {% endif %}
-                    {% endif %}
-                  {% endif %}
-                </div>
-              </div>
-            </li>
-            {% endif %}
-
             {% if shop_item.category %}
             <li class="list-group-item">
               <div class="row">
