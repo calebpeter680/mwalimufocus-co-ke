@@ -61,96 +61,6 @@ def send_promotional_email(user, new_shop_items):
 
 
 @shared_task
-def send_promotional_emails_to_all_users():
-    email_limit_obj = EmailPerHourLimit.objects.first()
-    email_limit = email_limit_obj.limit if email_limit_obj else 50
-
-    users = CustomUser.objects.filter(send_promotional_emails_to_all_users_is_sent=False)[:email_limit]
-    sent_emails_count = 0
-
-    for user in users:
-        if not validate_email(user.email):
-            WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
-            continue
-        
-        subjects = get_purchased_subjects(user)
-        if subjects:
-            new_shop_items = get_new_shop_items(subjects)
-            try:
-                send_promotional_email(user, new_shop_items)
-                WeeklyPromotionEmail.objects.create(user=user, status='SENT')
-                user.send_promotional_emails_to_all_users_is_sent = True
-                user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
-                sent_emails_count += 1
-            except Exception as e:
-                WeeklyPromotionEmail.objects.create(user=user, status='FAILED')
-
-    return f"Sent promotional emails to {sent_emails_count} users."
-
-
-
-
-
-@shared_task
-def reset_promotional_emails_status():
-    try:
-        users = CustomUser.objects.all()
-        updated_users_count = 0
-
-        for user in users:
-            if validate_email(user.email):
-                user.send_promotional_emails_to_all_users_is_sent = False
-                user.save(update_fields=['send_promotional_emails_to_all_users_is_sent'])
-                updated_users_count += 1
-
-        return f"Reset send_promotional_emails_to_all_users_is_sent for {updated_users_count} users."
-    except Exception as e:
-        return f"Failed to reset promotional emails status: {str(e)}"
-
-
-
-
-
-@shared_task
-def apply_discount_to_shop_items():
-    try:
-        latest_discount = Discount.objects.latest('id')
-    except ObjectDoesNotExist:
-        return "No discounts found. No items updated."
-
-    discount_percentage = Decimal(latest_discount.amount) / Decimal('100')
-    shop_items = ShopItem.objects.all()
-
-    for item in shop_items:
-        discounted_price = item.price - (item.price * discount_percentage)
-        item.price = discounted_price
-        item.save()
-
-    return f"Discount applied to {len(shop_items)} ShopItems"
-
-
-
-@shared_task
-def remove_discount_from_shop_items():
-    try:
-        latest_discount = Discount.objects.latest('id')
-        discount_percentage = Decimal(latest_discount.amount) / Decimal('100')
-
-        shop_items = ShopItem.objects.all()
-
-        for item in shop_items:
-            original_price = item.price / (Decimal('1') - discount_percentage)
-            item.price = original_price
-            item.save()
-
-        return f"Increased prices of {len(shop_items)} ShopItems"
-    except Discount.DoesNotExist:
-        return "No Discount objects found in the database."
-
-
-
-
-@shared_task
 def send_payment_reminders():
     try:
         latest_discount = Discount.objects.latest('id')
@@ -217,6 +127,7 @@ def send_payment_reminders():
 
         order.cart_reminder_sent = True
         order.save()
+
 
 
 @shared_task

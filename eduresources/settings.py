@@ -88,7 +88,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eduresources.wsgi.application'
 
 
-#DEVELOPMENT_MODE = True
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 if DEVELOPMENT_MODE:
