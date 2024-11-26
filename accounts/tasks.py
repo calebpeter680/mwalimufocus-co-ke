@@ -13,50 +13,6 @@ from decimal import Decimal
 from validate_email_address import validate_email
 
 
-def get_purchased_subjects(user):
-  subject_ids = Order.objects.filter(user=user).values_list('items__subject', flat=True)
-  subjects = Subject.objects.filter(pk__in=subject_ids)
-  return set(subjects) 
-
-
-def get_new_shop_items(subject_names):
-    two_months_ago = timezone.now() - timedelta(days=60)
-    new_shop_items = ShopItem.objects.filter(
-        subject__name__in=subject_names,
-        date_created__gte=two_months_ago
-    )
-
-    if not new_shop_items.exists():
-        new_shop_items = ShopItem.objects.filter(subject__name__in=subject_names)
-
-    return new_shop_items
-
-
-
-def send_promotional_email(user, new_shop_items):
-    latest_discount = Discount.objects.latest('id')
-    subject = f"🎉 {latest_discount} Offer! Check Out Our New Resources 📚"
-
-    current_site = Site.objects.get_current()
-    context = {
-        'user': user,
-        'new_shop_items': new_shop_items,
-        'domain': current_site.domain,
-        'protocol': 'https' if settings.SECURE_SSL_REDIRECT else 'http',
-        'latest_discount': latest_discount,
-
-    }
-    html_message = render_to_string('promotional_email.html', context)
-    plain_message = strip_tags(html_message)
-    send_mail(
-        subject,
-        plain_message,
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        fail_silently=True,
-        html_message=html_message,
-    )
-
 
 
 

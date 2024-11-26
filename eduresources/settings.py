@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
@@ -85,7 +86,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'eduresources.wsgi.application'
+
+
+ASGI_APPLICATION = 'eduresources.asgi.application'
 
 
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
