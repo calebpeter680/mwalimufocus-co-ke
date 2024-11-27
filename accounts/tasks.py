@@ -16,9 +16,8 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 
-
-
 def send_payment_reminders():
+    print("send_payment_reminders Job Initiated")
     try:
         latest_discount = Discount.objects.latest('id')
     except ObjectDoesNotExist:
@@ -85,9 +84,11 @@ def send_payment_reminders():
         order.cart_reminder_sent = True
         order.save()
 
+scheduler.add_job(send_payment_reminders, 'interval', minutes=5)
 
 
 def restore_item_prices():
+    print("restore_item_prices Job Initiated")
     now = timezone.now()
     discounted_items = ShopItem.objects.filter(is_discounted=True)
 
@@ -112,5 +113,4 @@ def restore_item_prices():
 
 
 
-scheduler.add_job(send_payment_reminders, 'interval', minutes=5)
 scheduler.add_job(restore_item_prices, 'interval', minutes=3)
