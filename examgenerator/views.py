@@ -8,7 +8,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 from django.urls import reverse
 from .tasks import generate_pdf_task
-from celery.result import AsyncResult
 from django.conf import settings
 from django.db.models import Count
 from accounts.models import SocialMediaLinks

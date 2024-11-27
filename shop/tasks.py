@@ -1,4 +1,3 @@
-from celery import shared_task
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.shortcuts import get_object_or_404

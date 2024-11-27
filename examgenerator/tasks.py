@@ -1,5 +1,3 @@
-# examgenerator/tasks.py
-from celery import shared_task
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.shortcuts import render
@@ -28,7 +26,6 @@ import urllib.request
 import random
 from datetime import datetime, timedelta
 from django.urls import reverse
-from celery.result import AsyncResult
 from django.conf import settings
 from django.db.models import Case, When
 from django.utils import timezone
@@ -43,8 +40,6 @@ def display_order_number(number):
         return None
 
 
-
-@shared_task(bind=True)
 def generate_pdf_task(self, school_name, academic_term, assessment_type, education_level,
                       exam_type, subjects, month, year, exam_duration, max_score,
                       instructions, topics):

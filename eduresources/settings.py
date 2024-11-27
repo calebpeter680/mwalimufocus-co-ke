@@ -1,7 +1,6 @@
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import os
-from celery.schedules import crontab
 import sys
 import dj_database_url
 from django.conf import settings
@@ -45,7 +44,6 @@ INSTALLED_APPS = [
     'pages',
     'examgenerator',
     'tinymce',
-    'django_celery_beat',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -180,50 +178,6 @@ MPESA_CONSUMER_KEY = os.getenv("MPESA_CONSUMER_KEY")
 MPESA_CONSUMER_SECRET = os.getenv("MPESA_CONSUMER_SECRET")
 
 
-
-CELERY_BROKER_URL = os.getenv('REDISCLOUD_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDISCLOUD_URL')
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_ALWAYS_EAGER = False
-CELERY_TASK_STORE_EAGER_RESULT = False
-CELERY_ENABLE_UTC = False
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_RESULT_EXPIRES = 3600
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-
-CELERY_BEAT_SCHEDULE = {
-    'send-promotional-emails': {
-        'task': 'accounts.tasks.send_promotional_emails_to_all_users',
-        #'schedule': crontab(hour=5, minute=0, day_of_week='5'),  
-    },
-    'apply-discount-to-shop-items': {
-        'task': 'accounts.tasks.apply_discount_to_shop_items',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='4'),
-    },
-    'remove-discount-from-shop-items': {
-        'task': 'accounts.tasks.remove_discount_from_shop_items',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
-    },
-    'reset_promotional_emails_status': {
-        'task': 'accounts.tasks.reset_promotional_emails_status',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
-    },
-    'send_payment_reminders': {
-        'task': 'accounts.tasks.send_payment_reminders',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
-    },
-    'restore_item_prices': {
-        'task': 'accounts.tasks.restore_item_prices',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
-    },
-
-    'send_attachments_for_paid_orders': {
-        'task': 'accounts.tasks.send_attachments_for_paid_orders',
-        #'schedule': crontab(hour=23, minute=59, day_of_week='0'),
-    },
-}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'sm1.cloudoon.com'
