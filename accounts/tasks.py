@@ -2,22 +2,15 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from datetime import timedelta
-from .models import CustomUser, EmailPerHourLimit, WeeklyPromotionEmail
-from shop.models import Customer_Item, ShopItem, Discount, Order, Subject, PaymentReminderLog
 from django.conf import settings
-from django.contrib.sites.models import Site
-from django.core.exceptions import ObjectDoesNotExist
-from decimal import Decimal
 from validate_email_address import validate_email
-from apscheduler.schedulers.background import BackgroundScheduler
+from decimal import Decimal
 
-scheduler = BackgroundScheduler()
-scheduler.start()
 
 
 def send_payment_reminders():
     print("send_payment_reminders Job Initiated")
+    from shop.models import Discount, Order, PaymentReminderLog
     try:
         latest_discount = Discount.objects.latest('id')
     except ObjectDoesNotExist:
@@ -57,6 +50,8 @@ def send_payment_reminders():
                 item.discount_end_time = item.discount_start_time + timezone.timedelta(minutes=20)
                 item.save()
 
+
+        from django.contrib.sites.models import Site
         current_site = Site.objects.get_current()
         html_message = render_to_string('payment_reminder_email.html', {
             'user': user,
@@ -84,12 +79,11 @@ def send_payment_reminders():
         order.cart_reminder_sent = True
         order.save()
 
-scheduler.add_job(send_payment_reminders, 'interval', minutes=5, jitter=10)
-
 
 
 def restore_item_prices():
     print("restore_item_prices Job Initiated")
+    from shop.models import ShopItem
     now = timezone.now()
     discounted_items = ShopItem.objects.filter(is_discounted=True)
 
@@ -111,7 +105,3 @@ def restore_item_prices():
             item.discount_start_time = None
             item.discount_end_time = None
             item.save()
-
-
-
-scheduler.add_job(restore_item_prices, 'interval', minutes=3, jitter=15)

@@ -210,9 +210,13 @@ LOGGING = {
             "handlers": ["console"],
             "level": "DEBUG",
         },
-        "daphne": {  # Daphne logs
+        "daphne": {
             "handlers": ["console"],
             "level": "DEBUG",
+        },
+        "apscheduler": {
+            "handlers": ["console"],
+            "level": "DEBUG", 
         },
     },
 }
