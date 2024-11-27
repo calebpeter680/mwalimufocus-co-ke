@@ -13,7 +13,6 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 
-@shared_task
 def send_email_with_attachments_task(order_id):
     order = get_object_or_404(Order, pk=order_id)
 

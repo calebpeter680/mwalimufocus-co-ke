@@ -11,7 +11,7 @@ import json
 import requests
 from django.urls import reverse
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, login
 from accounts.models import CustomUser, SocialMediaLinks
 from django.conf import settings
@@ -31,7 +31,11 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from .tasks import send_email_with_attachments_task
 import logging
 from django.conf import settings
+from apscheduler.schedulers.background import BackgroundScheduler
 
+
+scheduler = BackgroundScheduler()
+scheduler.start()
 
 
 logger = logging.getLogger(__name__)
@@ -846,7 +850,7 @@ def webhook_callback(request):
 
                         order.is_paid = True
                         order.save()
-                        send_email_with_attachments_task.delay_on_commit(order.id)
+                        scheduler.add_job(send_email_with_attachments_task, 'date', run_date=datetime.now() + timedelta(seconds=2), args=[order.id])
 
                 return JsonResponse({'message': 'IntaSend Webhook received successfully'}, status=200)
 
@@ -875,7 +879,7 @@ def webhook_callback(request):
                     order.is_paid = True
                     order.save()
 
-                    send_email_with_attachments_task.delay_on_commit(order.id)
+                    scheduler.add_job(send_email_with_attachments_task, 'date', run_date=datetime.now() + timedelta(seconds=2), args=[order.id])
 
                     return JsonResponse({'message': 'M-Pesa payment successful'}, status=200)
 
