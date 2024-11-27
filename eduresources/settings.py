@@ -201,7 +201,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "handlers": {
         "console": {
-            "level": "INFO",
+            "level": "INFO", 
             "class": "logging.StreamHandler",
         },
     },
@@ -209,6 +209,7 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             "level": "DEBUG",
+            "propagate": False, 
         },
         "daphne": {
             "handlers": ["console"],
@@ -218,8 +219,14 @@ LOGGING = {
             "handlers": ["console"],
             "level": "DEBUG", 
         },
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
     },
 }
+
 
 
 
