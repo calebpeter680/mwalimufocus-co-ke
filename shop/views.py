@@ -33,6 +33,7 @@ import logging
 from django.conf import settings
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.db.models.functions import Lower
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 scheduler = BackgroundScheduler()
@@ -151,7 +152,7 @@ def home(request):
 
     popular_downloads = []
     for item in shop_items:
-        if item.views_count != 0:
+        if item.views_count >= 5000:
             conversion_rate = (item.downloads_count / item.views_count) * 100
             popular_downloads.append((item, conversion_rate))
 
@@ -234,11 +235,19 @@ def categories_view(request):
 
 
 
-
 class CategoryShopItemsView(View):
     def get(self, request, category_slug):
         category = get_object_or_404(Category, slug=category_slug)
         shop_items = ShopItem.objects.filter(category=category)
+
+        paginator = Paginator(shop_items, 30)
+        page = request.GET.get('page', 1)
+        try:
+            paginated_shop_items = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_shop_items = paginator.page(1)
+        except EmptyPage:
+            paginated_shop_items = paginator.page(paginator.num_pages)
 
         categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
         menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
@@ -260,7 +269,7 @@ class CategoryShopItemsView(View):
 
         context = {
             'category': category,
-            'shop_items': shop_items,
+            'shop_items': paginated_shop_items,
             'subjects_with_items': subjects_with_items,
             'education_levels_with_items': education_levels_with_items,
             'brand': brand,
@@ -277,6 +286,7 @@ class CategoryShopItemsView(View):
 
 
 
+
 def shop_items_by_subject_category(request, category_slug, subject_slug):
     category = get_object_or_404(Category, slug=category_slug)
     subject = get_object_or_404(Subject, slug=subject_slug)
@@ -287,7 +297,18 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
         .filter(num_shop_items__gt=0)  
     )
 
-    shop_items = ShopItem.objects.filter(category=category, subject=subject)
+    shop_items_queryset = ShopItem.objects.filter(category=category, subject=subject)
+
+    # Pagination
+    paginator = Paginator(shop_items_queryset, 30) 
+    page = request.GET.get('page')
+
+    try:
+        shop_items = paginator.page(page)
+    except PageNotAnInteger:
+        shop_items = paginator.page(1)  
+    except EmptyPage:
+        shop_items = paginator.page(paginator.num_pages) 
 
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
@@ -304,7 +325,7 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
     context = {
         'category': category,
         'subject': subject,
-        'shop_items': shop_items,
+        'shop_items': shop_items,  # Paginated shop items
         'brand': brand,
         'education_levels': education_levels,
         'categories_with_items': categories_with_items,
@@ -312,7 +333,7 @@ def shop_items_by_subject_category(request, category_slug, subject_slug):
         'num_cart_items': num_cart_items,
         'cart_items': cart_items,
         'user': request.user,
-        'latest_link': latest_link
+        'latest_link': latest_link,
     }
 
     return render(request, 'shop_items_by_subject_category.html', context)
@@ -333,6 +354,15 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
         education_level=education_level
     )
 
+    paginator = Paginator(shop_items, 32)
+    page = request.GET.get('page', 1)
+    try:
+        paginated_shop_items = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_shop_items = paginator.page(1)
+    except EmptyPage:
+        paginated_shop_items = paginator.page(paginator.num_pages)
+
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
 
@@ -349,7 +379,7 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
         'category': category,
         'subject': subject,
         'education_level': education_level,
-        'shop_items': shop_items,
+        'shop_items': paginated_shop_items,
         'brand': brand,
         'categories_with_items': categories_with_items,
         'menu_items': menu_items,
@@ -364,8 +394,6 @@ def shop_items_by_subject_category_education_level(request, education_level_slug
 
 
 
-
-
 def shop_items_by_education_level_category(request, education_level_slug, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     education_level = get_object_or_404(Education_Level, slug=education_level_slug)
@@ -375,6 +403,15 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
         category=category,
         education_level=education_level
     )
+
+    paginator = Paginator(shop_items, 30)
+    page = request.GET.get('page', 1)
+    try:
+        paginated_shop_items = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_shop_items = paginator.page(1)
+    except EmptyPage:
+        paginated_shop_items = paginator.page(paginator.num_pages)
 
     categories_with_items = Category.objects.annotate(num_items=Count('shopitem')).filter(num_items__gt=0)
     menu_items = (Category.objects.annotate(num_shopitems=Count('shopitem')).filter(num_shopitems__gt=0).order_by('-num_shopitems')[:5])
@@ -397,7 +434,7 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
     context = {
         'category': category,
         'education_level': education_level,
-        'shop_items': shop_items,
+        'shop_items': paginated_shop_items,
         'subjects': subjects,
         'brand': brand,
         'categories_with_items': categories_with_items,
@@ -409,6 +446,7 @@ def shop_items_by_education_level_category(request, education_level_slug, catego
     }
 
     return render(request, 'shop_items_by_education_level_category.html', context)
+
 
 
 
