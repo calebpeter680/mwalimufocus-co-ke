@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from shop.models import PaymentOption, ShopItem, Category, Subject, Education_Level, Brand, Order, Transaction, Customer_Item
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Count, Q, F
+from django.db.models import Count, Q, F, Value
 from django.views import View
 from django.http import JsonResponse, HttpResponse, FileResponse
 from django.contrib import messages
@@ -32,6 +32,7 @@ from .tasks import send_email_with_attachments_task
 import logging
 from django.conf import settings
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.db.models.functions import Lower
 
 
 scheduler = BackgroundScheduler()
@@ -39,7 +40,6 @@ scheduler.start()
 
 
 logger = logging.getLogger(__name__)
-
 
 def search_shop_items(request):
     query = request.GET.get('query', '')
@@ -56,7 +56,10 @@ def search_shop_items(request):
 
     queryset = ShopItem.objects.filter(search_filter).select_related(
         'category', 'subject', 'education_level'
+    ).annotate(
+        relevance_score=Value(0) 
     )
+
 
     shop_items = []
     for item in queryset:
@@ -67,21 +70,22 @@ def search_shop_items(request):
             word.lower() in (item.education_level.name or '').lower()
             for word in search_words
         )
-        shop_items.append({
-            'id': item.id,
-            'title': item.title,
-            'slug': item.slug,
-            'category': item.category.name,
-            'subject': item.subject.name,
-            'education_level': item.education_level.name,
-            'price': str(item.price),
-            'education_level_slug': item.education_level_slug,
-            'subject_slug': item.subject_slug,
-            'category_slug': item.category.slug,
-            'match_count': match_count,
-        })
+        if match_count > 0:
+            shop_items.append({
+                'id': item.id,
+                'title': item.title,
+                'slug': item.slug,
+                'category': item.category.name,
+                'subject': item.subject.name,
+                'education_level': item.education_level.name,
+                'price': str(item.price),
+                'education_level_slug': item.education_level.slug,
+                'subject_slug': item.subject.slug,
+                'category_slug': item.category.slug,
+                'match_count': match_count,
+            })
 
-    sorted_items = sorted(shop_items, key=lambda x: x['match_count'], reverse=True)
+    sorted_items = sorted(shop_items, key=lambda x: x['match_count'], reverse=True)[:20]
 
     serialized_items = [
         {
@@ -100,6 +104,7 @@ def search_shop_items(request):
     ]
 
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 
