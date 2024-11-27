@@ -5,8 +5,12 @@ from django.shortcuts import get_object_or_404
 import requests
 import filetype
 from validate_email_address import validate_email
-
+from apscheduler.schedulers.background import BackgroundScheduler
 from .models import Order, Brand
+
+
+scheduler = BackgroundScheduler()
+scheduler.start()
 
 
 @shared_task
@@ -80,8 +84,6 @@ def send_email_with_attachments_task(order_id):
 
 
 
-
-@shared_task
 def send_attachments_for_paid_orders():
     paid_orders = Order.objects.filter(is_paid=True, attachments_sent=False, user__isnull=False)
 
@@ -157,3 +159,4 @@ def send_attachments_for_paid_orders():
                 print(f"Invalid email address detected: {to_email}")
 
 
+scheduler.add_job(send_attachments_for_paid_orders, 'interval', minutes=3)

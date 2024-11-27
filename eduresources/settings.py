@@ -240,4 +240,29 @@ SITE_ID = 1
 
 django_heroku.settings(locals())
 
+SCHEDULER_AUTOSTART = True
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+        "daphne": {  # Daphne logs
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
+
+
 
