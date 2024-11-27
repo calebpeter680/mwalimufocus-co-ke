@@ -84,7 +84,8 @@ def send_payment_reminders():
         order.cart_reminder_sent = True
         order.save()
 
-scheduler.add_job(send_payment_reminders, 'interval', minutes=5)
+scheduler.add_job(send_payment_reminders, 'interval', minutes=5, jitter=10)
+
 
 
 def restore_item_prices():
@@ -113,4 +114,4 @@ def restore_item_prices():
 
 
 
-scheduler.add_job(restore_item_prices, 'interval', minutes=3)
+scheduler.add_job(restore_item_prices, 'interval', minutes=3, jitter=15)

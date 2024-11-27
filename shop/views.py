@@ -45,36 +45,43 @@ def search_shop_items(request):
     query = request.GET.get('query', '')
     search_words = query.split()
 
-    queryset = ShopItem.objects.all()
+    search_filter = Q()
+    for word in search_words:
+        search_filter |= (
+            Q(title__icontains=word) |
+            Q(category__name__icontains=word) |
+            Q(subject__name__icontains=word) |
+            Q(education_level__name__icontains=word)
+        )
 
-    shop_items = {}
+    queryset = ShopItem.objects.filter(search_filter).select_related(
+        'category', 'subject', 'education_level'
+    )
 
+    shop_items = []
     for item in queryset:
-        match_count = 0
-        for word in search_words:
-            if (word.lower() in item.title.lower() or
-                word.lower() in item.category.name.lower() or
-                word.lower() in item.subject.name.lower() or
-                word.lower() in item.education_level.name.lower()):
-                match_count += 1
-        
-        shop_items[item.id] = {
+        match_count = sum(
+            word.lower() in (item.title or '').lower() or
+            word.lower() in (item.category.name or '').lower() or
+            word.lower() in (item.subject.name or '').lower() or
+            word.lower() in (item.education_level.name or '').lower()
+            for word in search_words
+        )
+        shop_items.append({
             'id': item.id,
             'title': item.title,
             'slug': item.slug,
             'category': item.category.name,
             'subject': item.subject.name,
             'education_level': item.education_level.name,
-            'price': str(item.price), 
+            'price': str(item.price),
             'education_level_slug': item.education_level_slug,
             'subject_slug': item.subject_slug,
             'category_slug': item.category.slug,
-            'match_count': match_count
-        }
+            'match_count': match_count,
+        })
 
-
-    sorted_items = sorted(shop_items.values(), key=lambda x: x['match_count'], reverse=True)
-
+    sorted_items = sorted(shop_items, key=lambda x: x['match_count'], reverse=True)
 
     serialized_items = [
         {
@@ -92,8 +99,8 @@ def search_shop_items(request):
         for item in sorted_items
     ]
 
-
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 
