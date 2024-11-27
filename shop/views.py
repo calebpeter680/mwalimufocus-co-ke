@@ -45,8 +45,23 @@ def search_shop_items(request):
     query = request.GET.get('query', '')
     search_words = query.split()
 
+    stop_words = {
+        'a', 'an', 'the', 'and', 'or', 'for', 'nor', 'but', 'if', 'then', 'with', 'without',
+        'as', 'at', 'by', 'on', 'in', 'to', 'from', 'about', 'above', 'below', 'this', 'that',
+        'those', 'these', 'it', 'its', 'you', 'he', 'she', 'we', 'they', 'us', 'them', 'there',
+        'where', 'when', 'how', 'why', 'all', 'any', 'some', 'many', 'few', 'more', 'most',
+        'other', 'each', 'every', 'no', 'not', 'none', 'only', 'own', 'same', 'such', 'too',
+        'very', 'even', 'how', 'in', 'out', 'up', 'down'
+    }
+
+
+    filtered_search_words = [word for word in search_words if word.lower() not in stop_words]
+
+    if not filtered_search_words:
+        return JsonResponse({'shop_items': []})
+
     search_filter = Q()
-    for word in search_words:
+    for word in filtered_search_words:
         search_filter |= (
             Q(title__icontains=word) |
             Q(category__name__icontains=word) |
@@ -56,8 +71,6 @@ def search_shop_items(request):
 
     queryset = ShopItem.objects.filter(search_filter).select_related(
         'category', 'subject', 'education_level'
-    ).annotate(
-        relevance_score=Value(0) 
     )
 
 
@@ -68,8 +81,10 @@ def search_shop_items(request):
             word.lower() in (item.category.name or '').lower() or
             word.lower() in (item.subject.name or '').lower() or
             word.lower() in (item.education_level.name or '').lower()
-            for word in search_words
+            for word in filtered_search_words
         )
+        
+
         if match_count > 0:
             shop_items.append({
                 'id': item.id,
@@ -104,6 +119,7 @@ def search_shop_items(request):
     ]
 
     return JsonResponse({'shop_items': serialized_items})
+
 
 
 
