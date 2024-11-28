@@ -149,7 +149,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
     'https://mwalimufocus-ec482d83d7a7.herokuapp.com',
-    'https://63a9-102-6-193-121.ngrok-free.app'
+    'https://63a9-102-6-193-121.ngrok-free.app',
+    'https://mwalimufocus-co-ke.onrender.com',
 ]
 
 
