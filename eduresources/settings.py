@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'pages',
     'examgenerator',
     'tinymce',
+    'csp',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'shop.middleware.DomainRedirectMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
+    'csp.middleware.CSPMiddleware',
     
 ]
 
@@ -148,9 +150,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://mwalimufocus.co.ke',
     'https://mwalimufocus.com',
-    'https://mwalimufocus-ec482d83d7a7.herokuapp.com',
-    'https://63a9-102-6-193-121.ngrok-free.app',
-    'https://mwalimufocus-co-ke.onrender.com',
 ]
 
 
@@ -229,6 +228,18 @@ LOGGING = {
     },
 }
 
+
+CSP_DEFAULT_SRC = "'self'"
+CSP_FRAME_ANCESTORS = "'self'"
+CSP_FORM_ACTION = "'self' https://safaricom.co.ke https://intasend.com"
+CSP_IMG_SRC = "'self' https://mwalimufocus.nyc3.digitaloceanspaces.com"
+CSP_MEDIA_SRC = "'self' https://mwalimufocus.nyc3.digitaloceanspaces.com"
+CSP_FONT_SRC = "'self'"
+CSP_SCRIPT_SRC = "'self' https://intasend.com https://js.cdn.safaricom.co.ke"
+CSP_STYLE_SRC = "'self'"
+
+CSP_EXCLUDE_URL_PREFIXES = "/admin"
+CSP_REPORT_ONLY = False
 
 
 
