@@ -1184,6 +1184,15 @@ def shop_item_detail(request, category_slug, pk, slug):
             subject=shop_item.subject,
         ).exclude(pk=shop_item.pk)
 
+    elif shop_item.category.name == "Schemes of Work":
+
+        related_items = ShopItem.objects.filter(
+            is_search_engine_indexible=True, 
+            category=shop_item.category,
+            term=shop_item.term,
+            education_level=shop_item.education_level,
+        ).exclude(pk=shop_item.pk)
+
     else:
 
         related_items = ShopItem.objects.filter(
