@@ -65,33 +65,9 @@
       </div>
       <div class="content">
         <h2 style="font-size: 14px;">Hi <span style="text-decoration: none;">{{ user.email }}</span>,</h2>
-        <p>Hurry! <b>FurahiDay Series:</b> Enjoy a special <b>{{ latest_discount }}</b> on all products. The discounted prices are already applied. Act now — this offer ends on Sunday at 23:59, after which regular prices will resume on Monday at 00:00.</p>
 
-        {% if new_shop_items %}
-        <p>Also, we have some new teaching and learning resources that you might be interested in:</p>
-        <div class="items">
-          {% for item in new_shop_items %}
-            <div class="item">
-              <div class="item-header" style="font-size: 14px; color: black; border-radius: 10px; padding: 10px; background-color: #98FB98;">{{ item.category.name }} » {{ item.education_level.name }} » {{ item.subject.name }}</div>
-              <div class="item-title"><a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" style="text-decoration: none;">{{ item.title }}</a></div>
-              <div class="item-price">Price: Ksh {{ item.price }}</div>
-              <a href="{{ protocol }}://{{ domain }}{{ item.get_absolute_url }}" class="btn btn-primary">View Resource</a>
-            </div>
-          {% endfor %}
-        </div>
-        {% endif %}
-        <p>Visit our <a style="text-decoration: none;" href="{{ protocol }}://{{ domain }}/">online store</a> and utilize the search box to find more CBC and 8-4-4 learning and teaching resources.</p>
-        <h2 style="text-align: center;">Why choose us?</h2>
-        <ul>
-          <li>Instant downloads: Get your resources immediately after purchase. No waiting!</li>
-          <li>High-quality materials: Prepared by professional teachers and national examiners.</li>
-          <li>Wide range of materials: From pre-primary (PP1 & PP2) to Form 4.</li>
-          <li>Join thousands of satisfied customers who have improved their teaching and learning experiences with our resources.</li>
-        </ul>
-        <p>Don't miss out! Take advantage of the <b>{{ latest_discount }}</b> discount now and elevate your teaching and learning experience. Our offer is limited, and so are the benefits — act now!</p>
-        <p>If you have any questions or need further assistance, reply to this email. We're here to help!</p>
-        <p>Best regards,</p>
-        <p>The MwalimuFocus.Co.Ke Team</p>
+        {{ message|safe }}
+        
       </div>
       <div class="footer text-center">
         <p>&copy; MwalimuFocus.Co.Ke. All rights reserved.</p>

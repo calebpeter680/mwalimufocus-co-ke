@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import EmailPerHourLimit, WeeklyPromotionEmail, CustomUser, CustomerFAQ, VendorFAQ, Subscriber, SocialMediaLinks
+from .models import EmailSchedule, EmailPerHourLimit, PromotionEmailLog, CustomUser, CustomerFAQ, VendorFAQ, Subscriber, SocialMediaLinks
+
+
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -58,7 +60,13 @@ class SocialMediaLinksAdmin(admin.ModelAdmin):
 class EmailPerHourLimitAdmin(admin.ModelAdmin):
     list_display = ('limit',)
 
-@admin.register(WeeklyPromotionEmail)
-class WeeklyPromotionEmailAdmin(admin.ModelAdmin):
+@admin.register(PromotionEmailLog)
+class PromotionEmailLogAdmin(admin.ModelAdmin):
     list_display = ('user', 'date_created', 'status')
     list_filter = ('status', 'date_created')
+
+
+@admin.register(EmailSchedule)
+class EmailScheduleAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'start_time', 'is_active')
+    list_filter = ('is_active', 'start_time')

@@ -5,7 +5,12 @@ from django.utils.html import strip_tags
 from django.conf import settings
 from validate_email_address import validate_email
 from decimal import Decimal
-
+from django.utils.timezone import now
+from .models import CustomUser, EmailSchedule, PromotionEmailLog
+from django.db.models import Q, Count
+from django.contrib.sites.models import Site
+from threading import Lock
+from django.db import transaction
 
 
 def send_payment_reminders():
@@ -105,3 +110,117 @@ def restore_item_prices():
             item.discount_start_time = None
             item.discount_end_time = None
             item.save()
+
+
+
+
+
+
+
+
+BATCH_SIZE = 500
+user_locks = {}  
+
+def send_emails_in_batches():
+    current_time = now().time()
+
+    active_schedule = EmailSchedule.objects.filter(is_active=True).first()
+
+    if not active_schedule:
+        print("No active schedule found.")
+        return
+
+    users_to_email = CustomUser.objects.exclude(
+        promotionemaillog__email_schedule=active_schedule
+    ).distinct()[:BATCH_SIZE]
+
+    if not users_to_email.exists():
+        total_users = CustomUser.objects.count()
+        logs_count = PromotionEmailLog.objects.filter(email_schedule=active_schedule).count()
+
+        if total_users <= logs_count:
+            print("All users have been emailed. Deactivating the schedule.")
+            active_schedule.is_active = False
+            active_schedule.save()
+            return
+
+    current_site = Site.objects.get_current()
+    domain = current_site.domain
+    protocol = 'https' if settings.SECURE_SSL_REDIRECT else 'http'
+
+    for user in users_to_email:
+        try:
+            if not validate_email(user.email):
+                # Log the failure
+                PromotionEmailLog.objects.create(
+                    user=user,
+                    email_schedule=active_schedule,
+                    status='FAILED'
+                )
+                print(f"Invalid email address for user {user.email}. Skipping.")
+                continue
+
+            existing_sent_log = PromotionEmailLog.objects.filter(
+                user=user,
+                email_schedule=active_schedule,
+                status='SENT'
+            ).first()
+
+            if existing_sent_log:
+                print(f"Email already sent to user {user.email}. Skipping.")
+                continue 
+
+            if user.id not in user_locks:
+                user_locks[user.id] = Lock()
+
+
+            user_lock = user_locks[user.id]
+            with user_lock: 
+
+                existing_sent_log = PromotionEmailLog.objects.filter(
+                    user=user,
+                    email_schedule=active_schedule,
+                    status='SENT'
+                ).first()
+                
+                if existing_sent_log:
+                    print(f"Email already sent to user {user.email}. Skipping.")
+                    continue  # Skip if the email is already marked as sent
+
+                html_message = render_to_string('promotional_email.html', {
+                    'user': user,
+                    'domain': domain,
+                    'protocol': protocol,
+                    'message': active_schedule.message,
+                })
+                plain_message = strip_tags(html_message)
+
+                send_mail(
+                    subject=active_schedule.subject,
+                    message=plain_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    html_message=html_message,
+                )
+
+                with transaction.atomic():
+                    PromotionEmailLog.objects.update_or_create(
+                        user=user,
+                        email_schedule=active_schedule,
+                        defaults={'status': 'SENT'}
+                    )
+
+        except Exception as e:
+            PromotionEmailLog.objects.create(
+                user=user,
+                email_schedule=active_schedule,
+                status='FAILED'
+            )
+            print(f"Failed to send email to {user.email}: {e}")
+
+    print(f"Sent {len(users_to_email)} emails this batch.")
+
+
+
+
+

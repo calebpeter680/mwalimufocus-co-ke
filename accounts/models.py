@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
+from tinymce.models import HTMLField
 
 
 class CustomUserManager(BaseUserManager):
@@ -97,7 +99,23 @@ class EmailPerHourLimit(models.Model):
 
 
 
-class WeeklyPromotionEmail(models.Model):
+
+
+class EmailSchedule(models.Model): 
+    subject = models.CharField(max_length=255)
+    message = HTMLField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_active = models.BooleanField(default=True) 
+
+    def __str__(self):
+        return f"Schedule {self.subject} ({self.start_time} - {self.end_time})"
+
+
+
+
+
+class PromotionEmailLog(models.Model):
     STATUS_CHOICES = [
         ('SENT', 'Sent'),
         ('FAILED', 'Failed'),
@@ -106,6 +124,7 @@ class WeeklyPromotionEmail(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=6, choices=STATUS_CHOICES)
+    email_schedule = models.ForeignKey(EmailSchedule, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Weekly Promotion Email to {self.user.email} - Status: {self.status}"
