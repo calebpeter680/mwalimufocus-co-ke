@@ -238,7 +238,9 @@ TINYMCE_DEFAULT_CONFIG = {
     "bold italic backcolor | alignleft aligncenter "
     "alignright alignjustify | bullist numlist outdent indent | "
     "removeformat | help",
-    "convert_urls": True,
+    "convert_urls": False,
+    "remove_script_host": False,
+    "relative_urls": False,
 }
 
 

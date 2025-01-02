@@ -11,5 +11,5 @@ class AccountsConfig(AppConfig):
             self.scheduler = BackgroundScheduler()
             self.scheduler.add_job(send_payment_reminders, 'interval', minutes=5, jitter=10)
             self.scheduler.add_job(restore_item_prices, 'interval', minutes=3, jitter=15)
-            self.scheduler.add_job(send_emails_in_batches, 'interval', hours=1, jitter=15)
+            self.scheduler.add_job(send_emails_in_batches, 'interval', seconds=10, jitter=15)
             self.scheduler.start()
